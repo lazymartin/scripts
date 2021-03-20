@@ -40,7 +40,7 @@ mv xray /usr/local/bin/ && chmod +x /usr/local/bin/xray
 mv {geoip.dat,geosite.dat} /usr/local/share/xray/
 
 [[ ! -f /usr/local/etc/xray/config.json ]] && echo "{}" > /usr/local/etc/xray/config.json
-[[ ! -f /usr/lib/systemd/system/xray.service ]] && wget -q --show-progress https://raw.githubusercontent.com/lazymartin/scripts/master/configurations/xray/xray.service  
+[[ ! -f /usr/lib/systemd/system/xray.service ]] && wget -q --show-progress https://raw.githubusercontent.com/lazymartin/scripts/master/configurations/xray/xray.service && mv xray.service /usr/lib/systemd/system/xray.service 
 
 echo -e "${OK}The xray with latest commit has been installed!
 ${Yellow}Please complete the configuration file and execute the following commands:
