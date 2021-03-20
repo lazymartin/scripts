@@ -41,7 +41,6 @@ mv {geoip.dat,geosite.dat} /usr/local/share/xray/
 
 [[ ! -f /usr/local/etc/xray/config.json ]] && echo "{}" > /usr/local/etc/xray/config.json
 [[ ! -f /usr/lib/systemd/system/xray.service ]] && wget -q --show-progress https://raw.githubusercontent.com/lazymartin/scripts/master/configurations/xray/xray.service  
-[[ $? -ne 0 ]] && echo -e "${Error}Download xray.service failed, please check the network!${Font}" && exit
 
 echo -e "${OK}The xray with latest commit has been installed!
 ${Yellow}Please complete the configuration file and execute the following commands:
