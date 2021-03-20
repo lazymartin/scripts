@@ -1,0 +1,60 @@
+#=================================================
+# Description: Build OpenWrt using GitHub Actions
+# Lisence: GPL-3.0
+# Author: lazymartin
+#=================================================
+
+name: Compile aria2 macOS Latest release
+
+on:
+  schedule:
+    - cron: '30 21 * * 0'
+  push:
+    paths: 
+      - '.github/workflows/compile_aria2_macOS_64-threads.yml'
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+    - name: Install dependences
+      run: |
+        cd ~
+        brew install autoconf automake libtool gettext pkg-config
+        # coreutils gnu-sed
+        export PATH="/usr/local/opt/gettext/bin:$PATH"
+        # export PATH="$(brew --prefix coreutils)/libexec/gnubin:/usr/local/bin:$PATH"
+        # export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
+    - name: Compile
+      run: |
+        cd ~
+        FILE_VER=`curl -s https://api.github.com/repos/aria2/aria2/releases/latest|grep tag_name|awk -F "\"" '{print $4}'|grep -oE [0-9].[0-9]*.[0-9]*`
+        FILE_NAME=`curl -s https://api.github.com/repos/aria2/aria2/releases/latest|grep $FILE_VER.tar.xz|awk -F "\"" 'NR==1 {print $4}'`
+        DOWNLOAD_LINK=`curl -s https://api.github.com/repos/aria2/aria2/releases/latest|grep -oE "https://github.com.*$FILE_VER.tar.xz"`
+        
+        wget -q $DOWNLOAD_LINK --show-progress -O $FILE_NAME
+        tar xf $FILE_NAME
+        cd `echo $FILE_NAME|sed "s/.tar.xz//g"`
+        # sed -i s"/1\, 16\,/1\, 64\,/" ./src/OptionHandlerFactory.cc
+        CXXFLAGS="-O2 -std=c++14"
+        autoreconf -i
+        ./configure ARIA2_STATIC=yes
+        make
+        
+        
+    - name: Assemble Artifact
+      run: |
+        mkdir -p ./artifact
+        FILE_VER=`curl -s https://api.github.com/repos/aria2/aria2/releases/latest|grep tag_name|awk -F "\"" '{print $4}'|grep -oE [0-9].[0-9]*.[0-9]*`
+        # work_path=`curl -s https://api.github.com/repos/aria2/aria2/releases/latest|grep $FILE_VER.tar.xz|awk -F "\"" 'NR==1 {print $4}'|gsed "s/.tar.xz//g"`
+        cp ~/aria2-${FILE_VER}/src/aria2c ./artifact/aria2c_macOS_64-threads
+        
+    - name: Upload binaries to release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: ./artifact/*
+        tag: "Last_release"
+        overwrite: true
+        file_glob: true

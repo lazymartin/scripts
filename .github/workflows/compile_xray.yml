@@ -1,0 +1,54 @@
+#=================================================
+# Description: Build OpenWrt using GitHub Actions
+# Lisence: GPL-3.0
+# Author: lazymartin
+#=================================================
+
+name: Compile Xray-core with Latest commits
+
+on:
+  schedule:
+    - cron: '05 21 * * 0'
+  push:
+    paths: 
+      - '.github/workflows/compile_xray.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@master
+
+    - name: Initialization environment
+      uses: actions/setup-go@v2
+      with:
+        stable: 'true'
+        go-version: '^1.16' # The Go version to download (if necessary) and use.
+
+    - name: Compile
+      run: |
+        git clone https://github.com/XTLS/Xray-core.git
+        cd Xray-core/
+        CGO_ENABLED=0 go build -o xray_linux-x64 -trimpath -ldflags "-s -w -buildid=" ./main  # linux_x64
+        CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o xray_win-x64.exe -trimpath -ldflags "-s -w -buildid=" ./main # win_x64
+        CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o xray_macos_x86-64 -trimpath -ldflags "-s -w -buildid=" ./main # macOS_x86-64v
+        wget `curl -s https://api.github.com/repos/v2fly/geoip/releases/latest|grep -oE "https.*geoip.dat\""|sed 's/"//'`
+        wget `curl -s https://api.github.com/repos/v2fly/domain-list-community/releases/latest|grep -oE "https.*dlc.dat\""|sed 's/"//'`
+ 
+    - name: Assemble Artifact
+      run: |
+        mkdir -p ./artifact
+        cp /home/runner/work/scripts/scripts/Xray-core/xray* artifact/
+        cp /home/runner/work/scripts/scripts/Xray-core/geoip.dat artifact/
+        cp /home/runner/work/scripts/scripts/Xray-core/dlc.dat artifact/geosite.dat
+        
+    - name: Upload binaries to release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: ./artifact/*
+        tag: "Last_release"
+        overwrite: true
+        file_glob: true

@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
+export PATH
+
+update_crt(){
+  systemctl stop nginx &>/dev/null
+  systemctl stop xray &>/dev/null
+  ps -aux|grep -v grep|grep -E "nginx|xray"|awk -F " " '{print $2}'|xargs kill -9 &>/dev/null
+  /root/.acme.sh/acme.sh --issue -d ${x_domain} --standalone --keylength ec-256 --force
+  /root/.acme.sh/acme.sh --installcert -d ${x_domain} --fullchainpath /etc/ssl/web.crt --keypath /etc/ssl/web.key --ecc
+  # /root/.acme.sh/acme.sh --renew -d ${x_domain} --force --ecc #已有配置文件，成功申请过，强制更新
+  crontab -r
+  crontab /root/cron_list
+  tar -zcPf /root/${x_domain}.tar.gz /root/.acme.sh/${x_domain}_ecc
+  curl -sfT /etc/ssl/web.crt -u ${webdav_username}:${webdav_password} ${webdav_link}/myfiles/upload/ssl/${x_domain}.crt #上传证书
+  curl -sfT /etc/ssl/web.key -u ${webdav_username}:${webdav_password} ${webdav_link}/myfiles/upload/ssl/${x_domain}.key #上传证书
+  curl -sfT ${x_domain}.tar.gz -u ${webdav_username}:${webdav_password} ${webdav_link}/myfiles/upload/ssl/${x_domain}.tar.gz #上传证书
+  systemctl daemon-reload &>/dev/null
+  systemctl start nginx &>/dev/null
+  systemctl start xray &>/dev/null
+}
+
+update_crt

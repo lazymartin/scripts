@@ -1,0 +1,61 @@
+#=================================================
+# Description: Build OpenWrt using GitHub Actions
+# Lisence: GPL-3.0
+# Author: lazymartin
+#=================================================
+
+name: Compile NaiveProxy
+
+on:
+  schedule:
+    - cron: '15 22 * * 0'
+  push:
+    paths: 
+      - '.github/workflows/compile_NaiveProxy.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@master
+
+    - name: Initialization environment
+      env:
+        DEBIAN_FRONTEND: noninteractive
+      run: |
+        sudo apt-get update
+        # Nginx,Caddy,NaiveProxy Dependent library
+        sudo apt-get install -y build-essential libtool libpcre3 libpcre3-dev zlib1g-dev openssl gcc make ninja-build pkg-config libnss3-dev ccache curl unzip wget libxslt-dev
+        
+    - name: Compile
+      run: |
+        wget https://dl.google.com/go/go1.14.8.linux-amd64.tar.gz
+        sudo tar -C /usr/local -xzf go1.14.8.linux-amd64.tar.gz
+        export PATH=$PATH:/usr/local/go/bin
+        git clone -b naive https://github.com/klzgrad/forwardproxy
+        go get -u github.com/caddyserver/xcaddy/cmd/xcaddy
+        ~/go/bin/xcaddy build --with github.com/caddyserver/forwardproxy=$PWD/forwardproxy
+        git clone --depth 1 https://github.com/klzgrad/naiveproxy.git
+        cd naiveproxy/src
+        ./get-clang.sh
+        ./build.sh
+        
+    - name: Assemble Artifact
+      run: |
+        cd /home/runner/work/scripts/scripts
+        mkdir -p ./artifact
+        caddy_version=`./caddy version|awk '{print $1}'`
+        cp ./caddy ./artifact/caddy
+        naiveproxy_version=`./naiveproxy/src/out/Release/naive --version|awk '{print $2}'`
+        cp ./naiveproxy/src/out/Release/naive ./artifact/naive
+       
+    - name: Upload binaries to release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: ./artifact/*
+        tag: "Last_release"
+        overwrite: true
+        file_glob: true

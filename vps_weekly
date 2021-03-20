@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
+export PATH
+
+update_app(){
+  systemctl stop nginx &>/dev/null
+  systemctl stop xray &>/dev/null
+  ps -aux|grep -v grep|grep -Ei "nginx|xray"|awk -F " " '{print $2}'|xargs kill -9 &>/dev/null
+  # bash /root/compile_nginx.sh
+  apt install -y nginx
+  if [[ $? -eq 0 ]];then logger "Nginx upgrade succeeded!";else logger "Nginx upgrade failed!";fi
+  /root/.acme.sh/acme.sh --upgrade &>/dev/null
+  if [[ $? -eq 0 ]];then logger "acme upgrade succeeded!";else logger "acme upgrade failed!";fi
+  bash <(curl -Ls https://raw.githubusercontent.com/lazymartin/scripts/master/install_xray.sh)
+  if [[ $? -eq 0 ]];then logger "Xray-core upgrade succeeded!";else logger "Xray-core upgrade failed!";fi
+  systemctl daemon-reload &>/dev/null
+  systemctl start nginx &>/dev/null
+  systemctl start xray &>/dev/null
+}
+
+del_log(){
+  rm -rf /var/log/{auth.log.*,syslog.*,user.*,dpkg.log.*,kern.log.*,messages.*,daemon.log.*,debug.*,fail2ban.log.*,alternatives.log.*,mail.err.*,mail.info.*,mail.log.*,mail.warn.*,btmp.*,wtmp.*}
+  rm -rf /var/log/nginx/{access.log.*,error.log.*}
+  echo "" > /var/log/xray/access.log
+  echo "" > /var/log/xray/error.log
+  logger "The specified log file has been emptied."
+}
+
+update_freenom(){
+  cd ~/freenom
+  if [[ -s check.md ]]; then
+      cat /dev/null > check.md
+    else
+      echo "check update" > check.md
+  fi
+  git add -A && git commit -a -m "push" && git push
+  logger "Repository of freenom Active status has been updated!"
+  cd ~
+}
+
+update_app
+del_log
+update_freenom
