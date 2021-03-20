@@ -8,7 +8,7 @@ name: Compile aria2 windows x86_64 Latest release
 
 on:
   schedule:
-    - cron: '50 21 * * 0'
+    - cron: '50 00 * * 0'
   push:
     paths: 
       - '.github/workflows/compile_aria2_windows_x86_64_64-threads.yml'

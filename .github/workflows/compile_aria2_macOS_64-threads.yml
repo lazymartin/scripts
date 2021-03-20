@@ -8,7 +8,7 @@ name: Compile aria2 macOS Latest release
 
 on:
   schedule:
-    - cron: '30 21 * * 0'
+    - cron: '30 00 * * 0'
   push:
     paths: 
       - '.github/workflows/compile_aria2_macOS_64-threads.yml'
