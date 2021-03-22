@@ -44,6 +44,6 @@ mv {geoip.dat,geosite.dat} /usr/local/share/xray/
 
 echo -e "${OK}The xray with latest commit has been installed!
 ${Yellow}Please complete the configuration file and execute the following commands:
-${OK}systemctl enable xray
+${Green}systemctl enable xray
 systemctl start xray${Font}"
 
