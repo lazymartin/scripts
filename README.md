@@ -9,13 +9,13 @@
 ## [DD system script](https://moeclub.org/)
 ## useage:
 ```
-    bash <(wget --no-check-certificate -qO- 'https://raw.githubusercontent.com/lazymartin/scripts/master/dd.sh') -d 10 -v 64 -p 'xxx' -a --mirror 'http://mirrors.aliyun.com/debian'
+bash <(wget --no-check-certificate -qO- 'https://raw.githubusercontent.com/lazymartin/scripts/master/dd.sh') -d 10 -v 64 -p 'xxx' -a --mirror 'http://mirrors.aliyun.com/debian'
 
-        Installation parameter description：  
+    Installation parameter description：  
         
-            -d 10     --> diban 10  
-            -v 64     --> 64 bit  
-            -p 'xxx'  --> password  
-            -a        --> auto install  
-            --mirror  --> mirror site  
+        -d 10     --> diban 10  
+        -v 64     --> 64 bit  
+        -p 'xxx'  --> password  
+        -a        --> auto install  
+        --mirror  --> mirror site  
 ```
