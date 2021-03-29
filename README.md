@@ -1,4 +1,4 @@
-# 
+# Compile scripts
 
 [How to Use NGINX as an HTTPS Forward Proxy Server](https://www.alibabacloud.com/blog/how-to-use-nginx-as-an-https-forward-proxy-server_595799)
 
@@ -8,10 +8,15 @@
 
 [DD system script](https://moeclub.org/)
 
-useage:
-bash \<\(wget --no-check-certificate -qO- 'https://raw.githubusercontent.com/lazymartin/scripts/master/dd.sh'\) -d 10 -v 64 -p 'xxx' -a --mirror 'http://mirrors.aliyun.com/debian'
--d 10     --> diban 10
--v 64     --> 64 bit
--p 'xxx'  --> password
--a        --> auto install
---mirror  --> mirror site
+## useage:
+```
+    bash <(wget --no-check-certificate -qO- 'https://raw.githubusercontent.com/lazymartin/scripts/master/dd.sh') -d 10 -v 64 -p 'xxx' -a --mirror 'http://mirrors.aliyun.com/debian'
+
+        Installation parameter description：
+    
+           -d 10     --> diban 10
+           -v 64     --> 64 bit
+           -p 'xxx'  --> password
+           -a        --> auto install
+           --mirror  --> mirror site
+``` 
