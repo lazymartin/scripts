@@ -12,6 +12,7 @@
     bash <(wget --no-check-certificate -qO- 'https://raw.githubusercontent.com/lazymartin/scripts/master/dd.sh') -d 10 -v 64 -p 'xxx' -a --mirror 'http://mirrors.aliyun.com/debian'
 
         Installation parameter description：  
+        
             -d 10     --> diban 10  
             -v 64     --> 64 bit  
             -p 'xxx'  --> password  
