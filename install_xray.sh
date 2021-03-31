@@ -21,8 +21,10 @@ echo -e "${OK}Downloading xray, please wait...${Font}"
 #curl -O --progress-bar $LINK
 wget -q --show-progress https://github.com/lazymartin/scripts/releases/download/Last_release/xray_linux-x64 -O xray
 [[ $? -ne 0 ]] && echo -e "${Error}Download xray failed, please check the network!${Font}" && exit
+
 wget -q --show-progress https://github.com/lazymartin/scripts/releases/download/Last_release/geoip.dat
 [[ $? -ne 0 ]] && echo -e "${Error}Download geoip.dat failed, please check the network!${Font}" && exit
+
 wget -q --show-progress https://github.com/lazymartin/scripts/releases/download/Last_release/geosite.dat
 [[ $? -ne 0 ]] && echo -e "${Error}Download geosite.dat failed, please check the network!${Font}" && exit
 
@@ -42,17 +44,16 @@ mv {geoip.dat,geosite.dat} /usr/local/share/xray/
 if [[ ! -f /usr/local/etc/xray/config.json ]]; then
   echo "{}" > /usr/local/etc/xray/config.json
   echo -e "${Yellow}
-  The configuration file is empty, please complete the configuration, and then start xray!!
+  The configuration file is empty, please complete the configuration, and then restart xray!!
 ${Green}
   Configuration examples:
-  https://github.com/XTLS/Xray-examples${Font}
-"
+  https://github.com/XTLS/Xray-examples${Font}"
 fi
 
 [[ ! -f /usr/lib/systemd/system/xray.service ]] && wget -q --show-progress https://raw.githubusercontent.com/lazymartin/scripts/master/configurations/xray/xray.service -O /usr/lib/systemd/system/xray.service 
 
 active_stat=`systemctl list-units --type=service --state=active |grep xray`
-[[ -z ${active_stat} ]] && systemctl enable xray
+[[ -z ${active_stat} ]] && systemctl enable xray &>/dev/null
 
-echo -e "${OK}The xray with latest commit has been installed!${Font}"
+echo && echo -e "${OK}The xray with latest commit has been installed!${Font}"
 
