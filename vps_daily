@@ -14,6 +14,7 @@ sync_repo(){
       [[ -z ${upstream_name} ]] && git remote add upstream git@github.com:${owner_list[i]}/${repo_list[i]}.git
       git pull upstream ${BRANCHNAME}
       git push origin
+      if [[ $? -eq 0 ]];then logger "${repo_list[i]} has synchronized with upstream!";else logger "==ERROR== ${repo_list[i]} failed to synchronize with upstream!";fi
     cd ~
     done
 }
