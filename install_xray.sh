@@ -55,5 +55,5 @@ fi
 active_stat=`systemctl list-units --type=service --state=active |grep xray`
 [[ -z ${active_stat} ]] && systemctl enable xray &>/dev/null
 
-echo && echo -e "${OK}The xray with latest commit has been installed!${Font}"
+echo -e "${OK}The xray with latest commit has been installed!${Font}"
 
