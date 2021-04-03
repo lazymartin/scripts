@@ -28,6 +28,16 @@ del_log(){
 
 update_freenom(){
   cd ~/freenom
+  git reset --hard 7adb018bea4598707c626d32ba1f3d1522d6018c
+  git push origin master --force
+  git pull upstream master
+  git push origin master
+  logger "Repository of freenom Active status has been updated!"
+  cd ~
+}
+
+update_freenom_old(){
+  cd ~/freenom
   if [[ -s check.md ]]; then
       cat /dev/null > check.md
     else

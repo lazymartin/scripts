@@ -12,9 +12,9 @@ update_crt(){
   crontab -r
   crontab /root/cron_list
   tar -zcPf /root/${x_domain}.tar.gz /root/.acme.sh/${x_domain}_ecc
-  curl -sfT /etc/ssl/web.crt -u ${webdav_username}:${webdav_password} ${webdav_link}/myfiles/upload/ssl/${x_domain}.crt #上传证书
-  curl -sfT /etc/ssl/web.key -u ${webdav_username}:${webdav_password} ${webdav_link}/myfiles/upload/ssl/${x_domain}.key #上传证书
-  curl -sfT ${x_domain}.tar.gz -u ${webdav_username}:${webdav_password} ${webdav_link}/myfiles/upload/ssl/${x_domain}.tar.gz #上传证书
+  curl -sfT /etc/ssl/web.crt -u ${webdav_username}:${webdav_password} ${webdav_link}/documents/ssl/${x_domain}.crt #上传证书
+  curl -sfT /etc/ssl/web.key -u ${webdav_username}:${webdav_password} ${webdav_link}/documents/ssl/${x_domain}.key #上传证书
+  curl -sfT ${x_domain}.tar.gz -u ${webdav_username}:${webdav_password} ${webdav_link}/documents/ssl/${x_domain}.tar.gz #上传证书
   systemctl daemon-reload &>/dev/null
   systemctl start nginx &>/dev/null
   systemctl start xray &>/dev/null
