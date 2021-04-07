@@ -6,7 +6,6 @@ update_app(){
   systemctl stop nginx &>/dev/null
   systemctl stop xray &>/dev/null
   ps -aux|grep -v grep|grep -Ei "nginx|xray"|awk -F " " '{print $2}'|xargs kill -9 &>/dev/null
-  # bash /root/compile_nginx.sh
   apt install -y nginx
   if [[ $? -eq 0 ]];then logger "Nginx upgrade succeeded!";else logger "Nginx upgrade failed!";fi
   /root/.acme.sh/acme.sh --upgrade &>/dev/null
@@ -28,10 +27,14 @@ del_log(){
 
 update_freenom(){
   cd ~/freenom
-  git reset --hard 7adb018bea4598707c626d32ba1f3d1522d6018c
-  git push origin master --force
-  git pull upstream master
-  git push origin master
+  BRANCHNAME=`git checkout|awk -F "/" '{print $2}'|sed "s/'.//g"`
+  # latest_commit=`curl -s https://github.com/luolongfei/freenom/commits/master|grep "data-url"|awk -F "/" 'NR==1 {print $5}'`
+  rollback_commit="f9218406445dd5d7bb29c7562ef720d08fea3a92"
+  git reset --hard ${rollback_commit}
+  git push origin ${BRANCHNAME} --force
+  sleep 60
+  git pull upstream ${BRANCHNAME}
+  git push origin ${BRANCHNAME}
   logger "Repository of freenom Active status has been updated!"
   cd ~
 }
