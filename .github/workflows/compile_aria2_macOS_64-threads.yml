@@ -43,8 +43,8 @@ jobs:
         export LIBEXPAT_CFLAGS="-I/usr/local/opt/expat/include"
         export LDFLAGS="-L/usr/local/lib"
         export CPPFLAGS="-I/usr/local/include"
-        # export CXX="$CXX -Qunused-arguments" CC="$CC -Qunused-arguments"
-        # CXXFLAGS="-O2 -std=c++14"
+        export CXX="$CXX -Qunused-arguments" CC="$CC -Qunused-arguments"
+        CXXFLAGS="-O2 -std=c++14"
         autoreconf -i
         automake
         autoconf
