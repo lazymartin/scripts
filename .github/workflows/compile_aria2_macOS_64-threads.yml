@@ -21,7 +21,9 @@ jobs:
     - name: Install dependences
       run: |
         cd ~
-        brew install autoconf automake libtool gettext pkg-config
+        brew update
+        brew install --force autoconf automake libtool gettext pkg-config cppunit openssl libssh2 c-ares sqlite3 ccache
+        brew link --force autoconf automake libtool gettext pkg-config cppunit openssl libssh2 c-ares sqlite3 ccache
         # coreutils gnu-sed
         export PATH="/usr/local/opt/gettext/bin:$PATH"
         # export PATH="$(brew --prefix coreutils)/libexec/gnubin:/usr/local/bin:$PATH"
@@ -37,9 +39,12 @@ jobs:
         tar xf $FILE_NAME
         cd `echo $FILE_NAME|sed "s/.tar.xz//g"`
         # sed -i s"/1\, 16\,/1\, 64\,/" ./src/OptionHandlerFactory.cc
+        export CXX="$CXX -Qunused-arguments" CC="$CC -Qunused-arguments"
         CXXFLAGS="-O2 -std=c++14"
         autoreconf -i
-        ./configure ARIA2_STATIC=yes
+        automake
+        autoconf
+        ./configure ARIA2_STATIC=yes --without-openssl --without-gnutls --with-appletls --disable-nls CPPFLAGS=-fsanitize=address LDFLAGS=-fsanitize=address
         make
         
         
