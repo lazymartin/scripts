@@ -22,8 +22,8 @@ jobs:
       run: |
         cd ~
         # brew update
-        brew install libxml2 libtool autopoint autoconf automake libtool gnutls libssh2 expat gettext pkg-config cppunit openssl libssh2 c-ares sqlite3 ccache
-        brew link libxml2 libtool autopoint autoconf automake libtool gnutls libssh2 expat gettext pkg-config cppunit openssl libssh2 c-ares sqlite3 ccache
+        brew install libxml2 autoconf automake libtool gnutls expat gettext pkg-config cppunit openssl libssh2 c-ares sqlite3 ccache
+        brew link libxml2 autoconf automake libtool gnutls expat gettext pkg-config cppunit openssl libssh2 c-ares sqlite3 ccache
         # coreutils gnu-sed
         # export PATH="/usr/local/opt/gettext/bin:$PATH"
         # export PATH="/usr/local/opt/expat/bin:$PATH"
