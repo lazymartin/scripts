@@ -22,27 +22,27 @@ jobs:
       run: |
         cd ~
         brew update
-        brew install autoconf automake libtool gnutls libssh2 expat gettext pkg-config cppunit openssl libssh2 c-ares sqlite3 ccache
-        brew link autoconf automake libtool gnutls libssh2 expat gettext pkg-config cppunit openssl libssh2 c-ares sqlite3 ccache
+        brew install libxml2-dev libcppunit-dev libtool autotools-dev autopoint autoconf automake libtool gnutls libssh2 expat gettext pkg-config cppunit openssl libssh2 c-ares sqlite3 ccache
+        brew link libxml2-dev libcppunit-dev libtool autotools-dev autopoint autoconf automake libtool gnutls libssh2 expat gettext pkg-config cppunit openssl libssh2 c-ares sqlite3 ccache
         # coreutils gnu-sed
-        export PATH="/usr/local/opt/gettext/bin:$PATH"
-        export PATH="/usr/local/opt/expat/bin:$PATH"
+        # export PATH="/usr/local/opt/gettext/bin:$PATH"
+        # export PATH="/usr/local/opt/expat/bin:$PATH"
         # export LDFLAGS="-L/usr/local/opt/expat/lib"
         # export CPPFLAGS="-I/usr/local/opt/expat/include"
-        export LDFLAGS="-L/usr/local/lib"
-        export CPPFLAGS="-I/usr/local/include"
-        export PKG_CONFIG_PATH="/usr/local/opt/expat/lib/pkgconfig"
-        export PATH="/usr/local/opt/ccache/libexec:$PATH"
-        export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"
-        export LDFLAGS="-L/usr/local/opt/openssl@1.1/lib"
-        export CPPFLAGS="-I/usr/local/opt/openssl@1.1/include"
-        export PKG_CONFIG_PATH="/usr/local/opt/openssl@1.1/lib/pkgconfig"
-        export PATH="/usr/local/opt/sqlite/bin:$PATH"
-        export LDFLAGS="-L/usr/local/opt/sqlite/lib"
-        export CPPFLAGS="-I/usr/local/opt/sqlite/include"
-        export PKG_CONFIG_PATH="/usr/local/opt/sqlite/lib/pkgconfig"
-        # export PATH="$(brew --prefix coreutils)/libexec/gnubin:/usr/local/bin:$PATH"
-        # export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
+        # export LDFLAGS="-L/usr/local/lib"
+        # export CPPFLAGS="-I/usr/local/include"
+        # export PKG_CONFIG_PATH="/usr/local/opt/expat/lib/pkgconfig"
+        # export PATH="/usr/local/opt/ccache/libexec:$PATH"
+        # export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"
+        # export LDFLAGS="-L/usr/local/opt/openssl@1.1/lib"
+        # export CPPFLAGS="-I/usr/local/opt/openssl@1.1/include"
+        # export PKG_CONFIG_PATH="/usr/local/opt/openssl@1.1/lib/pkgconfig"
+        # export PATH="/usr/local/opt/sqlite/bin:$PATH"
+        # export LDFLAGS="-L/usr/local/opt/sqlite/lib"
+        # export CPPFLAGS="-I/usr/local/opt/sqlite/include"
+        # export PKG_CONFIG_PATH="/usr/local/opt/sqlite/lib/pkgconfig"
+        # # export PATH="$(brew --prefix coreutils)/libexec/gnubin:/usr/local/bin:$PATH"
+        # # export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
     - name: Compile
       run: |
         cd ~
@@ -61,26 +61,28 @@ jobs:
         # autoreconf -i
         # automake
         # autoconf
-        ./configure  --enable-static \
-                --disable-shared \
-                --enable-metalink \
-                --enable-bittorrent \
-                --disable-nls \
-                --with-appletls \
-                --with-libgmp \
-                --with-sqlite3 \
-                --with-libz \
-                --with-libexpat \
-                --with-libcares \
-                --with-libgcrypt \
-                --with-libssh2 \
-                --without-libuv \
-                --without-gnutls \
-                --without-openssl \
-                --without-libnettle \
-                --without-libxml2 \
-                ARIA2_STATIC=yes
-        sudo make
+        # ./configure  --enable-static \
+        #         --disable-shared \
+        #         --enable-metalink \
+        #         --enable-bittorrent \
+        #         --disable-nls \
+        #         --with-appletls \
+        #         --with-libgmp \
+        #         --with-sqlite3 \
+        #         --with-libz \
+        #         --with-libexpat \
+        #         --with-libcares \
+        #         --with-libgcrypt \
+        #         --with-libssh2 \
+        #         --without-libuv \
+        #         --without-gnutls \
+        #         --without-openssl \
+        #         --without-libnettle \
+        #         --without-libxml2 \
+        #         ARIA2_STATIC=yes
+        autoreconf -i
+        ./configure ARIA2_STATIC=yes
+        make
         
     - name: Assemble Artifact
       run: |
