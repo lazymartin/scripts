@@ -48,7 +48,7 @@ jobs:
         cp ~/aria2-${FILE_VER}/src/aria2c ./artifact/aria2c_macOS_64-threads
         cp ~/aria2-${FILE_VER}/src/
         chmod +x aria2c
-        aria2c -h
+        ./aria2c -h
         
     - name: Upload binaries to release
       uses: svenstaro/upload-release-action@v2
