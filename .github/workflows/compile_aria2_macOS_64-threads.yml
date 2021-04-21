@@ -25,7 +25,7 @@ jobs:
     - name: Compile
       run: |
         cd ~
-        FILE_VER=`curl -s https://api.github.com/repos/aria2/aria2/releases/latest|grep tag_name|awk -F "\"" '{print $4}'|grep -oE [0-9].[0-9]*.[0-9]*`
+        FILE_VER=`curl -s https://api.github.com/repos/aria2/aria2/releases/latest|grep tag_name|awk -F "\"" '{print $4}'|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
         FILE_NAME=`curl -s https://api.github.com/repos/aria2/aria2/releases/latest|grep $FILE_VER.tar.xz|awk -F "\"" 'NR==1 {print $4}'`
         DOWNLOAD_LINK=`curl -s https://api.github.com/repos/aria2/aria2/releases/latest|grep -oE "https://github.com.*$FILE_VER.tar.xz"`
         
@@ -34,7 +34,6 @@ jobs:
         cd `echo $FILE_NAME|sed "s/.tar.xz//g"`
         sed -i s"/1\, 16\,/1\, 64\,/" ./src/OptionHandlerFactory.cc
         autoreconf -i
-        autoconf configure.ac
         autoconf -i
         ./configure ARIA2_STATIC=yes
         make check
