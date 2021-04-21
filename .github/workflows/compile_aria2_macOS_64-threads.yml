@@ -19,11 +19,12 @@ jobs:
 
     steps:
     - name: Install dependences
-      shell: zsh {0} 
       run: |
         brew install autoconf automake cppunit libtool libxml2 gettext openssl pkg-config sqlite zlib
         brew link gettext --force
+
     - name: Compile
+      shell: zsh {0} 
       run: |
         cd ~
         FILE_VER=`curl -s https://api.github.com/repos/aria2/aria2/releases/latest|grep tag_name|awk -F "\"" '{print $4}'|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
