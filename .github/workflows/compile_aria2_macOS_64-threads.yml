@@ -24,7 +24,7 @@ jobs:
         brew link gettext --force
 
     - name: Compile
-      shell: zsh {0} 
+      shell: zsh {0}
       run: |
         cd ~
         FILE_VER=`curl -s https://api.github.com/repos/aria2/aria2/releases/latest|grep tag_name|awk -F "\"" '{print $4}'|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
