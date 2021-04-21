@@ -19,7 +19,7 @@ jobs:
 
     steps:
     - name: Install dependences
-      shell: zsh
+      shell: zsh {0}
       run: |
         brew install autoconf automake cppunit libtool libxml2 gettext openssl pkg-config sqlite zlib
         brew link gettext --force
