@@ -24,7 +24,7 @@ jobs:
         brew link gettext --force
 
     - name: Compile
-      shell: zsh {0} 
+      shell: zsh {0}
       run: |
         cd ~
         FILE_VER=`curl -s https://api.github.com/repos/aria2/aria2/releases/latest|grep tag_name|awk -F "\"" '{print $4}'|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
@@ -47,7 +47,7 @@ jobs:
         FILE_VER=`curl -s https://api.github.com/repos/aria2/aria2/releases/latest|grep tag_name|awk -F "\"" '{print $4}'|grep -oE [0-9].[0-9]*.[0-9]*`
         # work_path=`curl -s https://api.github.com/repos/aria2/aria2/releases/latest|grep $FILE_VER.tar.xz|awk -F "\"" 'NR==1 {print $4}'|gsed "s/.tar.xz//g"`
         cp ~/aria2-${FILE_VER}/src/aria2c ./artifact/aria2c_macOS_64-threads
-        cd ~/aria2-${FILE_VER}/src/aria2c
+        cd ~/aria2-${FILE_VER}/src/
         chmod +x aria2c
         ./aria2c -h
         
