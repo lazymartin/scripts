@@ -20,29 +20,9 @@ jobs:
     steps:
     - name: Install dependences
       run: |
-        cd ~
-        # brew update
-        brew install libxml2 autoconf automake libtool gnutls expat gettext pkg-config cppunit openssl libssh2 c-ares sqlite3 ccache
-        brew link libxml2 autoconf automake libtool gnutls expat gettext pkg-config cppunit openssl libssh2 c-ares sqlite3 ccache
-        # coreutils gnu-sed
-        # export PATH="/usr/local/opt/gettext/bin:$PATH"
-        # export PATH="/usr/local/opt/expat/bin:$PATH"
-        # export LDFLAGS="-L/usr/local/opt/expat/lib"
-        # export CPPFLAGS="-I/usr/local/opt/expat/include"
-        # export LDFLAGS="-L/usr/local/lib"
-        # export CPPFLAGS="-I/usr/local/include"
-        # export PKG_CONFIG_PATH="/usr/local/opt/expat/lib/pkgconfig"
-        # export PATH="/usr/local/opt/ccache/libexec:$PATH"
-        # export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"
-        # export LDFLAGS="-L/usr/local/opt/openssl@1.1/lib"
-        # export CPPFLAGS="-I/usr/local/opt/openssl@1.1/include"
-        # export PKG_CONFIG_PATH="/usr/local/opt/openssl@1.1/lib/pkgconfig"
-        # export PATH="/usr/local/opt/sqlite/bin:$PATH"
-        # export LDFLAGS="-L/usr/local/opt/sqlite/lib"
-        # export CPPFLAGS="-I/usr/local/opt/sqlite/include"
-        # export PKG_CONFIG_PATH="/usr/local/opt/sqlite/lib/pkgconfig"
-        # # export PATH="$(brew --prefix coreutils)/libexec/gnubin:/usr/local/bin:$PATH"
-        # # export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
+        xcode-select --install
+        brew install autoconf automake cppunit libtool libxml2 gettext openssl pkg-config sqlite zlib
+        brew link gettext --force
     - name: Compile
       run: |
         cd ~
@@ -54,35 +34,12 @@ jobs:
         tar xf $FILE_NAME
         cd `echo $FILE_NAME|sed "s/.tar.xz//g"`
         sed -i s"/1\, 16\,/1\, 64\,/" ./src/OptionHandlerFactory.cc
-        # export LIBEXPAT_LIBS="-L/usr/local/opt/expat/lib"
-        # export LIBEXPAT_CFLAGS="-I/usr/local/opt/expat/include"
-        # export CXX="$CXX -Qunused-arguments" CC="$CC -Qunused-arguments"
-        # CXXFLAGS="-O2 -std=c++14"
-        # autoreconf -i
-        # automake
-        # autoconf
-        # ./configure  --enable-static \
-        #         --disable-shared \
-        #         --enable-metalink \
-        #         --enable-bittorrent \
-        #         --disable-nls \
-        #         --with-appletls \
-        #         --with-libgmp \
-        #         --with-sqlite3 \
-        #         --with-libz \
-        #         --with-libexpat \
-        #         --with-libcares \
-        #         --with-libgcrypt \
-        #         --with-libssh2 \
-        #         --without-libuv \
-        #         --without-gnutls \
-        #         --without-openssl \
-        #         --without-libnettle \
-        #         --without-libxml2 \
-        #         ARIA2_STATIC=yes
         autoreconf -i
+        autoconf configure.ac
+        autoconf -i
         ./configure ARIA2_STATIC=yes
-        make
+        make check
+        sudo make
         
     - name: Assemble Artifact
       run: |
