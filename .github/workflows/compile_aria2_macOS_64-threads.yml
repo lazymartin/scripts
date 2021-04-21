@@ -80,7 +80,7 @@ jobs:
                 --without-libnettle \
                 --without-libxml2 \
                 ARIA2_STATIC=yes
-        make
+        sudo make
         
     - name: Assemble Artifact
       run: |
