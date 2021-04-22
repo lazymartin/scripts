@@ -8,7 +8,7 @@ name: Compile aria2 windows x86_64 Latest release
 
 on:
   schedule:
-    - cron: '50 21 * * 0'
+    - cron: '10 22 * * 0'
   push:
     paths: 
       - '.github/workflows/compile_aria2_windows_x86_64_64-threads.yml'
@@ -42,13 +42,34 @@ jobs:
         fi
 
         ## DEPENDENCES ##
-        ZLIB=http://sourceforge.net/projects/libpng/files/zlib/1.2.11/zlib-1.2.11.tar.gz
-        OPENSSL=http://www.openssl.org/source/openssl-1.0.2u.tar.gz
-        # OPENSSL=https://www.openssl.org/source/openssl-1.1.1i.tar.gz
-        EXPAT=https://github.com/libexpat/libexpat/releases/download/R_2_2_10/expat-2.2.10.tar.bz2
-        SQLITE3=https://sqlite.org/2020/sqlite-autoconf-3330000.tar.gz
-        C_ARES=https://c-ares.haxx.se/download/c-ares-1.16.1.tar.gz
-        SSH2=https://www.libssh2.org/download/libssh2-1.7.0.tar.gz
+        ZLIB_ver=`curl -s http://www.zlib.net/|grep -A 3 "Current release"|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
+        ZLIB=http://www.zlib.net/zlib-${ZLIB_ver}.tar.gz
+        # ZLIB=http://sourceforge.net/projects/libpng/files/zlib/1.2.11/zlib-1.2.11.tar.gz
+        OPENSSL_ver=`curl -s https://www.openssl.org/source/|grep -oE "[0-9]\.[0-9]{1,2}\.[0-9]{1,2}[a-z]"|sort|uniq|tail -n 1`
+        OPENSSL=http://www.openssl.org/source/openssl-${OPENSSL_ver}.tar.gz
+        # OPENSSL=http://www.openssl.org/source/openssl-1.0.2u.tar.gz
+        EXPAT_ver_1=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/libexpat/libexpat/releases/latest|grep tag_name|awk -F "\"" '{print $4}'`
+        EXPAT_ver_2=`echo ${EXPAT_ver_1}|sed "s/R_//g;s/_/\./g"`
+        EXPAT=https://github.com/libexpat/libexpat/releases/download/${EXPAT_ver_1}/expat-${EXPAT_ver_2}.tar.bz2
+        # EXPAT=https://github.com/libexpat/libexpat/releases/download/R_2_2_10/expat-2.2.10.tar.bz2
+        SQLITE3_ver_1=`curl -s https://www.sqlite.org/download.html|grep -oE "sqlite-autoconf-[0-9]{7}"|grep -m 1 -oE "[0-9]{7}"`
+        SQLITE3_ver_2=`curl -s https://www.sqlite.org/download.html|grep "sqlite-autoconf"|awk -F "\'" 'NR==2 {print $4}'`
+        SQLITE3=https://sqlite.org/${SQLITE3_ver_2}
+        # SQLITE3=https://sqlite.org/2020/sqlite-autoconf-3330000.tar.gz
+        C_ARES_ver=`curl -s https://c-ares.haxx.se/download/|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"|head -n 1`
+        C_ARES=https://c-ares.haxx.se/download/c-ares-${C_ARES_ver}.tar.gz
+        # C_ARES=https://c-ares.haxx.se/download/c-ares-1.16.1.tar.gz
+        SSH2_ver=`curl -s https://www.libssh2.org|grep "The latest release"|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
+        SSH2=https://www.libssh2.org/download/libssh2-${SSH2_ver}.tar.gz
+        # SSH2=https://www.libssh2.org/download/libssh2-1.7.0.tar.gz
+
+        # ZLIB=http://sourceforge.net/projects/libpng/files/zlib/1.2.11/zlib-1.2.11.tar.gz
+        # OPENSSL=http://www.openssl.org/source/openssl-1.0.2u.tar.gz
+        # # OPENSSL=https://www.openssl.org/source/openssl-1.1.1i.tar.gz
+        # EXPAT=https://github.com/libexpat/libexpat/releases/download/R_2_2_10/expat-2.2.10.tar.bz2
+        # SQLITE3=https://sqlite.org/2020/sqlite-autoconf-3330000.tar.gz
+        # C_ARES=https://c-ares.haxx.se/download/c-ares-1.16.1.tar.gz
+        # SSH2=https://www.libssh2.org/download/libssh2-1.7.0.tar.gz
 
         ## CONFIG ##
         BUILD_DIRECTORY=/tmp/
@@ -156,8 +177,8 @@ jobs:
       run: |
         mkdir -p ./artifact
         REPO_NAME="aria2/aria2"
-        FILE_VER=`curl -s https://api.github.com/repos/$REPO_NAME/releases/latest|grep tag_name|awk -F "\"" '{print $4}'|grep -oE [0-9].[0-9]*.[0-9]*`
-        work_path=`curl -s https://api.github.com/repos/$REPO_NAME/releases/latest|grep $FILE_VER.tar.xz|awk -F "\"" 'NR==1 {print $4}'|sed "s/.tar.xz//g"`
+        FILE_VER=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/$REPO_NAME/releases/latest|grep tag_name|awk -F "\"" '{print $4}'|grep -oE [0-9].[0-9]*.[0-9]*`
+        work_path=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/$REPO_NAME/releases/latest|grep $FILE_VER.tar.xz|awk -F "\"" 'NR==1 {print $4}'|sed "s/.tar.xz//g"`
         cp /home/runner/work/scripts/scripts/${work_path}/src/aria2c.exe ./artifact/aria2c_windows_x86_64_64-threads.exe
         
     - name: Upload binaries to release

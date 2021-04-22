@@ -29,7 +29,7 @@ jobs:
         sudo apt-get install -y build-essential libpcre3 libpcre3-dev zlib1g-dev git libxslt-dev libssl-dev
         # git clone https://github.com/nginx/nginx.git
         
-        FILE_VER=`curl https://api.github.com/repos/nginx/nginx/tags|grep name|head -1|grep -oE [0-9].[0-9]*.[0-9]*`
+        FILE_VER=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/nginx/nginx/tags|grep name|head -1|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
         wget https://github.com/nginx/nginx/archive/release-${FILE_VER}.tar.gz
         tar xf release-${FILE_VER}.tar.gz
         cd nginx-release-${FILE_VER}
@@ -39,7 +39,7 @@ jobs:
         
     - name: Compile
       run: |
-        FILE_VER=`curl https://api.github.com/repos/nginx/nginx/tags|grep name|head -1|grep -oE [0-9].[0-9]*.[0-9]*`
+        FILE_VER=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/nginx/nginx/tags|grep name|head -1|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
         cd /home/runner/work/scripts/scripts/nginx-release-${FILE_VER}
         ./auto/configure \
             --prefix=/etc/nginx \
@@ -90,7 +90,7 @@ jobs:
     - name: Assemble Artifact
       run: |
         mkdir -p ./artifact
-        FILE_VER=`curl https://api.github.com/repos/nginx/nginx/tags|grep name|head -1|grep -oE [0-9].[0-9]*.[0-9]*`
+        FILE_VER=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/nginx/nginx/tags|grep name|head -1|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
         # cp /home/runner/work/scripts/scripts/nginx-release-${FILE_VER}/objs/nginx ./artifact/nginx_${FILE_VER}
         cp /home/runner/work/scripts/scripts/nginx-release-${FILE_VER}/objs/nginx ./artifact/nginx
         

@@ -8,7 +8,7 @@ name: Compile aria2 macOS Latest release
 
 on:
   schedule:
-    - cron: '30 21 * * 0'
+    - cron: '40 21 * * 0'
   push:
     paths: 
       - '.github/workflows/compile_aria2_macOS_64-threads.yml'
@@ -49,6 +49,7 @@ jobs:
         cp ~/aria2-${FILE_VER}/src/aria2c ./artifact/aria2c_macOS_64-threads
         cd ~/aria2-${FILE_VER}/src/
         chmod +x aria2c
+        ./aria2c -v
         ./aria2c -h
         
     - name: Upload binaries to release
