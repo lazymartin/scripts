@@ -6,9 +6,14 @@
 
 name: Compile aria2 macOS Latest release
 
+env:
+  TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+  TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+  TZ: Asia/Shanghai
+
 on:
   schedule:
-    - cron: '00 21 * * 0'
+    - cron: '00 03 * * 0'
   push:
     paths: 
       - '.github/workflows/compile_aria2_macOS_64-threads.yml'
@@ -19,10 +24,21 @@ jobs:
 
     steps:
     - name: Install dependences
+      id: dependences
+      continue-on-error: true
       run: |
         brew install autoconf automake cppunit libtool libxml2 gettext openssl pkg-config sqlite zlib
         brew link gettext --force
+
+    - name: Check dependency installation
+      # if: steps.dependences.outcome != 'success' || steps.compile.outcome != 'success'
+      if: steps.dependences.outcome != 'success'
+      run: |
+        curl -s --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=Failed to install aria2 dependency, compilation terminated!!" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
+
     - name: Compile
+      id: compile
+      continue-on-error: true
       shell: zsh {0} 
       run: |
         cd ~
@@ -40,7 +56,12 @@ jobs:
         ./configure ARIA2_STATIC=yes
         make check
         sudo make
-        
+
+    - name: Check compilation
+      if: steps.compile.outcome != 'success'
+      run: |
+        curl -s --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=Compiling aria2 failed!!" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
+
     - name: Assemble Artifact
       run: |
         mkdir -p ./artifact

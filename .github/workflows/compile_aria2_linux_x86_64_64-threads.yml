@@ -6,9 +6,14 @@
 
 name: Compile aria2 linux x86_64 Latest release
 
+env:
+  TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+  TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+  TZ: Asia/Shanghai
+
 on:
   schedule:
-    - cron: '00 21 * * 0'
+    - cron: '00 03 * * 0'
   push:
     paths: 
       - '.github/workflows/compile_aria2_linux_x86_64_64-threads.yml'
@@ -28,6 +33,8 @@ jobs:
         sudo apt-get update
         
     - name: Install dependences
+      id: dependences
+      continue-on-error: true
       run: |
         
         #COMPILER AND PATH
@@ -118,8 +125,16 @@ jobs:
           PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig/ LD_LIBRARY_PATH=$PREFIX/lib/ CC="$C_COMPILER" CXX="$CXX_COMPILER" ./configure --without-libgcrypt --with-openssl --without-wincng --prefix=$PREFIX --enable-static --disable-shared
           make -j$(nproc)
           make install
-        #
+
+    - name: Check dependency installation
+      # if: steps.dependences.outcome != 'success' || steps.compile.outcome != 'success'
+      if: steps.dependences.outcome != 'success'
+      run: |
+        curl -s --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=Failed to install aria2 dependency, compilation terminated!!" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
+
     - name: Compile
+      id: compile
+      continue-on-error: true
       run: |
         REPO_NAME="aria2/aria2"
         FILE_VER=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/$REPO_NAME/releases/latest|grep tag_name|awk -F "\"" '{print $4}'|grep -oE [0-9].[0-9]*.[0-9]*`
@@ -157,6 +172,11 @@ jobs:
             --enable-shared=no
         make -j$(nproc)
         strip -s ./src/aria2c
+
+    - name: Check compilation
+      if: steps.compile.outcome != 'success'
+      run: |
+        curl -s --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=Compiling aria2 failed!!" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
 
     - name: Assemble Artifact
       run: |

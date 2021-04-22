@@ -6,17 +6,17 @@
 
 name: Compile aria2 windows x86_64 Latest release
 
-on:
-  schedule:
-    - cron: '00 21 * * 0'
-  push:
-    paths: 
-      - '.github/workflows/compile_aria2_windows_x86_64_64-threads.yml'
-
 env:
   TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
   TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
   TZ: Asia/Shanghai
+
+on:
+  schedule:
+    - cron: '00 03 * * 0'
+  push:
+    paths: 
+      - '.github/workflows/compile_aria2_windows_x86_64_64-threads.yml'
 
 jobs:
   build:
