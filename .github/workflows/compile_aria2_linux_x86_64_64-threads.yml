@@ -161,8 +161,8 @@ jobs:
       run: |
         mkdir -p ./artifact
         REPO_NAME="aria2/aria2"
-        FILE_VER=`curl -s https://api.github.com/repos/$REPO_NAME/releases/latest|grep tag_name|awk -F "\"" '{print $4}'|grep -oE [0-9].[0-9]*.[0-9]*`
-        work_path=`curl -s https://api.github.com/repos/$REPO_NAME/releases/latest|grep $FILE_VER.tar.xz|awk -F "\"" 'NR==1 {print $4}'|sed "s/.tar.xz//g"`
+        FILE_VER=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/$REPO_NAME/releases/latest|grep tag_name|awk -F "\"" '{print $4}'|grep -oE [0-9].[0-9]*.[0-9]*`
+        work_path=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/$REPO_NAME/releases/latest|grep $FILE_VER.tar.xz|awk -F "\"" 'NR==1 {print $4}'|sed "s/.tar.xz//g"`
         cp /home/runner/work/scripts/scripts/${work_path}/src/aria2c ./artifact/aria2c_linux_x86_64_64-threads
         
     - name: Upload binaries to release
