@@ -81,8 +81,8 @@ jobs:
 
         # zlib build
         $DOWNLOADER $ZLIB
-        tar zxvf zlib-1.2.11.tar.gz
-        cd zlib-1.2.11/
+        tar zxvf zlib-${ZLIB_ver}.tar.gz
+        cd zlib-${ZLIB_ver}/
         CC=$HOST-gcc CXX=$HOST-g++ AR=$HOST-ar RANLIB=$HOST-ranlib ./configure --prefix=$PREFIX --static
         sudo make -j$(nproc)
         sudo make install
@@ -90,8 +90,8 @@ jobs:
         # expat build
         cd ..
         $DOWNLOADER $EXPAT
-        tar jxvf expat-2.2.10.tar.bz2
-        cd expat-2.2.10/
+        tar jxvf expat-${EXPAT_ver_2}.tar.bz2
+        cd expat-${EXPAT_ver_2}/
         CC=$HOST-gcc CXX=$HOST-g++ AR=$HOST-ar RANLIB=$HOST-ranlib ./configure --prefix=$PREFIX --host=$HOST --enable-static --enable-shared
         sudo make -j$(nproc)
         sudo make install
@@ -99,8 +99,8 @@ jobs:
         # c-ares build
         cd ..
         $DOWNLOADER $C_ARES
-        tar zxvf c-ares-1.16.1.tar.gz
-        cd c-ares-1.16.1/
+        tar zxvf c-ares-${C_ARES_ver}.tar.gz
+        cd c-ares-${C_ARES_ver}/
         CC=$HOST-gcc CXX=$HOST-g++ AR=$HOST-ar RANLIB=$HOST-ranlib ./configure --prefix=$PREFIX --host=$HOST --enable-static --disable-shared
         sudo make -j$(nproc)
         sudo make install
@@ -108,8 +108,8 @@ jobs:
         # Openssl build
         cd ..
         $DOWNLOADER $OPENSSL
-        tar zxvf openssl-1.0.2u.tar.gz
-        cd openssl-1.0.2u/
+        tar zxvf openssl-${OPENSSL_ver}.tar.gz
+        cd openssl-${OPENSSL_ver}/
         ./Configure mingw64 --cross-compile-prefix=$HOST- --prefix=$PREFIX shared
         sudo make -j$(nproc)
         sudo make install
@@ -117,8 +117,8 @@ jobs:
         # sqlite3
         cd ..
         $DOWNLOADER $SQLITE3
-        tar zxvf sqlite-autoconf-3330000.tar.gz
-        cd sqlite-autoconf-3330000/
+        tar zxvf sqlite-autoconf-${SQLITE3_ver_1}.tar.gz
+        cd sqlite-autoconf-${SQLITE3_ver_1}/
         CC=$HOST-gcc CXX=$HOST-g++ AR=$HOST-ar RANLIB=$HOST-ranlib ./configure --prefix=$PREFIX --host=$HOST --enable-static --enable-shared
         sudo make -j$(nproc)
         sudo make install
@@ -126,8 +126,8 @@ jobs:
         # libssh2
         cd ..
         $DOWNLOADER $SSH2
-        tar zxvf libssh2-1.7.0.tar.gz
-        cd libssh2-1.7.0/
+        tar zxvf libssh2-${SSH2_ver}.tar.gz
+        cd libssh2-${SSH2_ver}/
         rm -rf $PREFIX/lib/pkgconfig/libssh2.pc
         CC=$HOST-gcc CXX=$HOST-g++ AR=$HOST-ar RANLIB=$HOST-ranlib ./configure --prefix=$PREFIX --host=$HOST --enable-static --disable-shared
         sudo make -j$(nproc)
@@ -136,13 +136,14 @@ jobs:
     - name: Compile
       run: |
         REPO_NAME="aria2/aria2"
-        FILE_VER=`curl -s https://api.github.com/repos/$REPO_NAME/releases/latest|grep tag_name|awk -F "\"" '{print $4}'|grep -oE [0-9].[0-9]*.[0-9]*`
-        FILE_NAME=`curl -s https://api.github.com/repos/$REPO_NAME/releases/latest|grep $FILE_VER.tar.xz|awk -F "\"" 'NR==1 {print $4}'`
-        DOWNLOAD_LINK=`curl -s https://api.github.com/repos/$REPO_NAME/releases/latest|grep -oE "https://github.com.*$FILE_VER.tar.xz"`
+        FILE_VER=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/$REPO_NAME/releases/latest|grep tag_name|awk -F "\"" '{print $4}'|grep -oE [0-9].[0-9]*.[0-9]*`
+        FILE_NAME=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/$REPO_NAME/releases/latest|grep $FILE_VER.tar.xz|awk -F "\"" 'NR==1 {print $4}'`
+        DOWNLOAD_LINK=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/$REPO_NAME/releases/latest|grep -oE "https://github.com.*$FILE_VER.tar.xz"`
         
         wget -q $DOWNLOAD_LINK --show-progress -O $FILE_NAME
         tar xf $FILE_NAME
         cd `echo $FILE_NAME|sed "s/.tar.xz//g"`
+        sed -i s"/\"1\"\, 1\, 16\, \'x\'/\"1\"\, 1\, 64\, \'x\'/g" ./src/OptionHandlerFactory.cc
         sed -i s"/1\, 16\,/1\, 64\,/" ./src/OptionHandlerFactory.cc
         
         HOST=x86_64-w64-mingw32
