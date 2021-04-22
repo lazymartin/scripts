@@ -33,7 +33,8 @@ jobs:
         wget -q $DOWNLOAD_LINK --show-progress -O $FILE_NAME
         tar xf $FILE_NAME
         cd `echo $FILE_NAME|sed "s/.tar.xz//g"`
-        sed -i s"/1\, 16\,/1\, 64\,/" ./src/OptionHandlerFactory.cc
+        sed -i "" s"/\"1\"\, 1\, 16\, \'x\'/\"1\"\, 1\, 64\, \'x\'/g" ./src/OptionHandlerFactory.cc
+        sed -i "" s"/\"5\"\, 1\, -1, \'j\'/\"5\"\, 1\, -1\, \'j\'/g" ./src/OptionHandlerFactory.cc
         autoreconf -i
         autoconf -i
         ./configure ARIA2_STATIC=yes
@@ -58,3 +59,4 @@ jobs:
         tag: "Last_release"
         overwrite: true
         file_glob: true
+
