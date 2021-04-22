@@ -7,9 +7,9 @@
 name: Compile aria2 macOS Latest release
 
 env:
-  TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-  TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-  shell: /bin/zsh -e {0}
+  # TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+  # TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+  # shell: /bin/zsh -e {0}
   TZ: Asia/Shanghai
 
 on:
