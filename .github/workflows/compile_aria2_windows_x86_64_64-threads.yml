@@ -68,7 +68,7 @@ jobs:
         # # OPENSSL=https://www.openssl.org/source/openssl-1.1.1i.tar.gz
         # EXPAT=https://github.com/libexpat/libexpat/releases/download/R_2_2_10/expat-2.2.10.tar.bz2
         # SQLITE3=https://sqlite.org/2020/sqlite-autoconf-3330000.tar.gz
-        C_ARES=https://c-ares.haxx.se/download/c-ares-1.16.1.tar.gz
+        C_ARES=https://c-ares.haxx.se/download/c-ares-1.17.0.tar.gz
         # SSH2=https://www.libssh2.org/download/libssh2-1.7.0.tar.gz
 
         ## CONFIG ##
@@ -99,8 +99,8 @@ jobs:
         # c-ares build
         cd ..
         $DOWNLOADER $C_ARES
-        tar zxvf c-ares-1.16.1.tar.gz
-        cd c-ares-1.16.1/
+        tar zxvf c-ares-1.17.0.tar.gz
+        cd c-ares-1.17.0/
         # tar zxvf c-ares-${C_ARES_ver}.tar.gz
         # cd c-ares-${C_ARES_ver}/
         CC=$HOST-gcc CXX=$HOST-g++ AR=$HOST-ar RANLIB=$HOST-ranlib ./configure --prefix=$PREFIX --host=$HOST --enable-static --disable-shared
@@ -134,7 +134,6 @@ jobs:
         CC=$HOST-gcc CXX=$HOST-g++ AR=$HOST-ar RANLIB=$HOST-ranlib ./configure --prefix=$PREFIX --host=$HOST --enable-static --disable-shared
         sudo make -j$(nproc)
         sudo make install
-        #
         
     - name: Compile
       run: |
@@ -147,7 +146,7 @@ jobs:
         tar xf $FILE_NAME
         cd `echo $FILE_NAME|sed "s/.tar.xz//g"`
         sed -i s"/\"1\"\, 1\, 16\, \'x\'/\"1\"\, 1\, 64\, \'x\'/g" ./src/OptionHandlerFactory.cc
-        sed -i s"/1\, 16\,/1\, 64\,/" ./src/OptionHandlerFactory.cc
+        sed -i s"/1\, 16\,/1\, 64\,/g" ./src/OptionHandlerFactory.cc
         
         HOST=x86_64-w64-mingw32
         PREFIX=/usr/x86_64-w64-mingw32
