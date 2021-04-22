@@ -133,6 +133,7 @@ jobs:
         sudo make -j$(nproc)
         sudo make install
         #
+        
     - name: Compile
       run: |
         REPO_NAME="aria2/aria2"
