@@ -36,6 +36,7 @@ jobs:
         
     - name: Install dependences
       id: dependences
+      continue-on-error: true
       run: |
         
         #IMPORTANT: Require install gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64
@@ -142,14 +143,6 @@ jobs:
         sudo make -j$(nproc)
         sudo make install
         
-        echo "::set-output name=status::success"
-        
-    - name: Telegram notification
-      #if: env.TELEGRAM_TOKEN && ! contains(github.event.action, 'notg')
-      continue-on-error: true
-      run: |
-        [ steps.dependences.outputs.status == 'success' ] && curl -k --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=true" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" || curl -k --data chat_id="${{ secrets.TELEGRAM_TO }}" --data "text=false" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
-        
     - name: Compile
       id: compile
       run: |
@@ -192,11 +185,12 @@ jobs:
         sudo make -j$(nproc)
         sudo $HOST-strip src/aria2c.exe
         
-    - name: Telegram notification
-      # if: env.TELEGRAM_TOKEN && ! contains(github.event.action, 'notg')
       continue-on-error: true
+        
+    - name: Telegram notification
+      if: steps.dependences.outcome != 'success' || steps.compile.outcome != 'success'
       run: |
-        [ steps.compile.outputs.status == 'success' ] && curl -k --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=true" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" || curl -k --data chat_id="${{ secrets.TELEGRAM_TO }}" --data "text=false" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
+        curl -k --data chat_id="${{ secrets.TELEGRAM_TO }}" --data "text=false" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
 
     - name: Assemble Artifact
       run: |
