@@ -146,8 +146,8 @@ jobs:
     - name: Telegram notification 1
       if: steps.dependences.outcome != 'success' || steps.compile.outcome != 'success'
       run: |
-        curl -k --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=false" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
-        exit 1
+        curl -s --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=Failed to install aria2 dependency, compilation terminated!!" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
+        exit
         
     - name: Compile
       id: compile
@@ -196,8 +196,8 @@ jobs:
     - name: Telegram notification 2
       if: steps.dependences.outcome != 'success' || steps.compile.outcome != 'success'
       run: |
-        curl -k --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=false" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
-        exit 1
+        curl -s --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=false" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
+        exit
 
     - name: Assemble Artifact
       run: |
