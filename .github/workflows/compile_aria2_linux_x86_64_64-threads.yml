@@ -50,7 +50,7 @@ jobs:
         # EXPAT=https://github.com/libexpat/libexpat/releases/download/R_2_2_10/expat-2.2.10.tar.bz2
         SQLITE3_ver_1=`curl -s https://www.sqlite.org/download.html|grep -oE "sqlite-autoconf-[0-9]{7}"|grep -m 1 -oE "[0-9]{7}"`
         SQLITE3_ver_2=`curl -s https://www.sqlite.org/download.html|grep "sqlite-autoconf"|awk -F "\'" 'NR==2 {print $4}'`
-        SQLITE3=https://sqlite.org/{SQLITE3_ver_2}
+        SQLITE3=https://sqlite.org/${SQLITE3_ver_2}
         # SQLITE3=https://sqlite.org/2020/sqlite-autoconf-3330000.tar.gz
         C_ARES_ver=`curl -s https://c-ares.haxx.se/download/|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"|head -n 1`
         C_ARES=https://c-ares.haxx.se/download/c-ares-${C_ARES_ver}.tar.gz
