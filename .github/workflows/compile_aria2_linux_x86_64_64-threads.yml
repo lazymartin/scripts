@@ -45,7 +45,7 @@ jobs:
         OPENSSL=http://www.openssl.org/source/openssl-${OPENSSL_ver}.tar.gz
         # OPENSSL=http://www.openssl.org/source/openssl-1.0.2u.tar.gz
         EXPAT_ver_1=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/libexpat/libexpat/releases/latest|grep tag_name|awk -F "\"" '{print $4}'`
-        EXPAT_ver_2=`echo ${file_version_1}|sed "s/R_//g;s/_/\./g"`
+        EXPAT_ver_2=`echo ${EXPAT_ver_1}|sed "s/R_//g;s/_/\./g"`
         EXPAT=https://github.com/libexpat/libexpat/releases/download/${EXPAT_ver_1}/expat-${EXPAT_ver_2}.tar.bz2
         # EXPAT=https://github.com/libexpat/libexpat/releases/download/R_2_2_10/expat-2.2.10.tar.bz2
         SQLITE3_ver=`curl -s https://www.sqlite.org/download.html|grep -oE "sqlite-autoconf-[0-9]{7}"|grep -m 1 -oE "[0-9]{7}"`
