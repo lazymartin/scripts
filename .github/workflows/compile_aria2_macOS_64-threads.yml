@@ -9,6 +9,7 @@ name: Compile aria2 macOS Latest release
 env:
   TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
   TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+  shell: zsh {0}
   TZ: Asia/Shanghai
 
 on:
@@ -34,12 +35,11 @@ jobs:
       # if: steps.dependences.outcome != 'success' || steps.compile.outcome != 'success'
       if: steps.dependences.outcome != 'success'
       run: |
-        curl -s --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=Failed to install aria2 dependency, compilation terminated!!" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
+        curl -s --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=Failed to install aria2 macOS_x86_x64 dependency, compilation terminated!!" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
 
     - name: Compile
       id: compile
       continue-on-error: true
-      shell: zsh {0} 
       run: |
         cd ~
         FILE_VER=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/aria2/aria2/releases/latest|grep tag_name|awk -F "\"" '{print $4}'|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
@@ -60,7 +60,7 @@ jobs:
     - name: Check compilation
       if: steps.compile.outcome != 'success'
       run: |
-        curl -s --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=Compiling aria2 failed!!" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
+        curl -s --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=Compiling aria2 macOS_x86_x64 failed!!" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
 
     - name: Assemble Artifact
       run: |
