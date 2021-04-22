@@ -26,9 +26,9 @@ jobs:
       shell: zsh {0} 
       run: |
         cd ~
-        FILE_VER=`curl -s --header "Authorization: token ${{ secrets.MY_TOKEN }}" https://api.github.com/repos/aria2/aria2/releases/latest|grep tag_name|awk -F "\"" '{print $4}'|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
-        FILE_NAME=`curl -s --header "Authorization: token ${{ secrets.MY_TOKEN }}" https://api.github.com/repos/aria2/aria2/releases/latest|grep $FILE_VER.tar.xz|awk -F "\"" 'NR==1 {print $4}'`
-        DOWNLOAD_LINK=`curl -s --header "Authorization: token ${{ secrets.MY_TOKEN }}" https://api.github.com/repos/aria2/aria2/releases/latest|grep -oE "https://github.com.*$FILE_VER.tar.xz"`
+        FILE_VER=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/aria2/aria2/releases/latest|grep tag_name|awk -F "\"" '{print $4}'|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
+        FILE_NAME=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/aria2/aria2/releases/latest|grep $FILE_VER.tar.xz|awk -F "\"" 'NR==1 {print $4}'`
+        DOWNLOAD_LINK=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/aria2/aria2/releases/latest|grep -oE "https://github.com.*$FILE_VER.tar.xz"`
         
         wget -q $DOWNLOAD_LINK --show-progress -O $FILE_NAME
         tar xf $FILE_NAME
