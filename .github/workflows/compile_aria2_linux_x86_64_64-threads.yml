@@ -35,33 +35,27 @@ jobs:
         C_COMPILER="gcc"
         CXX_COMPILER="g++"
         
-        #CHECK TOOL FOR DOWNLOAD
-         aria2c --help > /dev/null
-         if [ "$?" -eq 0 ] ; then
-           DOWNLOADER="aria2c --check-certificate=false"
-         else
-           DOWNLOADER="wget -c"
-         fi
+        DOWNLOADER="wget -c"
         
         ## DEPENDENCES ##
-        file_version=`curl -s http://www.zlib.net/|grep -A 3 "Current release"|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
-        ZLIB=http://www.zlib.net/zlib-${file_version}.tar.gz
+        ZLIB_ver=`curl -s http://www.zlib.net/|grep -A 3 "Current release"|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
+        ZLIB=http://www.zlib.net/zlib-${ZLIB_ver}.tar.gz
         # ZLIB=http://sourceforge.net/projects/libpng/files/zlib/1.2.11/zlib-1.2.11.tar.gz
-        file_version=`curl -s https://www.openssl.org/source/|grep -oE "[0-9]\.[0-9]{1,2}\.[0-9]{1,2}[a-z]"|sort|uniq|tail -n 1`
-        OPENSSL=http://www.openssl.org/source/openssl-${file_version}.tar.gz
+        OPENSSL_ver=`curl -s https://www.openssl.org/source/|grep -oE "[0-9]\.[0-9]{1,2}\.[0-9]{1,2}[a-z]"|sort|uniq|tail -n 1`
+        OPENSSL=http://www.openssl.org/source/openssl-${OPENSSL_ver}.tar.gz
         # OPENSSL=http://www.openssl.org/source/openssl-1.0.2u.tar.gz
-        file_version_1=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/libexpat/libexpat/releases/latest|grep tag_name|awk -F "\"" '{print $4}'`
-        file_version_2=`echo ${file_version_1}|sed "s/R_//g;s/_/\./g"`
-        EXPAT=https://github.com/libexpat/libexpat/releases/download/${file_version_1}/expat-${file_version_2}.tar.bz2
+        EXPAT_ver_1=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/libexpat/libexpat/releases/latest|grep tag_name|awk -F "\"" '{print $4}'`
+        EXPAT_ver_2=`echo ${file_version_1}|sed "s/R_//g;s/_/\./g"`
+        EXPAT=https://github.com/libexpat/libexpat/releases/download/${EXPAT_ver_1}/expat-${EXPAT_ver_2}.tar.bz2
         # EXPAT=https://github.com/libexpat/libexpat/releases/download/R_2_2_10/expat-2.2.10.tar.bz2
-        file_version=`curl -s https://www.sqlite.org/download.html|grep sqlite-autoconf|awk -F "\'" 'NR==2 {print $4}'`
-        SQLITE3=https://sqlite.org/${file_version}
+        SQLITE3_ver=`curl -s https://www.sqlite.org/download.html|grep -oE "sqlite-autoconf-[0-9]{7}"|grep -m 1 -oE "[0-9]{7}"`
+        SQLITE3=https://sqlite.org/2020/sqlite-autoconf-${SQLITE3_ver}.tar.gz
         # SQLITE3=https://sqlite.org/2020/sqlite-autoconf-3330000.tar.gz
-        file_version=`curl -s https://c-ares.haxx.se/download/|grep -oE "\/download\/c-ares-([0-9]{1,2}\.){2}[0-9]{1,2}\.tar\.gz"|head -n 1`
-        C_ARES=https://c-ares.haxx.se${file_version}
+        C_ARES_ver=`curl -s https://c-ares.haxx.se/download/|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"|head -n 1`
+        C_ARES=https://c-ares.haxx.se/download/c-ares-${C_ARES_ver}.tar.gz
         # C_ARES=https://c-ares.haxx.se/download/c-ares-1.16.1.tar.gz
-        file_version=`curl -s https://www.libssh2.org|grep "The latest release"|awk -F "\"" '{print $2}'`
-        SSH2=https://www.libssh2.org/${file_version}
+        SSH2_ver=`curl -s https://www.libssh2.org|grep "The latest release"|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
+        SSH2=https://www.libssh2.org/download/libssh2-${SSH2_ver}.tar.gz
         # SSH2=https://www.libssh2.org/download/libssh2-1.7.0.tar.gz
         
         ## CONFIG ##
@@ -72,8 +66,8 @@ jobs:
         #
          # zlib build
           $DOWNLOADER $ZLIB
-          tar zxvf zlib-1.2.11.tar.gz
-          cd zlib-1.2.11/
+          tar zxvf zlib-${ZLIB_ver}.tar.gz
+          cd zlib-${ZLIB_ver}/
           PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig/ LD_LIBRARY_PATH=$PREFIX/lib/ CC="$C_COMPILER" CXX="$CXX_COMPILER" ./configure --prefix=$PREFIX --static
           make -j$(nproc)
           make install
@@ -81,8 +75,8 @@ jobs:
          # expat build
           cd ..
           $DOWNLOADER $EXPAT
-          tar jxvf expat-2.2.10.tar.bz2
-          cd expat-2.2.10/
+          tar jxvf expat-${EXPAT_ver_2}.tar.bz2
+          cd expat-${EXPAT_ver_2}/
           PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig/ LD_LIBRARY_PATH=$PREFIX/lib/ CC="$C_COMPILER" CXX="$CXX_COMPILER" ./configure --prefix=$PREFIX --enable-static --enable-shared
           make -j$(nproc)
           make install
@@ -90,8 +84,8 @@ jobs:
          # c-ares build
           cd ..
           $DOWNLOADER $C_ARES
-          tar zxvf c-ares-1.16.1.tar.gz
-          cd c-ares-1.16.1/
+          tar zxvf c-ares-${C_ARES_ver}.tar.gz
+          cd c-ares-${C_ARES_ver}/
           PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig/ LD_LIBRARY_PATH=$PREFIX/lib/ CC="$C_COMPILER" CXX="$CXX_COMPILER" ./configure --prefix=$PREFIX --enable-static --disable-shared
           make -j$(nproc)
           make install
@@ -99,8 +93,8 @@ jobs:
          # Openssl build
           cd ..
           $DOWNLOADER $OPENSSL
-          tar zxvf openssl-1.0.2u.tar.gz
-          cd openssl-1.0.2u/
+          tar zxvf openssl-${OPENSSL_ver}.tar.gz
+          cd openssl-${OPENSSL_ver}/
           PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig/ LD_LIBRARY_PATH=$PREFIX/lib/ CC="$C_COMPILER" CXX="$CXX_COMPILER" ./Configure --prefix=$PREFIX linux-x86_64 shared
           make -j$(nproc)
           make install
@@ -108,8 +102,8 @@ jobs:
          # sqlite3
           cd ..
           $DOWNLOADER $SQLITE3
-          tar zxvf sqlite-autoconf-3330000.tar.gz
-          cd sqlite-autoconf-3330000/
+          tar zxvf sqlite-autoconf-${SQLITE3_ver}.tar.gz
+          cd sqlite-autoconf-${SQLITE3_ver}/
           PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig/ LD_LIBRARY_PATH=$PREFIX/lib/ CC="$C_COMPILER" CXX="$CXX_COMPILER" ./configure --prefix=$PREFIX --enable-static --enable-shared
           make -j$(nproc)
           make install
@@ -117,8 +111,8 @@ jobs:
          # libssh2
           cd ..
           $DOWNLOADER $SSH2
-          tar zxvf libssh2-1.7.0.tar.gz
-          cd libssh2-1.7.0/
+          tar zxvf libssh2-${SSH2_ver}.tar.gz
+          cd libssh2-${SSH2_ver}/
           rm -rf $PREFIX/lib/pkgconfig/libssh2.pc
           PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig/ LD_LIBRARY_PATH=$PREFIX/lib/ CC="$C_COMPILER" CXX="$CXX_COMPILER" ./configure --without-libgcrypt --with-openssl --without-wincng --prefix=$PREFIX --enable-static --disable-shared
           make -j$(nproc)
