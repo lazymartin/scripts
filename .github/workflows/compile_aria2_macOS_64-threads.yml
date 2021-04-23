@@ -29,7 +29,7 @@ jobs:
       continue-on-error: true
       run: |
         brew install gmp autoconf automake cppunit libtool libxml2 gettext openssl pkg-config sqlite zlib
-        brew link gettext --force
+        brew link --force gmp autoconf automake cppunit libtool libxml2 gettext openssl pkg-config sqlite zlib
     - name: Check dependency installation
       # if: steps.dependences.outcome != 'success' || steps.compile.outcome != 'success'
       if: steps.dependences.outcome != 'success'
@@ -49,9 +49,35 @@ jobs:
         cd `echo $FILE_NAME|sed "s/.tar.xz//g"`
         sed -i "" s"/\"1\"\, 1\, 16\, \'x\'/\"1\"\, 1\, 64\, \'x\'/g" ./src/OptionHandlerFactory.cc
         sed -i "" s"/\"5\"\, 1\, -1, \'j\'/\"5\"\, 1\, -1\, \'j\'/g" ./src/OptionHandlerFactory.cc
-        autoreconf -i
-        autoconf -i
-        ./configure ARIA2_STATIC=yes
+
+        export LIBEXPAT_LIBS="-L/usr/local/opt/expat/lib"
+        export LIBEXPAT_CFLAGS="-I/usr/local/opt/expat/include"
+        export LDFLAGS="-L/usr/local/lib"
+        export CPPFLAGS="-I/usr/local/include"
+
+        #autoreconf -i
+        #autoconf -i
+        #./configure ARIA2_STATIC=yes
+        ./configure  --enable-static \
+                --disable-shared \
+                --enable-metalink \
+                --enable-bittorrent \
+                --disable-nls \
+                --with-appletls \
+                --with-libgmp \
+                --with-sqlite3 \
+                --with-libz \
+                --with-libexpat \
+                --with-libcares \
+                --with-libgcrypt \
+                --with-libssh2 \
+                --without-libuv \
+                --without-gnutls \
+                --without-openssl \
+                --without-libnettle \
+                --without-libxml2 \
+                ARIA2_STATIC=yes
+        
         make check
         sudo make
         
