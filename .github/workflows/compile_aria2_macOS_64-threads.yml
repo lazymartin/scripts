@@ -50,6 +50,16 @@ jobs:
         sed -i "" s"/\"1\"\, 1\, 16\, \'x\'/\"1\"\, 1\, 64\, \'x\'/g" ./src/OptionHandlerFactory.cc
         sed -i "" s"/\"5\"\, 1\, -1, \'j\'/\"5\"\, 1\, -1\, \'j\'/g" ./src/OptionHandlerFactory.cc
 
+        export PATH="/usr/local/opt/libxml2/bin:$PATH"
+        export LDFLAGS="-L/usr/local/opt/libxml2/lib"
+        export CPPFLAGS="-I/usr/local/opt/libxml2/include"
+        PKG_CONFIG_PATH="/usr/local/opt/libxml2/lib/pkgconfig"
+        
+        export PATH="/usr/local/opt/libssh2/bin:$PATH"        
+        export LDFLAGS="-L/usr/local/opt/libssh2/lib"         
+        export CPPFLAGS="-I/usr/local/opt/libssh2/include"    
+        PKG_CONFIG_PATH="/usr/local/opt/libssh2/lib/pkgconfig"
+
         export LIBEXPAT_LIBS="-L/usr/local/opt/expat/lib"
         export LIBEXPAT_CFLAGS="-I/usr/local/opt/expat/include"
         export LDFLAGS="-L/usr/local/lib"
