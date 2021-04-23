@@ -28,8 +28,8 @@ jobs:
       id: dependences
       continue-on-error: true
       run: |
-        brew install libssh2 gmp autoconf automake cppunit libtool libxml2 gettext openssl pkg-config sqlite zlib
-        brew link --force libssh2 gmp autoconf automake cppunit libtool libxml2 gettext openssl pkg-config sqlite zlib
+        brew install pkg-config libssh2 gmp autoconf automake cppunit libtool libxml2 gettext openssl pkg-config sqlite zlib
+        brew link --force pkg-config libssh2 gmp autoconf automake cppunit libtool libxml2 gettext openssl pkg-config sqlite zlib
     - name: Check dependency installation
       # if: steps.dependences.outcome != 'success' || steps.compile.outcome != 'success'
       if: steps.dependences.outcome != 'success'
