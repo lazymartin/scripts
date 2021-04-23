@@ -60,7 +60,6 @@ jobs:
         export CPPFLAGS="-I/usr/local/opt/libssh2/include"    
         PKG_CONFIG_PATH="/usr/local/opt/libssh2/lib/pkgconfig"
 
-        export DYLD_LIBRARY_PATH="/usr/local/Cellar/openssl@1.1/1.1.1k/lib:$DYLD_LIBRARY_PATH"
         export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"
         export LDFLAGS="-L/usr/local/opt/openssl@1.1/lib"
         export CPPFLAGS="-I/usr/local/opt/openssl@1.1/include"
@@ -80,6 +79,13 @@ jobs:
         export LDFLAGS="-L/usr/local/lib"
         export CPPFLAGS="-I/usr/local/include"
 
+
+        export ZLIB_LIBS="/opt/local/lib/libz.a"
+        export OPENSSL_LIBS="-L/usr/lib -lssl -L/usr/lib -lcrypto"
+        export LIBCARES_LIBS="/opt/local/lib/libcares.a"
+        export CPPFLAGS="-I/opt/local/include"
+        export LDFLAGS="-static-libstdc++"
+        export LIBS="/opt/local/lib/libintl.a /opt/local/lib/libcrypto.a /opt/local/lib/libiconv.a"        
         CC="gcc -arch i386 -arch x86_64" 
         CXX="g++ -arch i386 -arch x86_64" 
         CPP="gcc -E" 
