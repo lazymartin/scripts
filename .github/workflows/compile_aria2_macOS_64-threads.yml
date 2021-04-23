@@ -87,12 +87,7 @@ jobs:
         #autoreconf -i
         #autoconf -i
         #./configure ARIA2_STATIC=yes
-        ./configure  --enable-static \
-                --disable-shared \
-                --enable-metalink \
-                --disable-epoll
-                --enable-bittorrent \
-                --disable-nls \
+        ./configure \
                 --without-appletls \
                 --without-libgmp \
                 --with-sqlite3 \
