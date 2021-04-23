@@ -79,16 +79,21 @@ jobs:
         export LDFLAGS="-L/usr/local/lib"
         export CPPFLAGS="-I/usr/local/include"
 
-        # CC="gcc -arch i386 -arch x86_64" 
-        # CXX="g++ -arch i386 -arch x86_64" 
-        # CPP="gcc -E" 
-        # CXXCPP="g++ -E"
+        CC="gcc -arch i386 -arch x86_64" 
+        CXX="g++ -arch i386 -arch x86_64" 
+        CPP="gcc -E" 
+        CXXCPP="g++ -E"
 
         #autoreconf -i
         #autoconf -i
         #./configure ARIA2_STATIC=yes
         ./configure \
                 --enable-static \
+                --disable-shared \
+                --disable-nls \
+                --disable-epoll \
+                --enable-metalink \
+                --enable-bittorrent \
                 --without-appletls \
                 --without-libgmp \
                 --with-sqlite3 \
