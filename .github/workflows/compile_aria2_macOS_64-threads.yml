@@ -63,9 +63,7 @@ jobs:
         export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"
         export LDFLAGS="-L/usr/local/opt/openssl@1.1/lib"
         export CPPFLAGS="-I/usr/local/opt/openssl@1.1/include"
-        # export PKG_CONFIG_PATH="/usr/local/opt/openssl@1.1/lib/pkgconfig"
         export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/local/opt/openssl/lib/pkgconfig"
-        # ln -s /usr/local/opt/openssl@1.1/include/openssl /usr/local/include
 
         export PATH="/usr/local/opt/sqlite/bin:$PATH"
         export LDFLAGS="-L/usr/local/opt/sqlite/lib"
@@ -81,20 +79,21 @@ jobs:
         export LDFLAGS="-L/usr/local/lib"
         export CPPFLAGS="-I/usr/local/include"
 
-        # export ZLIB_LIBS="/opt/local/lib/libz.a"
-        # export OPENSSL_LIBS="-L/usr/lib -lssl -L/usr/lib -lcrypto"
-        # export LIBCARES_LIBS="/opt/local/lib/libcares.a"
-        # export CPPFLAGS="-I/opt/local/include"
-        # export LDFLAGS="-static-libstdc++"
-        # export LIBS="/opt/local/lib/libintl.a /opt/local/lib/libcrypto.a /opt/local/lib/libiconv.a"        
-        # CC="gcc -arch i386 -arch x86_64" 
-        # CXX="g++ -arch i386 -arch x86_64" 
-        # CPP="gcc -E" 
-        # CXXCPP="g++ -E"
+        export ZLIB_LIBS="/opt/local/lib/libz.a"
+        export OPENSSL_LIBS="-L/usr/lib -lssl -L/usr/lib -lcrypto"
+        export LIBCARES_LIBS="/opt/local/lib/libcares.a"
+        export CPPFLAGS="-I/opt/local/include"
+        export LDFLAGS="-static-libstdc++"
+        export LIBS="/opt/local/lib/libintl.a /opt/local/lib/libcrypto.a /opt/local/lib/libiconv.a"        
+        CC="gcc -arch i386 -arch x86_64" 
+        CXX="g++ -arch i386 -arch x86_64" 
+        CPP="gcc -E" 
+        CXXCPP="g++ -E"
+        CXXFLAGS="-O2 -std=c++14"
 
-        #autoreconf -i
+        autoreconf -i
         #autoconf -i
-        #./configure ARIA2_STATIC=yes
+        ARIA2_STATIC=yes
         ./configure \
                 --enable-static \
                 --disable-shared \
@@ -118,12 +117,14 @@ jobs:
                 ARIA2_STATIC=yes
         
         # make check
-        sudo make
+        sudo make -j8
+        strip -s ./src/aria2c
         
     - name: Check compilation
       if: steps.compile.outcome != 'success'
       run: |
         curl -s --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=Compiling aria2 macOS_x86_x64 failed!!" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
+
     - name: Assemble Artifact
       shell: zsh {0} 
       run: |
