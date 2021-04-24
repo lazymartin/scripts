@@ -80,21 +80,12 @@ jobs:
         export LDFLAGS="-L/usr/local/lib"
         export CPPFLAGS="-I/usr/local/include"
 
-<<<<<<< HEAD
         # export ZLIB_LIBS="/opt/local/lib/libz.a"
         # export OPENSSL_LIBS="-L/usr/lib -lssl -L/usr/lib -lcrypto"
         # export LIBCARES_LIBS="/opt/local/lib/libcares.a"
         # export CPPFLAGS="-I/opt/local/include"
         # export LDFLAGS="-static-libstdc++"
         # export LIBS="/opt/local/lib/libintl.a /opt/local/lib/libcrypto.a /opt/local/lib/libiconv.a"        
-=======
-        export ZLIB_LIBS="/opt/local/lib/libz.a"
-        export OPENSSL_LIBS="-L/usr/lib -lssl -L/usr/lib -lcrypto"
-        export LIBCARES_LIBS="/opt/local/lib/libcares.a"
-        export CPPFLAGS="-I/opt/local/include"
-        export LDFLAGS="-static-libstdc++"
-        export LIBS="/opt/local/lib/libintl.a /opt/local/lib/libcrypto.a /opt/local/lib/libiconv.a"        
->>>>>>> 4be3b15cdc0041ea596daaddf44433a6e9ec916f
         # CC="gcc -arch i386 -arch x86_64" 
         # CXX="g++ -arch i386 -arch x86_64" 
         # CPP="gcc -E" 
