@@ -89,12 +89,10 @@ jobs:
         CXX="g++ -arch i386 -arch x86_64" 
         CPP="gcc -E" 
         CXXCPP="g++ -E"
-        CXXFLAGS="-O2 -std=c++14"
 
         autoreconf -i
-        #autoconf -i
-        ARIA2_STATIC=yes
         ./configure \
+                --prefix=/usr/local
                 --enable-static \
                 --disable-shared \
                 --disable-nls \
@@ -114,6 +112,7 @@ jobs:
                 --with-openssl \
                 --without-libnettle \
                 --without-libxml2 \
+                CXXFLAGS="-O2 -std=c++14" \
                 ARIA2_STATIC=yes
         
         # make check
