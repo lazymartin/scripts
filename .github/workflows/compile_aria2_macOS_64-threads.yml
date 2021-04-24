@@ -109,7 +109,7 @@ jobs:
                 --with-libexpat \
                 --with-libcares \
                 --without-libgcrypt \
-                --with-libssh2 \
+                --without-libssh2 \
                 --without-libuv \
                 --without-gnutls \
                 --with-openssl \
@@ -117,7 +117,7 @@ jobs:
                 --without-libxml2 \
                 ARIA2_STATIC=yes
         
-        make check
+        # make check
         sudo make
         
     - name: Check compilation
