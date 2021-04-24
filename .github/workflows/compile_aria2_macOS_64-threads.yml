@@ -107,7 +107,7 @@ jobs:
                 --with-openssl \
                 --without-libnettle \
                 --without-libxml2 \
-i               CXXFLAGS="-O2 -std=c++14" \
+                CXXFLAGS="-O2 -std=c++14" \
                 CPPFLAGS="-fsanitize=address" \
                 LDFLAGS="-fsanitize=address" \
                 ARIA2_STATIC=yes
