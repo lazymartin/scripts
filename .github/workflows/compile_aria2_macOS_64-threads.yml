@@ -80,6 +80,9 @@ jobs:
         export LDFLAGS="-L/usr/local/lib"
         export CPPFLAGS="-I/usr/local/include"
 
+        CC="gcc-8"
+        CXX="g++-8"
+ 
         autoreconf -i
         autoconf -i
         #./configure ARIA2_STATIC=yes
@@ -104,9 +107,7 @@ jobs:
                 --with-openssl \
                 --without-libnettle \
                 --without-libxml2 \
-                CC="gcc-8" \
-                CXX="g++-8" \
-                CXXFLAGS="-O2 -std=c++14" \
+i               CXXFLAGS="-O2 -std=c++14" \
                 CPPFLAGS="-fsanitize=address" \
                 LDFLAGS="-fsanitize=address" \
                 ARIA2_STATIC=yes
