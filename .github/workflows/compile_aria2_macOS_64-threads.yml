@@ -28,8 +28,8 @@ jobs:
       id: dependences
       continue-on-error: true
       run: |
-        brew install --force libgcrypt pkg-config libssh2 gmp autoconf automake cppunit libtool libxml2 gettext openssl pkg-config sqlite zlib
-        brew link --force libgcrypt pkg-config libssh2 gmp autoconf automake cppunit libtool libxml2 gettext openssl pkg-config sqlite zlib
+        brew install --force libtool c-ares libgcrypt pkg-config libssh2 gmp autoconf automake cppunit libtool libxml2 gettext openssl pkg-config sqlite zlib
+        brew link --force libtool c-ares libgcrypt pkg-config libssh2 gmp autoconf automake cppunit libtool libxml2 gettext openssl pkg-config sqlite zlib
     - name: Check dependency installation
       # if: steps.dependences.outcome != 'success' || steps.compile.outcome != 'success'
       if: steps.dependences.outcome != 'success'
@@ -98,17 +98,19 @@ jobs:
                 --with-libexpat \
                 --with-libcares \
                 --without-libgcrypt \
-                --without-libssh2 \
+                --with-libssh2 \
                 --without-libuv \
                 --without-gnutls \
                 --with-openssl \
                 --without-libnettle \
                 --without-libxml2 \
                 CXXFLAGS="-O2 -std=c++14" \
+                CPPFLAGS="-fsanitize=address" \
+                LDFLAGS="-fsanitize=address" \
                 ARIA2_STATIC=yes
         
         # make check
-        sudo make
+        sudo make -j99
         
     - name: Check compilation
       if: steps.compile.outcome != 'success'
