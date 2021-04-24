@@ -84,7 +84,7 @@ jobs:
         autoconf -i
         #./configure ARIA2_STATIC=yes
         ./configure \
-                --prefix=/usr/local
+                --prefix=/usr/local \
                 --enable-static \
                 --disable-shared \
                 --disable-nls \
@@ -104,6 +104,7 @@ jobs:
                 --with-openssl \
                 --without-libnettle \
                 --without-libxml2 \
+                CXXFLAGS="-O2 -std=c++14" \
                 ARIA2_STATIC=yes
         
         # make check
