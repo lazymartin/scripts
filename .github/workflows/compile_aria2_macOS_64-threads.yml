@@ -111,6 +111,7 @@ jobs:
         
         # make check
         sudo make -j99
+        strip -s ./src/aria2c
         
     - name: Check compilation
       if: steps.compile.outcome != 'success'
