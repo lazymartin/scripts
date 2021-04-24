@@ -112,7 +112,6 @@ jobs:
                 --with-openssl \
                 --without-libnettle \
                 --without-libxml2 \
-                CXXFLAGS="-O2 -std=c++14" \
                 ARIA2_STATIC=yes
         
         # make check
