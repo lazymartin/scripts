@@ -115,6 +115,7 @@ jobs:
         # make check
         sudo make -j99
         sudo make check -j99
+        sudo make install
         # strip -s ./src/aria2c
         
     - name: Check compilation
