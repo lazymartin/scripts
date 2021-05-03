@@ -18,4 +18,9 @@ bash <(wget --no-check-certificate -qO- 'https://raw.githubusercontent.com/lazym
         -p 'xxx'  -->  password  
         -a        -->  auto install  
         --mirror  -->  mirror site  
+
+    `ATTENTION:`
+    The original system recommends using ubuntu 18.04
+
 ```
+
