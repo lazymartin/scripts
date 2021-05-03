@@ -7,10 +7,9 @@
 [aria2 compile script](https://github.com/q3aql/aria2-static-builds)
 
 ## [DD system script](https://github.com/veip007/dd)
-#    `ATTENTION:`
+### useage:
+###    `ATTENTION:`
     The original system recommends using ubuntu 18.04
-
-# useage:
 ```
 bash <(wget --no-check-certificate -qO- 'https://raw.githubusercontent.com/lazymartin/scripts/master/dd.sh') -d 10 -v 64 -p 'xxx' -a --mirror 'http://mirrors.aliyun.com/debian'
 
