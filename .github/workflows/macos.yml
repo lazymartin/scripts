@@ -1,0 +1,71 @@
+#=================================================
+# Description: Build OpenWrt using GitHub Actions
+# Lisence: GPL-3.0
+# Author: lazymartin
+#=================================================
+
+name: Compile aria2 macOS Latest release
+
+env:
+  TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+  TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+  shell: bash
+  TZ: Asia/Shanghai
+
+on:
+  schedule:
+    - cron: '00 19 * * 0'
+  push:
+    paths: 
+      - '.github/workflows/macos.yml'
+    
+jobs:
+  build:
+    runs-on: macos-latest
+    
+    steps:
+    - name: Compile
+      id: compile
+      continue-on-error: true
+      run: |
+        cd ~
+        FILE_VER=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/aria2/aria2/releases/latest|grep tag_name|awk -F "\"" '{print $4}'|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
+        FILE_NAME=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/aria2/aria2/releases/latest|grep $FILE_VER.tar.xz|awk -F "\"" 'NR==1 {print $4}'`
+        DOWNLOAD_LINK=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/aria2/aria2/releases/latest|grep -oE "https://github.com.*$FILE_VER.tar.xz"`
+        
+        wget -q $DOWNLOAD_LINK --show-progress -O $FILE_NAME
+        tar xf $FILE_NAME
+        cd `echo $FILE_NAME|sed "s/.tar.xz//g"`
+        sed -i "" s"/\"1\"\, 1\, 16\, \'x\'/\"1\"\, 1\, 64\, \'x\'/g" ./src/OptionHandlerFactory.cc
+        sed -i "" s"/\"5\"\, 1\, -1, \'j\'/\"5\"\, 1\, -1\, \'j\'/g" ./src/OptionHandlerFactory.cc
+
+        sudo make -f makerelease-osx.mk  -j99
+        find ./ *.dmg
+        find ./ aria2*
+        # strip -s ./src/aria2c
+        
+    - name: Check compilation
+      if: steps.compile.outcome != 'success'
+      run: |
+        curl -s --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=Compiling aria2 macOS_x86_x64 failed!!" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
+    - name: Assemble Artifact
+      shell: zsh {0} 
+      run: |
+        mkdir -p ./artifact
+        FILE_VER=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/aria2/aria2/releases/latest|grep tag_name|awk -F "\"" '{print $4}'|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
+        ## work_path=`curl -s https://api.github.com/repos/aria2/aria2/releases/latest|grep $FILE_VER.tar.xz|awk -F "\"" 'NR==1 {print $4}'|gsed "s/.tar.xz//g"`
+        cp ~/aria2-${FILE_VER}/src/aria2c ./artifact/aria2c_macOS_64-threads
+        cd ~/aria2-${FILE_VER}/src/
+        chmod +x aria2c
+        ./aria2c -v
+        ./aria2c -h
+        
+    - name: Upload binaries to release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: ./artifact/*
+        tag: "Last_release"
+        overwrite: true
+        file_glob: true
+
