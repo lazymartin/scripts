@@ -53,12 +53,12 @@ jobs:
         export PATH="/usr/local/opt/libxml2/bin:$PATH"
         export LDFLAGS="-L/usr/local/opt/libxml2/lib"
         export CPPFLAGS="-I/usr/local/opt/libxml2/include"
-        PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/local/opt/libxml2/lib/pkgconfig"
+        export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/local/opt/libxml2/lib/pkgconfig"
         
         export PATH="/usr/local/opt/libssh2/bin:$PATH"        
         export LDFLAGS="-L/usr/local/opt/libssh2/lib"         
         export CPPFLAGS="-I/usr/local/opt/libssh2/include"    
-        PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/local/opt/libssh2/lib/pkgconfig"
+        export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/local/opt/libssh2/lib/pkgconfig"
 
         export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"
         export LDFLAGS="-L/usr/local/opt/openssl@1.1/lib"
@@ -82,10 +82,10 @@ jobs:
         CC="gcc-8"
         CXX="g++-8"
  
-        autoreconf -i
-        autoconf -i
-        #./configure ARIA2_STATIC=yes
-        ./configure -h
+        # autoreconf -i
+        # autoconf -i
+        # ./configure ARIA2_STATIC=yes
+        # ./configure -h
         ./configure \
                 --prefix=/usr/local \
                 --enable-libaria2 \
