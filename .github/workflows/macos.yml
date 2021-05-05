@@ -41,9 +41,10 @@ jobs:
 
         mkdir build-release
         cd build-release
+        pip3 install virtualenv
         virtualenv .
         . bin/activate
-        pip install sphinx-build
+        pip3 install sphinx-build
         ln -s ../makerelease-os.mk Makefile
         sudo make -j99
         find / *.dmg
