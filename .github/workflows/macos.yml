@@ -39,9 +39,15 @@ jobs:
         sed -i "" s"/\"1\"\, 1\, 16\, \'x\'/\"1\"\, 1\, 64\, \'x\'/g" ./src/OptionHandlerFactory.cc
         sed -i "" s"/\"5\"\, 1\, -1, \'j\'/\"5\"\, 1\, -1\, \'j\'/g" ./src/OptionHandlerFactory.cc
 
-        sudo make -f makerelease-osx.mk  -j99
-        find ./ *.dmg
-        find ./ aria2*
+        mkdir build-release
+        cd build-release
+        virtualenv .
+        . bin/activate
+        pip install sphinx-build
+        ln -s ../makerelease-os.mk Makefile
+        sudo make -j99
+        find / *.dmg
+        find / aria2*
         # strip -s ./src/aria2c
         
     - name: Check compilation
