@@ -56,8 +56,9 @@ jobs:
         mkdir -p ./artifact
         cp /home/runner/work/scripts/scripts/Xray-core/xray* artifact/
         cp /home/runner/work/scripts/scripts/Xray-core/geoip.dat artifact/
-        cp /home/runner/work/scripts/scripts/Xray-core/dlc.dat artifact/geosite.dat
-        
+        # cp /home/runner/work/scripts/scripts/Xray-core/dlc.dat artifact/geosite.dat
+        cp /home/runner/work/scripts/scripts/Xray-core/geosite.dat artifact/
+
     - name: Upload binaries to release
       uses: svenstaro/upload-release-action@v2
       with:
