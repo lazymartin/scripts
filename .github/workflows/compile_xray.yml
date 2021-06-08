@@ -54,10 +54,10 @@ jobs:
     - name: Assemble Artifact
       run: |
         mkdir -p ./artifact
-        cp ${{ evn.GITHUB_WORKSPACE }}/Xray-core/xray* artifact/
-        cp ${{ evn.GITHUB_WORKSPACE }}/Xray-core/geoip.dat artifact/
-        # cp ${{ GITHUB_WORKSPACE }}/Xray-core/dlc.dat artifact/geosite.dat
-        cp ${{ evn.GITHUB_WORKSPACE }}/Xray-core/geosite.dat artifact/
+        cp ${{ github.workspace }}/Xray-core/xray* artifact/
+        cp ${{ github.workspace }}/Xray-core/geoip.dat artifact/
+        # cp ${{ github.workspace }}/Xray-core/dlc.dat artifact/geosite.dat
+        cp ${{ github.workspace }}/Xray-core/geosite.dat artifact/
 
     - name: Upload binaries to release
       uses: svenstaro/upload-release-action@v2
