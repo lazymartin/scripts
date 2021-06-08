@@ -44,8 +44,7 @@ mv {geoip.dat,geosite.dat} /usr/local/share/xray/
 if [[ ! -f /usr/local/etc/xray/config.json ]]; then
   echo "{}" > /usr/local/etc/xray/config.json
   echo -e "${Yellow}
-  The configuration file is empty, please complete the configuration, and then restart xray!!
-${Green}
+  The configuration file is empty, please complete the configuration, and then restart xray!!${Green}
   Configuration examples:
   https://github.com/XTLS/Xray-examples${Font}"
 fi
