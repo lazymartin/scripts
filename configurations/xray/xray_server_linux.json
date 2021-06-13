@@ -60,7 +60,16 @@
   "outbounds": [
     {
       "protocol": "freedom",
-      "settings": {}
+      "settings": {
+        "domainStrategy": "UseIP"
+      }
+    },
+    {
+      "tag":"IPv6_out",
+      "protocol": "freedom",
+      "settings": {
+        "domainStrategy": "UseIPv6"
+      }
     },
     {
       "protocol": "blackhole",
@@ -69,9 +78,23 @@
     }
   ],
   
+  "dns": {
+    "hosts": {
+      "dns.google": "8.8.4.4"
+    },
+    "servers": [
+    "https://dns.google/dns-query"
+    ]
+  },
+
   "routing": {
     "domainStrategy": "AsIs",
     "rules": [
+      {
+        "type": "field",
+        "outboundTag": "IPv6_out",
+        "domain": ["geosite:netflix","nflxvideo.net","nflxext.com","nflxso.net"]
+      },
       {
         "type": "field",
         "outboundTag": "block",
