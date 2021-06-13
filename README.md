@@ -8,7 +8,7 @@
 
 # [DD system script](https://github.com/veip007/dd)
 
-The original system recommends using ubuntu 18.04
+The original system recommends using ubuntu 18.04 or centos 7.6
 
 ### `Useage`
 ```
