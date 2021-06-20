@@ -61,7 +61,7 @@
     {
       "protocol": "freedom",
       "settings": {
-        "domainStrategy": "UseIP"
+        "domainStrategy": "UseIPv4"
       }
     },
     {
@@ -80,7 +80,8 @@
   
   "dns": {
     "hosts": {
-      "dns.google": "8.8.4.4"
+      "dns.google": "8.8.4.4",
+      "dns.google": "2001:4860:4860::8844"
     },
     "servers": [
     "https://dns.google/dns-query"
