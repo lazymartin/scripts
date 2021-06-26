@@ -6,8 +6,8 @@ update_crt(){
   systemctl stop nginx &>/dev/null
   systemctl stop xray &>/dev/null
   ps -aux|grep -v grep|grep -E "nginx|xray"|awk -F " " '{print $2}'|xargs kill -9 &>/dev/null
-  curl -so /etc/ssl/web.crt -u ${webdav_username}:${webdav_password} ${webdav_link}/documents/ssl/${domain}.crt
-  curl -so /etc/ssl/web.key -u ${webdav_username}:${webdav_password} ${webdav_link}/documents/ssl/${domain}.key
+  curl -Rso /etc/ssl/web.crt -u ${webdav_username}:${webdav_password} ${webdav_link}/documents/ssl/${domain}.crt
+  curl -Rso /etc/ssl/web.key -u ${webdav_username}:${webdav_password} ${webdav_link}/documents/ssl/${domain}.key
   systemctl daemon-reload &>/dev/null
   systemctl start nginx &>/dev/null
   systemctl start xray &>/dev/null
