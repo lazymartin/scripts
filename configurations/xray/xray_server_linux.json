@@ -96,7 +96,17 @@
       {
         "type": "field",
         "outboundTag": "IPv6_out",
-        "domain": ["geosite:netflix","nflxvideo.net","nflxext.com","nflxso.net"]
+        "domain": [
+          "geosite:netflix",
+          "nflxvideo.net",
+          "nflxext.com",
+          "nflxso.net",
+          "scholar.google.cn",
+          "scholar.google.com",
+          "scholar.google.com.hk",
+          "scholar.google.com.tw",
+          "scholar.google.com.sg"
+        ]
       },
       {
         "type": "field",
