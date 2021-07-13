@@ -58,8 +58,8 @@ jobs:
         # SQLITE3_ver_1=`curl -s https://www.sqlite.org/download.html|grep -oE "sqlite-autoconf-[0-9]{7}"|grep -m 1 -oE "[0-9]{7}"`
         # SQLITE3_ver_2=`curl -s https://www.sqlite.org/download.html|grep "sqlite-autoconf"|awk -F "\'" 'NR==2 {print $4}'`
         # SQLITE3=https://sqlite.org/${SQLITE3_ver_2}
-        SQLITE3_ver=`curl -s https://github.com/sqlite/sqlite/releases|grep -oE "version-([0-9]{1,3}\.){3}tar.gz"|head -n 1`
-        SQLITE3=https://github.com/sqlite/sqlite/archive/refs/tags/${SQLITE3_ver}
+        SQLITE3_ver=`curl -s https://github.com/sqlite/sqlite/releases|grep -oE "version-([0-9]{1,3}\.){3}tar.gz"|head -n 1|grep -oE "([0-9]{1,3}\.){2}[0-9]{1,3}"`
+        SQLITE3=https://github.com/sqlite/sqlite/archive/refs/tags/version-${SQLITE3_ver}.tar.gz
         # SQLITE3=https://sqlite.org/2020/sqlite-autoconf-3330000.tar.gz
         C_ARES_ver=`curl -s https://c-ares.haxx.se/download/|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"|head -n 1`
         C_ARES=https://c-ares.haxx.se/download/c-ares-${C_ARES_ver}.tar.gz
@@ -112,8 +112,8 @@ jobs:
          # sqlite3
           cd ..
           $DOWNLOADER $SQLITE3
-          tar zxvf ${SQLITE3_ver}
-          cd ${SQLITE3_ver}/
+          tar zxvf version-${SQLITE3_ver}.tar.gz
+          cd sqlite-version-${SQLITE3_ver}/
           PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig/ LD_LIBRARY_PATH=$PREFIX/lib/ CC="$C_COMPILER" CXX="$CXX_COMPILER" ./configure --prefix=$PREFIX --enable-static --enable-shared
           make -j$(nproc)
           make install
