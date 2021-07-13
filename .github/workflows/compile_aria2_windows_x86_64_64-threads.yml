@@ -42,12 +42,7 @@ jobs:
         #IMPORTANT: Require install gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64
 
         #CHECK TOOL FOR DOWNLOAD
-        aria2c --help > /dev/null
-        if [ "$?" -eq 0 ] ; then
-          DOWNLOADER="aria2c --check-certificate=false"
-        else
-          DOWNLOADER="wget -c"
-        fi
+        DOWNLOADER="wget -c"
 
         ## DEPENDENCES ##
         ZLIB_ver=`curl -s http://www.zlib.net/|grep -A 3 "Current release"|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
@@ -126,7 +121,7 @@ jobs:
         # sqlite3
         cd ..
         $DOWNLOADER $SQLITE3
-        tar zxvf sqlite-version-${SQLITE3_ver}.tar.gz
+        tar zxvf version-${SQLITE3_ver}.tar.gz
         cd sqlite-version-${SQLITE3_ver}/
         CC=$HOST-gcc CXX=$HOST-g++ AR=$HOST-ar RANLIB=$HOST-ranlib ./configure --prefix=$PREFIX --host=$HOST --enable-static --enable-shared
         sudo make -j$(nproc)
