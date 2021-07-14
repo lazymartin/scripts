@@ -56,7 +56,7 @@ jobs:
         EXPAT=https://github.com/libexpat/libexpat/releases/download/${EXPAT_ver_1}/expat-${EXPAT_ver_2}.tar.bz2
         # EXPAT=https://github.com/libexpat/libexpat/releases/download/R_2_2_10/expat-2.2.10.tar.bz2
         SQLITE3_ver=`curl -s https://github.com/sqlite/sqlite/releases|grep -oE "version-([0-9]{1,3}\.){3}tar.gz"|head -n 1|grep -oE "([0-9]{1,3}\.){2}[0-9]{1,3}"`
-        SQLITE3=https://github.com/sqlite/sqlite/archive/refs/tags/version-${SQLITE3_ver}.tar.gz
+        SQLITE3=https://github.com/sqlite/sqlite/archive/refs/tags/version-3.35.5.tar.gz
         # SQLITE3=https://sqlite.org/2020/sqlite-autoconf-3330000.tar.gz
         #C_ARES_ver=`curl -s https://c-ares.haxx.se/download/|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"|head -n 1`
         #C_ARES=https://c-ares.haxx.se/download/c-ares-${C_ARES_ver}.tar.gz
@@ -121,8 +121,8 @@ jobs:
         # sqlite3
         cd ..
         $DOWNLOADER $SQLITE3
-        tar zxvf version-${SQLITE3_ver}.tar.gz
-        cd sqlite-version-${SQLITE3_ver}/
+        tar zxvf version-3.35.5.tar.gz
+        cd sqlite-version-3.35.5/
         CC=$HOST-gcc CXX=$HOST-g++ AR=$HOST-ar RANLIB=$HOST-ranlib ./configure --prefix=$PREFIX --host=$HOST --enable-static --enable-shared
         sudo make -j$(nproc)
         sudo make install
