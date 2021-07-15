@@ -59,7 +59,7 @@ jobs:
         # SQLITE3=https://github.com/sqlite/sqlite/archive/refs/tags/version-3.35.5.tar.gz
         SQLITE3_add=`curl -s https://www.sqlite.org/download.html|grep -oE "[0-9]{1,4}/sqlite-autoconf-[0-9]{1,7}.tar.gz"|head -n 1`
         SQLITE3_ver=`echo ${SQLITE3_add}|grep -oE "[0-9]{7}"`
-        SQLITE3=`https://sqlite.org/${SQLITE3_add}`
+        SQLITE3="https://sqlite.org/${SQLITE3_add}"
         # SQLITE3=https://sqlite.org/2020/sqlite-autoconf-3330000.tar.gz
         #C_ARES_ver=`curl -s https://c-ares.haxx.se/download/|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"|head -n 1`
         #C_ARES=https://c-ares.haxx.se/download/c-ares-${C_ARES_ver}.tar.gz
