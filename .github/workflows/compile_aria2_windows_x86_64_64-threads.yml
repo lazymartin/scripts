@@ -45,6 +45,9 @@ jobs:
         DOWNLOADER="wget -c"
 
         ## DEPENDENCES ##
+        GMP_ver1=`curl -s https://gmplib.org/|grep -oE 'gmp-([0-9]{1,3}\.){3}tar.lz'|head -n 1`
+        GMP_ver2=`echo ${GMP_ver1}|sed "s/.tar.lz//"`
+        GMP=https://gmplib.org/download/gmp/${GMP_ver1}
         ZLIB_ver=`curl -s http://www.zlib.net/|grep -A 3 "Current release"|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
         ZLIB=http://www.zlib.net/zlib-${ZLIB_ver}.tar.gz
         # ZLIB=http://sourceforge.net/projects/libpng/files/zlib/1.2.11/zlib-1.2.11.tar.gz
@@ -80,12 +83,36 @@ jobs:
 
         ## BUILD ##
         cd $BUILD_DIRECTORY
+        
+        # gmp build
+        $DOWNLOADER $GMP
+        tar xf ${GMP_ver1}
+        cd ${GMP_ver2}
+        ./configure \
+            --disable-shared \
+            --enable-static \
+            --prefix=/usr/local/$HOST \
+            --host=$HOST \
+            --disable-cxx \
+            --enable-fat \
+            CFLAGS="-mtune=generic -O2 -g0" && \
+        sudo make -j$(nproc)
+        sudo make install
 
         # zlib build
         $DOWNLOADER $ZLIB
         tar zxvf zlib-${ZLIB_ver}.tar.gz
         cd zlib-${ZLIB_ver}/
-        CC=$HOST-gcc CXX=$HOST-g++ AR=$HOST-ar RANLIB=$HOST-ranlib ./configure --prefix=$PREFIX --static
+        CC=$HOST-gcc \
+        AR=$HOST-ar \
+        LD=$HOST-ld \
+        RANLIB=$HOST-ranlib \
+        STRIP=$HOST-strip \
+        ./configure \
+            --prefix=/usr/local/$HOST \
+            --libdir=/usr/local/$HOST/lib \
+            --includedir=/usr/local/$HOST/include \
+            --static && \
         sudo make -j$(nproc)
         sudo make install
 
@@ -94,7 +121,12 @@ jobs:
         $DOWNLOADER $EXPAT
         tar jxvf expat-${EXPAT_ver_2}.tar.bz2
         cd expat-${EXPAT_ver_2}/
-        CC=$HOST-gcc CXX=$HOST-g++ AR=$HOST-ar RANLIB=$HOST-ranlib ./configure --prefix=$PREFIX --host=$HOST --enable-static --enable-shared
+        ./configure \
+            --disable-shared \
+            --enable-static \
+            --prefix=/usr/local/$HOST \
+            --host=$HOST \
+            --build=`dpkg-architecture -qDEB_BUILD_GNU_TYPE` && \
         sudo make -j$(nproc)
         sudo make install
 
@@ -103,27 +135,37 @@ jobs:
         $DOWNLOADER $C_ARES
         tar zxvf c-ares-1.16.1.tar.gz
         cd c-ares-1.16.1/
-        # tar zxvf c-ares-${C_ARES_ver}.tar.gz
-        # cd c-ares-${C_ARES_ver}/
-        CC=$HOST-gcc CXX=$HOST-g++ AR=$HOST-ar RANLIB=$HOST-ranlib ./configure --prefix=$PREFIX --host=$HOST --enable-static --disable-shared
+        ./configure \
+            --disable-shared \
+            --enable-static \
+            --without-random \
+            --prefix=/usr/local/$HOST \
+            --host=$HOST \
+            --build=`dpkg-architecture -qDEB_BUILD_GNU_TYPE` \
+            LIBS="-lws2_32" && \
         sudo make -j$(nproc)
         sudo make install
  
         # Openssl build
-        cd ..
-        $DOWNLOADER $OPENSSL
-        tar zxvf openssl-${OPENSSL_ver}.tar.gz
-        cd openssl-${OPENSSL_ver}/
-        ./Configure mingw64 --cross-compile-prefix=$HOST- --prefix=$PREFIX shared
-        sudo make -j$(nproc)
-        sudo make install
+        # cd ..
+        # $DOWNLOADER $OPENSSL
+        # tar zxvf openssl-${OPENSSL_ver}.tar.gz
+        # cd openssl-${OPENSSL_ver}/
+        # ./Configure mingw64 --cross-compile-prefix=$HOST- --prefix=$PREFIX shared
+        # sudo make -j$(nproc)
+        # sudo make install
 
         # sqlite3
         cd ..
         $DOWNLOADER $SQLITE3
         tar zxvf sqlite-autoconf-${SQLITE3_ver}.tar.gz
         cd sqlite-autoconf-${SQLITE3_ver}/
-        CC=$HOST-gcc CXX=$HOST-g++ AR=$HOST-ar RANLIB=$HOST-ranlib ./configure --prefix=$PREFIX --host=$HOST --enable-static --enable-shared
+        ./configure \
+            --disable-shared \
+            --enable-static \
+            --prefix=/usr/local/$HOST \
+            --host=$HOST \
+            --build=`dpkg-architecture -qDEB_BUILD_GNU_TYPE` && \
         sudo make -j$(nproc)
         sudo make install
 
@@ -132,8 +174,15 @@ jobs:
         $DOWNLOADER $SSH2
         tar zxvf libssh2-${SSH2_ver}.tar.gz
         cd libssh2-${SSH2_ver}/
-        rm -rf $PREFIX/lib/pkgconfig/libssh2.pc
-        CC=$HOST-gcc CXX=$HOST-g++ AR=$HOST-ar RANLIB=$HOST-ranlib ./configure --prefix=$PREFIX --host=$HOST --enable-static --disable-shared
+        ./configure \
+            --disable-shared \
+            --enable-static \
+            --prefix=/usr/local/$HOST \
+            --host=$HOST \
+            --build=`dpkg-architecture -qDEB_BUILD_GNU_TYPE` \
+            --without-openssl \
+            --with-wincng \
+            LIBS="-lws2_32" && \
         sudo make -j$(nproc)
         sudo make install
 
@@ -161,6 +210,9 @@ jobs:
         HOST=x86_64-w64-mingw32
         PREFIX=/usr/x86_64-w64-mingw32
 
+        test -z "$HOST" && HOST=i686-w64-mingw32
+        test -z "$PREFIX" && PREFIX=/usr/local/$HOST
+
         ./configure \
             --host=$HOST \
             --prefix=$PREFIX \
@@ -168,12 +220,12 @@ jobs:
             --disable-nls \
             --with-libcares \
             --without-gnutls \
-            --with-openssl \
+            --without-openssl \
             --with-sqlite3 \
             --without-libxml2 \
             --with-libexpat \
             --with-libz \
-            --without-libgmp \
+            --with-libgmp \
             --with-libssh2 \
             --without-libgcrypt \
             --without-libnettle \
@@ -181,8 +233,8 @@ jobs:
             ARIA2_STATIC=yes \
             CPPFLAGS="-I$PREFIX/include" \
             LDFLAGS="-L$PREFIX/lib" \
+            PKG_CONFIG="/usr/bin/pkg-config" \
             PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig"
-            # --without-wintls \
         sudo make -j$(nproc)
         sudo $HOST-strip src/aria2c.exe
 
