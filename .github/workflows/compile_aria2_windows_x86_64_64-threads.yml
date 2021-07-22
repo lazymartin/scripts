@@ -32,7 +32,7 @@ jobs:
         
       run: |
         sudo apt-get update
-        sudo apt-get install -y lzip gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64
+        sudo apt-get install -y make binutils autoconf automake autotools-dev libtool pkg-config git curl dpkg-dev gcc-mingw-w64 g++-mingw-w64 autopoint libcppunit-dev libxml2-dev libgcrypt11-dev lzip
         
     - name: Install dependences
       id: dependences
@@ -63,7 +63,9 @@ jobs:
         SQLITE3="https://sqlite.org/${SQLITE3_add}"
         #C_ARES_ver=`curl -s https://c-ares.haxx.se/download/|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"|head -n 1`
         #C_ARES=https://c-ares.haxx.se/download/c-ares-${C_ARES_ver}.tar.gz
-        # C_ARES=https://c-ares.haxx.se/download/c-ares-1.16.1.tar.gz
+        #C_ARES=https://c-ares.haxx.se/download/c-ares-1.16.1.tar.gz
+        C_ARES_ver=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/c-ares/c-ares/releases/latest|jq .name|sed "s/\"//g"`
+        C_ARES=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/c-ares/c-ares/releases/latest|jq .assets[0].browser_download_url|sed "s/\"//g"`
         SSH2_ver=`curl -s https://www.libssh2.org|grep "The latest release"|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
         SSH2=https://www.libssh2.org/download/libssh2-${SSH2_ver}.tar.gz
         # SSH2=https://www.libssh2.org/download/libssh2-1.7.0.tar.gz
@@ -99,6 +101,34 @@ jobs:
         sudo make -j$(nproc)
         sudo make install
 
+        # expat build
+        cd ..
+        $DOWNLOADER $EXPAT
+        tar jxvf expat-${EXPAT_ver_2}.tar.bz2
+        cd expat-${EXPAT_ver_2}/
+        ./configure \
+            --disable-shared \
+            --enable-static \
+            --prefix=/usr/local/$HOST \
+            --host=$HOST \
+            --build=`dpkg-architecture -qDEB_BUILD_GNU_TYPE` && \
+        sudo make -j$(nproc)
+        sudo make install
+        
+        # sqlite3
+        cd ..
+        $DOWNLOADER $SQLITE3
+        tar zxvf sqlite-autoconf-${SQLITE3_ver}.tar.gz
+        cd sqlite-autoconf-${SQLITE3_ver}/
+        ./configure \
+            --disable-shared \
+            --enable-static \
+            --prefix=/usr/local/$HOST \
+            --host=$HOST \
+            --build=`dpkg-architecture -qDEB_BUILD_GNU_TYPE` && \
+        sudo make -j$(nproc)
+        sudo make install
+        
         # zlib build
         $DOWNLOADER $ZLIB
         tar zxvf zlib-${ZLIB_ver}.tar.gz
@@ -116,25 +146,11 @@ jobs:
         sudo make -j$(nproc)
         sudo make install
 
-        # expat build
-        cd ..
-        $DOWNLOADER $EXPAT
-        tar jxvf expat-${EXPAT_ver_2}.tar.bz2
-        cd expat-${EXPAT_ver_2}/
-        ./configure \
-            --disable-shared \
-            --enable-static \
-            --prefix=/usr/local/$HOST \
-            --host=$HOST \
-            --build=`dpkg-architecture -qDEB_BUILD_GNU_TYPE` && \
-        sudo make -j$(nproc)
-        sudo make install
-
         # c-ares build
         cd ..
         $DOWNLOADER $C_ARES
-        tar zxvf c-ares-1.16.1.tar.gz
-        cd c-ares-1.16.1/
+        tar zxvf c-ares-${C_ARES_ver}.tar.gz
+        cd c-ares-${C_ARES_ver}/
         ./configure \
             --disable-shared \
             --enable-static \
@@ -154,20 +170,6 @@ jobs:
         # ./Configure mingw64 --cross-compile-prefix=$HOST- --prefix=$PREFIX shared
         # sudo make -j$(nproc)
         # sudo make install
-
-        # sqlite3
-        cd ..
-        $DOWNLOADER $SQLITE3
-        tar zxvf sqlite-autoconf-${SQLITE3_ver}.tar.gz
-        cd sqlite-autoconf-${SQLITE3_ver}/
-        ./configure \
-            --disable-shared \
-            --enable-static \
-            --prefix=/usr/local/$HOST \
-            --host=$HOST \
-            --build=`dpkg-architecture -qDEB_BUILD_GNU_TYPE` && \
-        sudo make -j$(nproc)
-        sudo make install
 
         # libssh2
         cd ..
