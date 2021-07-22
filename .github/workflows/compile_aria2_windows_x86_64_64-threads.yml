@@ -75,7 +75,7 @@ jobs:
         # # OPENSSL=https://www.openssl.org/source/openssl-1.1.1i.tar.gz
         # EXPAT=https://github.com/libexpat/libexpat/releases/download/R_2_2_10/expat-2.2.10.tar.bz2
         # SQLITE3=https://sqlite.org/2020/sqlite-autoconf-3330000.tar.gz
-        C_ARES=https://c-ares.haxx.se/download/c-ares-1.16.1.tar.gz
+        ##C_ARES=https://c-ares.haxx.se/download/c-ares-1.16.1.tar.gz
         # SSH2=https://www.libssh2.org/download/libssh2-1.7.0.tar.gz
 
         ## CONFIG ##
