@@ -32,7 +32,7 @@ jobs:
         
       run: |
         sudo apt-get update
-        sudo apt-get install -y make binutils autoconf automake autotools-dev libtool pkg-config git curl dpkg-dev gcc-mingw-w64 g++-mingw-w64 autopoint libcppunit-dev libxml2-dev libgcrypt-mingw-w64-dev lzip libgmp-dev libgmp3-dev libgmpxx4ldbl
+        sudo apt-get install -y curl make binutils autoconf automake autotools-dev libtool pkg-config git curl dpkg-dev gcc-mingw-w64 g++-mingw-w64 autopoint libcppunit-dev libxml2-dev libgcrypt-mingw-w64-dev lzip libgmp-dev libgmp3-dev libgmpxx4ldbl
         
     - name: Install dependences
       id: dependences
@@ -103,7 +103,8 @@ jobs:
 
         # expat build
         cd ..
-        $DOWNLOADER $EXPAT
+        # $DOWNLOADER $EXPAT
+        curl -o $EXPAT
         sudo tar jxvf expat-${EXPAT_ver_2}.tar.bz2
         cd expat-${EXPAT_ver_2}/
         ./configure \
