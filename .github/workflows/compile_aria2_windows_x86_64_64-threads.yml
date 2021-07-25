@@ -32,7 +32,7 @@ jobs:
         
       run: |
         sudo apt-get update
-        sudo apt-get install -y curl make binutils autoconf automake autotools-dev libtool pkg-config git curl dpkg-dev gcc-mingw-w64 g++-mingw-w64 autopoint libcppunit-dev libxml2-dev libgcrypt-mingw-w64-dev lzip libgmp-dev libgmp3-dev libgmpxx4ldbl
+        sudo apt-get install -y curl make binutils autoconf automake autotools-dev libtool pkg-config git curl dpkg-dev gcc-mingw-w64 g++-mingw-w64 autopoint libcppunit-dev libxml2-dev libgcrypt-mingw-w64-dev lzip
         
     - name: Install dependences
       id: dependences
@@ -93,7 +93,8 @@ jobs:
         ./configure \
             --disable-shared \
             --enable-static \
-            --prefix=/usr/local/$HOST/include \
+            --prefix=/usr/local/$HOST \
+            --exec-prefix=/usr/local/$HOST/include \
             --host=$HOST \
             --disable-cxx \
             --enable-fat \
