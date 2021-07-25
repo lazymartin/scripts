@@ -32,7 +32,7 @@ jobs:
         
       run: |
         sudo apt-get update
-        sudo apt-get install -y make binutils autoconf automake autotools-dev libtool pkg-config git curl dpkg-dev gcc-mingw-w64 g++-mingw-w64 autopoint libcppunit-dev libxml2-dev libgcrypt-mingw-w64-dev lzip
+        sudo apt-get install -y make binutils autoconf automake autotools-dev libtool pkg-config git curl dpkg-dev gcc-mingw-w64 g++-mingw-w64 autopoint libcppunit-dev libxml2-dev libgcrypt-mingw-w64-dev lzip libgmp-dev libgmp3-dev libgmpxx4ldbl
         
     - name: Install dependences
       id: dependences
@@ -45,9 +45,9 @@ jobs:
         DOWNLOADER="wget -c"
 
         ## DEPENDENCES ##
-        GMP_ver1=`curl -s https://gmplib.org/|grep -oE 'gmp-([0-9]{1,3}\.){3}tar.lz'|head -n 1`
-        GMP_ver2=`echo ${GMP_ver1}|sed "s/.tar.lz//"`
-        GMP=https://gmplib.org/download/gmp/${GMP_ver1}
+        # GMP_ver1=`curl -s https://gmplib.org/|grep -oE 'gmp-([0-9]{1,3}\.){3}tar.lz'|head -n 1`
+        # GMP_ver2=`echo ${GMP_ver1}|sed "s/.tar.lz//"`
+        # GMP=https://gmplib.org/download/gmp/${GMP_ver1}
         ZLIB_ver=`curl -s http://www.zlib.net/|grep -A 3 "Current release"|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
         ZLIB=http://www.zlib.net/zlib-${ZLIB_ver}.tar.gz
         # ZLIB=http://sourceforge.net/projects/libpng/files/zlib/1.2.11/zlib-1.2.11.tar.gz
@@ -87,19 +87,19 @@ jobs:
         cd $BUILD_DIRECTORY
         
         # gmp build
-        $DOWNLOADER $GMP
-        tar xf ${GMP_ver1}
-        cd ${GMP_ver2}
-        ./configure \
-            --disable-shared \
-            --enable-static \
-            --prefix=/usr/local/$HOST \
-            --host=$HOST \
-            --disable-cxx \
-            --enable-fat \
-            CFLAGS="-mtune=generic -O2 -g0" && \
-        sudo make -j$(nproc)
-        sudo make install
+        # $DOWNLOADER $GMP
+        # tar xf ${GMP_ver1}
+        # cd ${GMP_ver2}
+        # ./configure \
+        #     --disable-shared \
+        #     --enable-static \
+        #     --prefix=/usr/local/$HOST \
+        #     --host=$HOST \
+        #     --disable-cxx \
+        #     --enable-fat \
+        #     CFLAGS="-mtune=generic -O2 -g0" && \
+        # sudo make -j$(nproc)
+        # sudo make install
 
         # expat build
         cd ..
