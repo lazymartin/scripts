@@ -94,7 +94,6 @@ jobs:
             --disable-shared \
             --enable-static \
             --prefix=/usr/local/$HOST \
-            --exec-prefix=/usr/local/$HOST/include \
             --host=$HOST \
             --disable-cxx \
             --enable-fat \
