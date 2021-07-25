@@ -102,9 +102,8 @@ jobs:
         # sudo make install
 
         # expat build
-        cd ..
-        # $DOWNLOADER $EXPAT
-        curl -O $EXPAT
+        # cd ..
+        $DOWNLOADER $EXPAT
         sudo tar jxvf expat-${EXPAT_ver_2}.tar.bz2
         cd expat-${EXPAT_ver_2}/
         ./configure \
