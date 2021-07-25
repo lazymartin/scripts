@@ -104,7 +104,7 @@ jobs:
         # expat build
         # cd ..
         $DOWNLOADER $EXPAT
-        sudo tar jxvf expat-${EXPAT_ver_2}.tar.bz2
+        tar jxvf expat-${EXPAT_ver_2}.tar.bz2
         cd expat-${EXPAT_ver_2}/
         ./configure \
             --disable-shared \
