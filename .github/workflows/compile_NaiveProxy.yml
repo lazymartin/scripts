@@ -27,8 +27,13 @@ jobs:
       uses: actions/checkout@master
 
     - name: Initialization environment
+      uses: actions/setup-go@v2
       env:
         DEBIAN_FRONTEND: noninteractive
+      with:
+        stable: 'true'
+        go-version: '^1.16' # The Go version to download (if necessary) and use.
+
       run: |
         sudo apt-get update
         # Nginx,Caddy,NaiveProxy Dependent library
@@ -38,8 +43,6 @@ jobs:
       id: compile
       continue-on-error: true
       run: |
-        wget https://dl.google.com/go/go1.14.8.linux-amd64.tar.gz
-        sudo tar -C /usr/local -xzf go1.14.8.linux-amd64.tar.gz
         export PATH=$PATH:/usr/local/go/bin
         git clone -b naive https://github.com/klzgrad/forwardproxy
         go get -u github.com/caddyserver/xcaddy/cmd/xcaddy
