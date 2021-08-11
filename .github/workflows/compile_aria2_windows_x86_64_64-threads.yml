@@ -32,20 +32,17 @@ jobs:
         
       run: |
         sudo apt-get update
-        sudo apt-get install -y make binutils autoconf automake autotools-dev libtool pkg-config git curl dpkg-dev gcc-mingw-w64 g++-mingw-w64 autopoint libcppunit-dev libxml2-dev libgcrypt-mingw-w64-dev lzip
+        sudo apt-get install -y gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64
         
     - name: Install dependences
       id: dependences
-      # continue-on-error: true
+      continue-on-error: true
       run: |
         
         #IMPORTANT: Require install gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64
         #CHECK TOOL FOR DOWNLOAD
         DOWNLOADER="wget -c"
         ## DEPENDENCES ##
-        GMP_ver1=`curl -s https://gmplib.org/|grep -oE 'gmp-([0-9]{1,3}\.){3}tar.lz'|head -n 1`
-        GMP_ver2=`echo ${GMP_ver1}|sed "s/.tar.lz//"`
-        GMP=https://gmplib.org/download/gmp/${GMP_ver1}
         ZLIB_ver=`curl -s http://www.zlib.net/|grep -A 3 "Current release"|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
         ZLIB=http://www.zlib.net/zlib-${ZLIB_ver}.tar.gz
         # ZLIB=http://sourceforge.net/projects/libpng/files/zlib/1.2.11/zlib-1.2.11.tar.gz
@@ -61,9 +58,7 @@ jobs:
         SQLITE3="https://sqlite.org/${SQLITE3_add}"
         #C_ARES_ver=`curl -s https://c-ares.haxx.se/download/|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"|head -n 1`
         #C_ARES=https://c-ares.haxx.se/download/c-ares-${C_ARES_ver}.tar.gz
-        #C_ARES=https://c-ares.haxx.se/download/c-ares-1.16.1.tar.gz
-        # C_ARES_ver=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/c-ares/c-ares/releases/latest|jq .name|sed "s/\"//g"`
-        # C_ARES=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/c-ares/c-ares/releases/latest|jq .assets[0].browser_download_url|sed "s/\"//g"`
+        # C_ARES=https://c-ares.haxx.se/download/c-ares-1.16.1.tar.gz
         SSH2_ver=`curl -s https://www.libssh2.org|grep "The latest release"|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
         SSH2=https://www.libssh2.org/download/libssh2-${SSH2_ver}.tar.gz
         # SSH2=https://www.libssh2.org/download/libssh2-1.7.0.tar.gz
@@ -80,64 +75,19 @@ jobs:
         PREFIX=/usr/x86_64-w64-mingw32
         ## BUILD ##
         cd $BUILD_DIRECTORY
-        
-        # # gmp build
-        # $DOWNLOADER $GMP
-        # tar xf ${GMP_ver1}
-        # cd ${GMP_ver2}
-        # ./configure \
-            # --disable-shared \
-            # --enable-static \
-            # --prefix=/usr/local/$HOST \
-            # --host=$HOST \
-            # --disable-cxx \
-            # --enable-fat \
-            # CFLAGS="-mtune=generic -O2 -g0" && \
-        # sudo make -j$(nproc)
-        # sudo make install
-        
+        # zlib build
+        $DOWNLOADER $ZLIB
+        tar zxvf zlib-${ZLIB_ver}.tar.gz
+        cd zlib-${ZLIB_ver}/
+        CC=$HOST-gcc CXX=$HOST-g++ AR=$HOST-ar RANLIB=$HOST-ranlib ./configure --prefix=$PREFIX --static
+        sudo make -j$(nproc)
+        sudo make install
         # expat build
         cd ..
         $DOWNLOADER $EXPAT
         tar jxvf expat-${EXPAT_ver_2}.tar.bz2
         cd expat-${EXPAT_ver_2}/
-        ./configure \
-            --disable-shared \
-            --enable-static \
-            --prefix=/usr/local/$HOST \
-            --host=$HOST \
-            --build=`dpkg-architecture -qDEB_BUILD_GNU_TYPE` && \
-        sudo make -j$(nproc)
-        sudo make install
-        
-        # sqlite3
-        cd ..
-        $DOWNLOADER $SQLITE3
-        tar zxvf sqlite-autoconf-${SQLITE3_ver}.tar.gz
-        cd sqlite-autoconf-${SQLITE3_ver}/
-        ./configure \
-            --disable-shared \
-            --enable-static \
-            --prefix=/usr/local/$HOST \
-            --host=$HOST \
-            --build=`dpkg-architecture -qDEB_BUILD_GNU_TYPE` && \
-        sudo make -j$(nproc)
-        sudo make install
-        
-        # zlib build
-        $DOWNLOADER $ZLIB
-        tar zxvf zlib-${ZLIB_ver}.tar.gz
-        cd zlib-${ZLIB_ver}/
-        CC=$HOST-gcc \
-        AR=$HOST-ar \
-        LD=$HOST-ld \
-        RANLIB=$HOST-ranlib \
-        STRIP=$HOST-strip \
-        ./configure \
-            --prefix=/usr/local/$HOST \
-            --libdir=/usr/local/$HOST/lib \
-            --includedir=/usr/local/$HOST/include \
-            --static && \
+        CC=$HOST-gcc CXX=$HOST-g++ AR=$HOST-ar RANLIB=$HOST-ranlib ./configure --prefix=$PREFIX --host=$HOST --enable-static --enable-shared
         sudo make -j$(nproc)
         sudo make install
         # c-ares build
@@ -145,18 +95,13 @@ jobs:
         $DOWNLOADER $C_ARES
         tar zxvf c-ares-1.16.1.tar.gz
         cd c-ares-1.16.1/
-        ./configure \
-            --disable-shared \
-            --enable-static \
-            --without-random \
-            --prefix=/usr/local/$HOST \
-            --host=$HOST \
-            --build=`dpkg-architecture -qDEB_BUILD_GNU_TYPE` \
-            LIBS="-lws2_32" && \
+        # tar zxvf c-ares-${C_ARES_ver}.tar.gz
+        # cd c-ares-${C_ARES_ver}/
+        CC=$HOST-gcc CXX=$HOST-g++ AR=$HOST-ar RANLIB=$HOST-ranlib ./configure --prefix=$PREFIX --host=$HOST --enable-static --disable-shared
         sudo make -j$(nproc)
         sudo make install
  
-        Openssl build
+        # Openssl build
         cd ..
         $DOWNLOADER $OPENSSL
         tar zxvf openssl-${OPENSSL_ver}.tar.gz
@@ -165,20 +110,22 @@ jobs:
         sudo make -j$(nproc)
         sudo make install
 
+        # sqlite3
+        cd ..
+        $DOWNLOADER $SQLITE3
+        tar zxvf sqlite-autoconf-${SQLITE3_ver}.tar.gz
+        cd sqlite-autoconf-${SQLITE3_ver}/
+        CC=$HOST-gcc CXX=$HOST-g++ AR=$HOST-ar RANLIB=$HOST-ranlib ./configure --prefix=$PREFIX --host=$HOST --enable-static --enable-shared
+        sudo make -j$(nproc)
+        sudo make install
+
         # libssh2
         cd ..
         $DOWNLOADER $SSH2
         tar zxvf libssh2-${SSH2_ver}.tar.gz
         cd libssh2-${SSH2_ver}/
-        ./configure \
-            --disable-shared \
-            --enable-static \
-            --prefix=/usr/local/$HOST \
-            --host=$HOST \
-            --build=`dpkg-architecture -qDEB_BUILD_GNU_TYPE` \
-            --without-openssl \
-            --with-wincng \
-            LIBS="-lws2_32" && \
+        rm -rf $PREFIX/lib/pkgconfig/libssh2.pc
+        CC=$HOST-gcc CXX=$HOST-g++ AR=$HOST-ar RANLIB=$HOST-ranlib ./configure --prefix=$PREFIX --host=$HOST --enable-static --disable-shared
         sudo make -j$(nproc)
         sudo make install
 
@@ -190,7 +137,7 @@ jobs:
         
     - name: Compile
       id: compile
-      # continue-on-error: true
+      continue-on-error: true
       run: |
         REPO_NAME="aria2/aria2"
         FILE_VER=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/$REPO_NAME/releases/latest|grep tag_name|awk -F "\"" '{print $4}'|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
@@ -205,8 +152,6 @@ jobs:
         
         HOST=x86_64-w64-mingw32
         PREFIX=/usr/x86_64-w64-mingw32
-        test -z "$HOST" && HOST=i686-w64-mingw32
-        test -z "$PREFIX" && PREFIX=/usr/local/$HOST
         ./configure \
             --host=$HOST \
             --prefix=$PREFIX \
@@ -214,8 +159,8 @@ jobs:
             --disable-nls \
             --with-libcares \
             --without-gnutls \
+            --without-openssl \
             --with-wintls \
-            --with-openssl \
             --with-sqlite3 \
             --without-libxml2 \
             --with-libexpat \
@@ -229,11 +174,9 @@ jobs:
             CPPFLAGS="-I$PREFIX/include" \
             LDFLAGS="-L$PREFIX/lib" \
             PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig"
+            # --without-wintls \
         sudo make -j$(nproc)
         sudo $HOST-strip src/aria2c.exe
-        
-            # PKG_CONFIG="/usr/bin/pkg-config" \
-        
     - name: Check compilation
       if: steps.compile.outcome != 'success'
       run: |
