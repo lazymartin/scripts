@@ -32,9 +32,7 @@ jobs:
         
       run: |
         sudo apt-get update
-        sudo apt-get install -y m4 gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64 libgnutls28-dev nettle-dev libgmp-dev libssh2-1-dev libc-ares-dev libxml2-dev zlib1g-dev libsqlite3-dev pkg-config libcppunit-dev autoconf automake autotools-dev autopoint libtool git gcc g++ libxml2-dev make quilt libcurl4-openssl-dev libevent-dev ca-certificates libssl-dev  build-essential intltool libgcrypt-dev libssl-dev python3-pip lzip
-        sudo pip3 install --upgrade pip
-        sudo pip3 install sphinx
+        sudo apt-get install -y gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64
         
     - name: Install dependences
       id: dependences
@@ -46,37 +44,13 @@ jobs:
         DOWNLOADER="wget -c"
         
         ## DEPENDENCES ##
-        GMP_ver1=`curl -s https://gmplib.org/|grep -oE 'gmp-([0-9]{1,3}\.){3}tar.lz'|head -n 1`
-        GMP_ver2=`echo ${GMP_ver1}|sed "s/.tar.lz//"`
-        GMP_ver3=`echo ${GMP_ver1}|sed "s/.lz//"`
-        GMP=https://gmplib.org/download/gmp/${GMP_ver1}
-        ZLIB_ver=`curl -s http://www.zlib.net/|grep -A 3 "Current release"|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
-        ZLIB=http://www.zlib.net/zlib-${ZLIB_ver}.tar.gz
-        # ZLIB=http://sourceforge.net/projects/libpng/files/zlib/1.2.11/zlib-1.2.11.tar.gz
-        OPENSSL_ver=`curl -s https://www.openssl.org/source/|grep -oE "[0-9]\.[0-9]{1,2}\.[0-9]{1,2}[a-z]"|sort|uniq|tail -n 1`
-        OPENSSL=http://www.openssl.org/source/openssl-${OPENSSL_ver}.tar.gz
-        # OPENSSL=http://www.openssl.org/source/openssl-1.0.2u.tar.gz
-        EXPAT_ver_1=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/libexpat/libexpat/releases/latest|grep tag_name|awk -F "\"" '{print $4}'`
-        EXPAT_ver_2=`echo ${EXPAT_ver_1}|sed "s/R_//g;s/_/\./g"`
-        EXPAT=https://github.com/libexpat/libexpat/releases/download/${EXPAT_ver_1}/expat-${EXPAT_ver_2}.tar.bz2
-        # EXPAT=https://github.com/libexpat/libexpat/releases/download/R_2_2_10/expat-2.2.10.tar.bz2
-        SQLITE3_add=`curl -s https://www.sqlite.org/download.html|grep -oE "[0-9]{1,4}/sqlite-autoconf-[0-9]{1,7}.tar.gz"|head -n 1`
-        SQLITE3_ver=`echo ${SQLITE3_add}|grep -oE "[0-9]{7}"`
-        SQLITE3="https://sqlite.org/${SQLITE3_add}"
-        #C_ARES_ver=`curl -s https://c-ares.haxx.se/download/|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"|head -n 1`
-        #C_ARES=https://c-ares.haxx.se/download/c-ares-${C_ARES_ver}.tar.gz
-        # C_ARES=https://c-ares.haxx.se/download/c-ares-1.16.1.tar.gz
-        SSH2_ver=`curl -s https://www.libssh2.org|grep "The latest release"|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
-        SSH2=https://www.libssh2.org/download/libssh2-${SSH2_ver}.tar.gz
-        # SSH2=https://www.libssh2.org/download/libssh2-1.7.0.tar.gz
-        # ZLIB=http://sourceforge.net/projects/libpng/files/zlib/1.2.11/zlib-1.2.11.tar.gz
-        # OPENSSL=http://www.openssl.org/source/openssl-1.0.2u.tar.gz
-        # # OPENSSL=https://www.openssl.org/source/openssl-1.1.1i.tar.gz
-        # EXPAT=https://github.com/libexpat/libexpat/releases/download/R_2_2_10/expat-2.2.10.tar.bz2
-        # SQLITE3=https://sqlite.org/2020/sqlite-autoconf-3330000.tar.gz
+        ZLIB=http://sourceforge.net/projects/libpng/files/zlib/1.2.11/zlib-1.2.11.tar.gz
+        OPENSSL=http://www.openssl.org/source/openssl-1.0.2u.tar.gz
+        EXPAT=https://github.com/libexpat/libexpat/releases/download/R_2_2_10/expat-2.2.10.tar.bz2
+        SQLITE3=https://sqlite.org/2020/sqlite-autoconf-3330000.tar.gz
         C_ARES=https://c-ares.haxx.se/download/c-ares-1.16.1.tar.gz
-        # SSH2=https://www.libssh2.org/download/libssh2-1.7.0.tar.gz
-        
+        SSH2=https://www.libssh2.org/download/libssh2-1.7.0.tar.gz
+
         ## CONFIG ##
         BUILD_DIRECTORY=/tmp/
         HOST=x86_64-w64-mingw32
@@ -84,79 +58,61 @@ jobs:
 
         ## BUILD ##
         cd $BUILD_DIRECTORY
-        
-        # gmp build
-        $DOWNLOADER $GMP
-        lzip -d ${GMP_ver1}
-        tar xf ${GMP_ver3}
-        cd ${GMP_ver2}
-        ./configure \
-            --disable-shared \
-            --enable-static \
-            --prefix=/usr/local/$HOST \
-            --host=$HOST \
-            --disable-cxx \
-            --enable-fat \
-            CFLAGS="-mtune=generic -O2 -g0" && \
-        sudo make -j$(nproc)
-        sudo make install
-
-        # zlib build
-        $DOWNLOADER $ZLIB
-        tar zxvf zlib-${ZLIB_ver}.tar.gz
-        cd zlib-${ZLIB_ver}/
-        CC=$HOST-gcc CXX=$HOST-g++ AR=$HOST-ar RANLIB=$HOST-ranlib ./configure --prefix=$PREFIX --static
-        sudo make -j$(nproc)
-        sudo make install
-
-        # expat build
-        cd ..
-        $DOWNLOADER $EXPAT
-        tar jxvf expat-${EXPAT_ver_2}.tar.bz2
-        cd expat-${EXPAT_ver_2}/
-        CC=$HOST-gcc CXX=$HOST-g++ AR=$HOST-ar RANLIB=$HOST-ranlib ./configure --prefix=$PREFIX --host=$HOST --enable-static --enable-shared
-        sudo make -j$(nproc)
-        sudo make install
-
-        # c-ares build
-        cd ..
-        $DOWNLOADER $C_ARES
-        tar zxvf c-ares-1.16.1.tar.gz
-        cd c-ares-1.16.1/
-        # tar zxvf c-ares-${C_ARES_ver}.tar.gz
-        # cd c-ares-${C_ARES_ver}/
-        CC=$HOST-gcc CXX=$HOST-g++ AR=$HOST-ar RANLIB=$HOST-ranlib ./configure --prefix=$PREFIX --host=$HOST --enable-static --disable-shared
-        sudo make -j$(nproc)
-        sudo make install
- 
-        # Openssl build
-        cd ..
-        $DOWNLOADER $OPENSSL
-        tar zxvf openssl-${OPENSSL_ver}.tar.gz
-        cd openssl-${OPENSSL_ver}/
-        ./Configure mingw64 --cross-compile-prefix=$HOST- --prefix=$PREFIX shared
-        sudo make -j$(nproc)
-        sudo make install
-
-        # sqlite3
-        cd ..
-        $DOWNLOADER $SQLITE3
-        tar zxvf sqlite-autoconf-${SQLITE3_ver}.tar.gz
-        cd sqlite-autoconf-${SQLITE3_ver}/
-        CC=$HOST-gcc CXX=$HOST-g++ AR=$HOST-ar RANLIB=$HOST-ranlib ./configure --prefix=$PREFIX --host=$HOST --enable-static --enable-shared
-        sudo make -j$(nproc)
-        sudo make install
-
-        # libssh2
-        cd ..
-        $DOWNLOADER $SSH2
-        tar zxvf libssh2-${SSH2_ver}.tar.gz
-        cd libssh2-${SSH2_ver}/
-        rm -rf $PREFIX/lib/pkgconfig/libssh2.pc
-        CC=$HOST-gcc CXX=$HOST-g++ AR=$HOST-ar RANLIB=$HOST-ranlib ./configure --prefix=$PREFIX --host=$HOST --enable-static --disable-shared
-        sudo make -j$(nproc)
-        sudo make install
-
+        #
+         # zlib build
+          $DOWNLOADER $ZLIB
+          tar zxvf zlib-1.2.11.tar.gz
+          cd zlib-1.2.11/
+          CC=$HOST-gcc CXX=$HOST-g++ AR=$HOST-ar RANLIB=$HOST-ranlib ./configure --prefix=$PREFIX --static
+          make
+          make install
+        #
+         # expat build
+          cd ..
+          $DOWNLOADER $EXPAT
+          tar jxvf expat-2.2.10.tar.bz2
+          cd expat-2.2.10/
+          CC=$HOST-gcc CXX=$HOST-g++ AR=$HOST-ar RANLIB=$HOST-ranlib ./configure --prefix=$PREFIX --host=$HOST --enable-static --enable-shared
+          make
+          make install
+        #
+         # c-ares build
+          cd ..
+          $DOWNLOADER $C_ARES
+          tar zxvf c-ares-1.16.1.tar.gz
+          cd c-ares-1.16.1/
+          CC=$HOST-gcc CXX=$HOST-g++ AR=$HOST-ar RANLIB=$HOST-ranlib ./configure --prefix=$PREFIX --host=$HOST --enable-static --disable-shared
+          make
+          make install
+        #
+         # Openssl build
+          cd ..
+          $DOWNLOADER $OPENSSL
+          tar zxvf openssl-1.0.2u.tar.gz
+          cd openssl-1.0.2u/
+          ./Configure mingw64 --cross-compile-prefix=$HOST- --prefix=$PREFIX shared
+          make
+          make install
+        #
+         # sqlite3
+          cd ..
+          $DOWNLOADER $SQLITE3
+          tar zxvf sqlite-autoconf-3330000.tar.gz
+          cd sqlite-autoconf-3330000/
+          CC=$HOST-gcc CXX=$HOST-g++ AR=$HOST-ar RANLIB=$HOST-ranlib ./configure --prefix=$PREFIX --host=$HOST --enable-static --enable-shared
+          make
+          make install
+        #
+         # libssh2
+          cd ..
+          $DOWNLOADER $SSH2
+          tar zxvf libssh2-1.7.0.tar.gz
+          cd libssh2-1.7.0/
+          rm -rf $PREFIX/lib/pkgconfig/libssh2.pc
+          CC=$HOST-gcc CXX=$HOST-g++ AR=$HOST-ar RANLIB=$HOST-ranlib ./configure --prefix=$PREFIX --host=$HOST --enable-static --disable-shared
+          make
+          make install
+          
     - name: Check dependency installation
       # if: steps.dependences.outcome != 'success' || steps.compile.outcome != 'success'
       if: steps.dependences.outcome != 'success'
@@ -180,6 +136,7 @@ jobs:
         
         HOST=x86_64-w64-mingw32
         PREFIX=/usr/x86_64-w64-mingw32
+
         ./configure \
             --host=$HOST \
             --prefix=$PREFIX \
@@ -187,8 +144,8 @@ jobs:
             --disable-nls \
             --with-libcares \
             --without-gnutls \
-            --without-openssl \
-            --with-wintls \
+            --without-wintls \
+            --with-openssl \
             --with-sqlite3 \
             --without-libxml2 \
             --with-libexpat \
@@ -202,8 +159,7 @@ jobs:
             CPPFLAGS="-I$PREFIX/include" \
             LDFLAGS="-L$PREFIX/lib" \
             PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig"
-        sudo make -j$(nproc)
-        sudo $HOST-strip src/aria2c.exe
+        make
         
     - name: Check compilation
       if: steps.compile.outcome != 'success'
