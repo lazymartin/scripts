@@ -45,11 +45,11 @@ jobs:
         DOWNLOADER="wget -c"
 
         ## DEPENDENCES ##
-        # GMP_ver1=`curl -s https://gmplib.org/|grep -oE 'gmp-([0-9]{1,3}\.){3}tar.lz'|head -n 1`
-        # GMP_ver2=`echo ${GMP_ver1}|sed "s/.tar.lz//"`
-        # GMP="https://gmplib.org/download/gmp/${GMP_ver1}"
-        GMP="https://gmplib.org/download/gmp/gmp-6.2.1.tar.lz"
-        GMP_ver2=gmp-6.2.1
+        GMP_ver1=`curl -s https://gmplib.org/|grep -oE 'gmp-([0-9]{1,3}\.){3}tar.lz'|head -n 1`
+        GMP_ver2=`echo ${GMP_ver1}|sed "s/.tar.lz//"`
+        GMP_1="https://gmplib.org/download/gmp/${GMP_ver1}"
+        # GMP="https://gmplib.org/download/gmp/gmp-6.2.1.tar.lz"
+        # GMP_ver2=gmp-6.2.1
         ZLIB_ver=`curl -s http://www.zlib.net/|grep -A 3 "Current release"|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
         ZLIB=http://www.zlib.net/zlib-${ZLIB_ver}.tar.gz
         # ZLIB=http://sourceforge.net/projects/libpng/files/zlib/1.2.11/zlib-1.2.11.tar.gz
@@ -89,7 +89,7 @@ jobs:
         cd $BUILD_DIRECTORY
         
         gmp build
-        $DOWNLOADER $GMP
+        $DOWNLOADER $GMP_1
         tar xf ${GMP_ver1}
         cd ${GMP_ver2}
         ./configure \
