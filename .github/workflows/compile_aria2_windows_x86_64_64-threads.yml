@@ -32,9 +32,9 @@ jobs:
         
       run: |
         sudo apt-get update
-        sudo apt-get install -y gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64 libgnutls28-dev nettle-dev libgmp-dev libssh2-1-dev libc-ares-dev libxml2-dev zlib1g-dev libsqlite3-dev pkg-config libcppunit-dev autoconf automake autotools-dev autopoint libtool git gcc g++ libxml2-dev make quilt libcurl4-openssl-dev libevent-dev ca-certificates libssl-dev  build-essential intltool libgcrypt-dev libssl-dev python-pip
-        sudo pip install --upgrade pip
-        sudo pip install sphinx
+        sudo apt-get install -y gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64 libgnutls28-dev nettle-dev libgmp-dev libssh2-1-dev libc-ares-dev libxml2-dev zlib1g-dev libsqlite3-dev pkg-config libcppunit-dev autoconf automake autotools-dev autopoint libtool git gcc g++ libxml2-dev make quilt libcurl4-openssl-dev libevent-dev ca-certificates libssl-dev  build-essential intltool libgcrypt-dev libssl-dev python3-pip
+        sudo python3-pip install --upgrade pip
+        sudo python3-pip install sphinx
         
     - name: Install dependences
       id: dependences
