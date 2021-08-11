@@ -64,7 +64,7 @@ jobs:
           tar zxvf zlib-1.2.11.tar.gz
           cd zlib-1.2.11/
           CC=$HOST-gcc CXX=$HOST-g++ AR=$HOST-ar RANLIB=$HOST-ranlib ./configure --prefix=$PREFIX --static
-          sudo make
+          sudo make -j$(nproc)
           sudo make install
         #
          # expat build
@@ -73,7 +73,7 @@ jobs:
           tar jxvf expat-2.2.10.tar.bz2
           cd expat-2.2.10/
           CC=$HOST-gcc CXX=$HOST-g++ AR=$HOST-ar RANLIB=$HOST-ranlib ./configure --prefix=$PREFIX --host=$HOST --enable-static --enable-shared
-          sudo make
+          sudo make -j$(nproc)
           sudo make install
         #
          # c-ares build
@@ -82,7 +82,7 @@ jobs:
           tar zxvf c-ares-1.16.1.tar.gz
           cd c-ares-1.16.1/
           CC=$HOST-gcc CXX=$HOST-g++ AR=$HOST-ar RANLIB=$HOST-ranlib ./configure --prefix=$PREFIX --host=$HOST --enable-static --disable-shared
-          sudo make
+          sudo make -j$(nproc)
           sudo make install
         #
          # Openssl build
@@ -91,7 +91,7 @@ jobs:
           tar zxvf openssl-1.0.2u.tar.gz
           cd openssl-1.0.2u/
           ./Configure mingw64 --cross-compile-prefix=$HOST- --prefix=$PREFIX shared
-          sudo make
+          sudo make -j$(nproc)
           sudo make install
         #
          # sqlite3
@@ -100,7 +100,7 @@ jobs:
           tar zxvf sqlite-autoconf-3330000.tar.gz
           cd sqlite-autoconf-3330000/
           CC=$HOST-gcc CXX=$HOST-g++ AR=$HOST-ar RANLIB=$HOST-ranlib ./configure --prefix=$PREFIX --host=$HOST --enable-static --enable-shared
-          sudo make
+          sudo make -j$(nproc)
           sudo make install
         #
          # libssh2
@@ -110,7 +110,7 @@ jobs:
           cd libssh2-1.7.0/
           rm -rf $PREFIX/lib/pkgconfig/libssh2.pc
           CC=$HOST-gcc CXX=$HOST-g++ AR=$HOST-ar RANLIB=$HOST-ranlib ./configure --prefix=$PREFIX --host=$HOST --enable-static --disable-shared
-          sudo make
+          sudo make -j$(nproc)
           sudo make install
           
     - name: Check dependency installation
@@ -159,7 +159,8 @@ jobs:
             CPPFLAGS="-I$PREFIX/include" \
             LDFLAGS="-L$PREFIX/lib" \
             PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig"
-        sudo make
+        sudo make -j$(nproc)
+        sudo $HOST-strip src/aria2c.exe
         
     - name: Check compilation
       if: steps.compile.outcome != 'success'
