@@ -32,7 +32,9 @@ jobs:
         
       run: |
         sudo apt-get update
-        sudo apt-get install -y gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64
+        sudo apt-get install -y gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64 libgnutls28-dev nettle-dev libgmp-dev libssh2-1-dev libc-ares-dev libxml2-dev zlib1g-dev libsqlite3-dev pkg-config libcppunit-dev autoconf automake autotools-dev autopoint libtool git gcc g++ libxml2-dev make quilt libcurl4-openssl-dev libevent-dev ca-certificates libssl-dev  build-essential intltool libgcrypt-dev libssl-dev python-pip
+        sudo pip install --upgrade pip
+        sudo pip install sphinx
         
     - name: Install dependences
       id: dependences
@@ -159,8 +161,8 @@ jobs:
             --disable-nls \
             --with-libcares \
             --without-gnutls \
-            --without-openssl \
             --with-wintls \
+            --without-openssl \
             --with-sqlite3 \
             --without-libxml2 \
             --with-libexpat \
@@ -174,9 +176,9 @@ jobs:
             CPPFLAGS="-I$PREFIX/include" \
             LDFLAGS="-L$PREFIX/lib" \
             PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig"
-            # --without-wintls \
         sudo make -j$(nproc)
         sudo $HOST-strip src/aria2c.exe
+        
     - name: Check compilation
       if: steps.compile.outcome != 'success'
       run: |
