@@ -95,7 +95,7 @@ jobs:
             --enable-static \
             --prefix=/usr/local/$HOST \
             --host=$HOST \
-            --enable-cxx \
+            --disable-cxx \
             --enable-fat \
             CFLAGS="-mtune=generic -O2 -g0" && \
         sudo make -j$(nproc)
@@ -188,11 +188,12 @@ jobs:
             --with-libcares \
             --without-gnutls \
             --without-openssl \
+            --with-wintls \
             --with-sqlite3 \
             --without-libxml2 \
             --with-libexpat \
             --with-libz \
-            --with-libgmp \
+            --without-libgmp \
             --with-libssh2 \
             --without-libgcrypt \
             --without-libnettle \
@@ -201,9 +202,6 @@ jobs:
             CPPFLAGS="-I$PREFIX/include" \
             LDFLAGS="-L$PREFIX/lib" \
             PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig"
-
-            # --without-wintls \
-            
         sudo make -j$(nproc)
         sudo $HOST-strip src/aria2c.exe
         
