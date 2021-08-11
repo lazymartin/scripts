@@ -81,20 +81,21 @@ jobs:
         ## BUILD ##
         cd $BUILD_DIRECTORY
         
-        # gmp build
-        $DOWNLOADER $GMP
-        tar xf ${GMP_ver1}
-        cd ${GMP_ver2}
-        ./configure \
-            --disable-shared \
-            --enable-static \
-            --prefix=/usr/local/$HOST \
-            --host=$HOST \
-            --disable-cxx \
-            --enable-fat \
-            CFLAGS="-mtune=generic -O2 -g0" && \
-        sudo make -j$(nproc)
-        sudo make install
+        # # gmp build
+        # $DOWNLOADER $GMP
+        # tar xf ${GMP_ver1}
+        # cd ${GMP_ver2}
+        # ./configure \
+            # --disable-shared \
+            # --enable-static \
+            # --prefix=/usr/local/$HOST \
+            # --host=$HOST \
+            # --disable-cxx \
+            # --enable-fat \
+            # CFLAGS="-mtune=generic -O2 -g0" && \
+        # sudo make -j$(nproc)
+        # sudo make install
+        
         # expat build
         cd ..
         $DOWNLOADER $EXPAT
@@ -155,14 +156,14 @@ jobs:
         sudo make -j$(nproc)
         sudo make install
  
-        # Openssl build
-        # cd ..
-        # $DOWNLOADER $OPENSSL
-        # tar zxvf openssl-${OPENSSL_ver}.tar.gz
-        # cd openssl-${OPENSSL_ver}/
-        # ./Configure mingw64 --cross-compile-prefix=$HOST- --prefix=$PREFIX shared
-        # sudo make -j$(nproc)
-        # sudo make install
+        Openssl build
+        cd ..
+        $DOWNLOADER $OPENSSL
+        tar zxvf openssl-${OPENSSL_ver}.tar.gz
+        cd openssl-${OPENSSL_ver}/
+        ./Configure mingw64 --cross-compile-prefix=$HOST- --prefix=$PREFIX shared
+        sudo make -j$(nproc)
+        sudo make install
 
         # libssh2
         cd ..
@@ -213,12 +214,12 @@ jobs:
             --disable-nls \
             --with-libcares \
             --without-gnutls \
-            --without-openssl \
+            --with-openssl \
             --with-sqlite3 \
             --without-libxml2 \
             --with-libexpat \
             --with-libz \
-            --with-libgmp \
+            --without-libgmp \
             --with-libssh2 \
             --without-libgcrypt \
             --without-libnettle \
@@ -226,10 +227,12 @@ jobs:
             ARIA2_STATIC=yes \
             CPPFLAGS="-I$PREFIX/include" \
             LDFLAGS="-L$PREFIX/lib" \
-            PKG_CONFIG="/usr/bin/pkg-config" \
             PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig"
         sudo make -j$(nproc)
         sudo $HOST-strip src/aria2c.exe
+        
+            # PKG_CONFIG="/usr/bin/pkg-config" \
+        
     - name: Check compilation
       if: steps.compile.outcome != 'success'
       run: |
