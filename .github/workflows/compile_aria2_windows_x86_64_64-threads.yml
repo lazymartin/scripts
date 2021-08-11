@@ -32,7 +32,7 @@ jobs:
         
       run: |
         sudo apt-get update
-        sudo apt-get install -y curl make binutils autoconf automake autotools-dev libtool pkg-config git curl dpkg-dev gcc-mingw-w64 g++-mingw-w64 autopoint libcppunit-dev libxml2-dev libgcrypt-mingw-w64-dev lzip
+        sudo apt-get install -y make binutils autoconf automake autotools-dev libtool pkg-config git curl dpkg-dev gcc-mingw-w64 g++-mingw-w64 autopoint libcppunit-dev libxml2-dev libgcrypt-mingw-w64-dev lzip
         
     - name: Install dependences
       id: dependences
@@ -40,21 +40,17 @@ jobs:
       run: |
         
         #IMPORTANT: Require install gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64
-
         #CHECK TOOL FOR DOWNLOAD
         DOWNLOADER="wget -c"
-
         ## DEPENDENCES ##
-        # GMP_ver1=`curl -s https://gmplib.org/|grep -oE 'gmp-([0-9]{1,3}\.){3}tar.lz'|head -n 1`
-        # GMP_ver2=`echo ${GMP_ver1}|sed "s/.tar.lz//"`
-        # GMP_1="https://gmplib.org/download/gmp/${GMP_ver1}"
-        # GMP="https://gmplib.org/download/gmp/gmp-6.2.1.tar.lz"
-        # GMP_ver2=gmp-6.2.1
+        GMP_ver1=`curl -s https://gmplib.org/|grep -oE 'gmp-([0-9]{1,3}\.){3}tar.lz'|head -n 1`
+        GMP_ver2=`echo ${GMP_ver1}|sed "s/.tar.lz//"`
+        GMP=https://gmplib.org/download/gmp/${GMP_ver1}
         ZLIB_ver=`curl -s http://www.zlib.net/|grep -A 3 "Current release"|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
         ZLIB=http://www.zlib.net/zlib-${ZLIB_ver}.tar.gz
         # ZLIB=http://sourceforge.net/projects/libpng/files/zlib/1.2.11/zlib-1.2.11.tar.gz
         OPENSSL_ver=`curl -s https://www.openssl.org/source/|grep -oE "[0-9]\.[0-9]{1,2}\.[0-9]{1,2}[a-z]"|sort|uniq|tail -n 1`
-        OPENSSL="http://www.openssl.org/source/openssl-${OPENSSL_ver}.tar.gz"
+        OPENSSL=http://www.openssl.org/source/openssl-${OPENSSL_ver}.tar.gz
         # OPENSSL=http://www.openssl.org/source/openssl-1.0.2u.tar.gz
         EXPAT_ver_1=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/libexpat/libexpat/releases/latest|grep tag_name|awk -F "\"" '{print $4}'`
         EXPAT_ver_2=`echo ${EXPAT_ver_1}|sed "s/R_//g;s/_/\./g"`
@@ -69,29 +65,26 @@ jobs:
         # C_ARES_ver=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/c-ares/c-ares/releases/latest|jq .name|sed "s/\"//g"`
         # C_ARES=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/c-ares/c-ares/releases/latest|jq .assets[0].browser_download_url|sed "s/\"//g"`
         SSH2_ver=`curl -s https://www.libssh2.org|grep "The latest release"|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
-        SSH2="https://www.libssh2.org/download/libssh2-${SSH2_ver}.tar.gz"
+        SSH2=https://www.libssh2.org/download/libssh2-${SSH2_ver}.tar.gz
         # SSH2=https://www.libssh2.org/download/libssh2-1.7.0.tar.gz
-
         # ZLIB=http://sourceforge.net/projects/libpng/files/zlib/1.2.11/zlib-1.2.11.tar.gz
         # OPENSSL=http://www.openssl.org/source/openssl-1.0.2u.tar.gz
         # # OPENSSL=https://www.openssl.org/source/openssl-1.1.1i.tar.gz
         # EXPAT=https://github.com/libexpat/libexpat/releases/download/R_2_2_10/expat-2.2.10.tar.bz2
         # SQLITE3=https://sqlite.org/2020/sqlite-autoconf-3330000.tar.gz
-        C_ARES="https://c-ares.haxx.se/download/c-ares-1.16.1.tar.gz"
+        C_ARES=https://c-ares.haxx.se/download/c-ares-1.16.1.tar.gz
         # SSH2=https://www.libssh2.org/download/libssh2-1.7.0.tar.gz
-
         ## CONFIG ##
         BUILD_DIRECTORY=/tmp/
         HOST=x86_64-w64-mingw32
         PREFIX=/usr/x86_64-w64-mingw32
-
         ## BUILD ##
         cd $BUILD_DIRECTORY
         
-        gmp build
-        $DOWNLOADER https://gmplib.org/download/gmp/gmp-6.2.1.tar.lz #$GMP_1
-        tar xf gmp-6.2.1.tar.lz #${GMP_ver1}
-        cd gmp-6.2.1 #${GMP_ver2}
+        # gmp build
+        $DOWNLOADER $GMP
+        tar xf ${GMP_ver1}
+        cd ${GMP_ver2}
         ./configure \
             --disable-shared \
             --enable-static \
@@ -102,7 +95,6 @@ jobs:
             CFLAGS="-mtune=generic -O2 -g0" && \
         sudo make -j$(nproc)
         sudo make install
-
         # expat build
         cd ..
         $DOWNLOADER $EXPAT
@@ -147,7 +139,6 @@ jobs:
             --static && \
         sudo make -j$(nproc)
         sudo make install
-
         # c-ares build
         cd ..
         $DOWNLOADER $C_ARES
@@ -198,7 +189,7 @@ jobs:
         
     - name: Compile
       id: compile
-      continue-on-error: true
+      # continue-on-error: true
       run: |
         REPO_NAME="aria2/aria2"
         FILE_VER=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/$REPO_NAME/releases/latest|grep tag_name|awk -F "\"" '{print $4}'|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
@@ -213,10 +204,8 @@ jobs:
         
         HOST=x86_64-w64-mingw32
         PREFIX=/usr/x86_64-w64-mingw32
-
         test -z "$HOST" && HOST=i686-w64-mingw32
         test -z "$PREFIX" && PREFIX=/usr/local/$HOST
-
         ./configure \
             --host=$HOST \
             --prefix=$PREFIX \
@@ -241,12 +230,10 @@ jobs:
             PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig"
         sudo make -j$(nproc)
         sudo $HOST-strip src/aria2c.exe
-
     - name: Check compilation
       if: steps.compile.outcome != 'success'
       run: |
         curl -s --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=Compiling aria2 windows_x86_x64 failed!!" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
-
     - name: Assemble Artifact
       run: |
         mkdir -p ./artifact
@@ -263,4 +250,3 @@ jobs:
         tag: "Last_release"
         overwrite: true
         file_glob: true
-
