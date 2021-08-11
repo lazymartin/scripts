@@ -144,8 +144,8 @@ jobs:
             --disable-nls \
             --with-libcares \
             --without-gnutls \
-            --without-wintls \
-            --with-openssl \
+            --with-wintls \
+            --without-openssl \
             --with-sqlite3 \
             --without-libxml2 \
             --with-libexpat \
