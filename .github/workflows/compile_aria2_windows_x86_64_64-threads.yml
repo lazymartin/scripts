@@ -164,8 +164,8 @@ jobs:
         
     - name: Assemble Artifact
       run: |
-        mkdir -p ${{ GITHUB_WORKSPACE }}/artifact
-        cp ${{ GITHUB_WORKSPACE }}/aria2/src/aria2c.exe ${{ GITHUB_WORKSPACE }}/artifact/aria2c_windows_x86_64_64-threads.exe
+        mkdir -p ${{ evn.GITHUB_WORKSPACE }}/artifact
+        cp ${{ evn.GITHUB_WORKSPACE }}/aria2/src/aria2c.exe ${{ evn.GITHUB_WORKSPACE }}/artifact/aria2c_windows_x86_64_64-threads.exe
         
     - name: Upload binaries to release
       uses: svenstaro/upload-release-action@v2
