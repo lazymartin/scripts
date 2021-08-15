@@ -33,8 +33,8 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y make binutils autoconf automake autotools-dev libtool pkg-config git curl dpkg-dev gcc-mingw-w64 g++-mingw-w64 autopoint libcppunit-dev libxml2-dev libgcrypt20-dev lzip
         
-    - name: Install dependences
-      id: dependences
+    - name: Install dependences and compile
+      id: compile
       continue-on-error: true
       run: |
         
@@ -139,6 +139,7 @@ jobs:
           make install
         
         #COMPILER AND PATH
+        cd
         PREFIX=/usr/sbin
         C_COMPILER="gcc"
         CXX_COMPILER="g++"
@@ -180,11 +181,8 @@ jobs:
 
     - name: Assemble Artifact
       run: |
-        mkdir -p ./artifact
-        REPO_NAME="aria2/aria2"
-        FILE_VER=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/$REPO_NAME/releases/latest|grep tag_name|awk -F "\"" '{print $4}'|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
-        work_path=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/$REPO_NAME/releases/latest|grep $FILE_VER.tar.xz|awk -F "\"" 'NR==1 {print $4}'|sed "s/.tar.xz//g"`
-        cp /home/runner/work/scripts/scripts/${work_path}/src/aria2c ./artifact/aria2c_linux_x86_64_64-threads
+        mkdir -p ${{ github.workspace }}/artifact
+        cp ${{ github.workspace }}/aria2/src/aria2c.exe ${{ github.workspace }}/artifact/aria2c_Linux_x86_64_64-threads_test
         
     - name: Upload binaries to release
       uses: svenstaro/upload-release-action@v2
