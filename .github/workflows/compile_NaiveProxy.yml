@@ -14,9 +14,10 @@ env:
 on:
   # schedule:
     # - cron: '00 19 * * 0'
-  # push:
-    # paths: 
+  push:
+    paths: 
       # - '.github/workflows/compile_NaiveProxy.yml'
+      - '.github/workflows/NaiveProxy.yml'
 
 jobs:
   build:

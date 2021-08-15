@@ -56,7 +56,9 @@ jobs:
         ZLIB_ver=`curl -s http://www.zlib.net/|grep -A 3 "Current release"|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
         ZLIB=http://www.zlib.net/zlib-${ZLIB_ver}.tar.gz
 
-        C_ARES=https://c-ares.haxx.se/download/c-ares-1.16.1.tar.gz
+        # C_ARES=https://c-ares.haxx.se/download/c-ares-1.16.1.tar.gz
+        C_ARES_ver=`curl -s https://c-ares.haxx.se/download/|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"|head -n 1`
+        C_ARES=https://c-ares.haxx.se/download/c-ares-${C_ARES_ver}.tar.gz
 
         SSH2_ver=`curl -s https://www.libssh2.org|grep "The latest release"|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
         SSH2=https://www.libssh2.org/download/libssh2-${SSH2_ver}.tar.gz
@@ -119,8 +121,8 @@ jobs:
         cd ..
 
         curl -L -O ${C_ARES}
-        tar xf c-ares-1.16.1.tar.gz && \
-        cd c-ares-1.16.1 && \
+        tar xf c-ares-${C_ARES_ver}.tar.gz && \
+        cd c-ares-${C_ARES_ver} && \
         ./configure \
             --disable-shared \
             --enable-static \
