@@ -42,13 +42,27 @@ jobs:
         
         git clone https://github.com/aria2/aria2
         cd aria2 && autoreconf -i
-        sed -i "s/HOST=i686-w64-mingw32/HOST=x86_64-w64-mingw32/g" ./mingw-config
         sed -i s"/\"1\"\, 1\, 16\, \'x\'/\"1\"\, 1\, 64\, \'x\'/g" ./src/OptionHandlerFactory.cc
         sed -i s"/1\, 16\,/1\, 64\,/" ./src/OptionHandlerFactory.cc
         
         ./configure \
-          CPPFLAGS="-fsanitize=address" LDFLAGS="-fsanitize=address" ARIA2_STATIC=yes
-        
+            --prefix=$PREFIX \
+            --disable-nls \
+            --without-libxml2 \
+            --without-libgcrypt \
+            --with-openssl \
+            --without-gnutls \
+            --without-libnettle \
+            --without-libgmp \
+            --with-libcares \
+            --with-libz \
+            --with-libexpat \
+            --with-libssl \
+            --with-libssh2 \
+            --with-sqlite3 \
+            --with-ca-bundle='/etc/ssl/certs/ca-certificates.crt' \
+            --enable-shared=no \
+            ARIA2_STATIC=yes
         make -j$(nproc)
         strip -s ./src/aria2c
 
