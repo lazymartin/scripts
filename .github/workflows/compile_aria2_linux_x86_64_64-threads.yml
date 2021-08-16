@@ -66,8 +66,6 @@ jobs:
         make -j$(nproc)
         strip -s ./src/aria2c
 
-            # --with-ca-bundle='/etc/ssl/certs/ca-certificates.crt' \
-
     - name: Check compilation
       if: steps.compile.outcome != 'success'
       run: |
