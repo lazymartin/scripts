@@ -10,14 +10,14 @@ env:
   TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
   TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
   TZ: Asia/Shanghai
-        
+
 on:
   schedule:
     - cron: '00 19 * * 0'
   push:
     paths: 
       - '.github/workflows/compile_aria2_linux_x86_64_64-threads.yml'
-        
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -40,7 +40,7 @@ jobs:
         CC="gcc-8"
         CXX="g++-8"
         
-        git clone https://github.com/aria2/aria2.git
+        git clone https://github.com/aria2/aria2
         cd aria2 && autoreconf -i
         sed -i s"/\"1\"\, 1\, 16\, \'x\'/\"1\"\, 1\, 64\, \'x\'/g" ./src/OptionHandlerFactory.cc
         sed -i s"/1\, 16\,/1\, 64\,/" ./src/OptionHandlerFactory.cc
@@ -70,8 +70,7 @@ jobs:
       if: steps.compile.outcome != 'success'
       run: |
         curl -s --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=Compiling aria2 linux_x64 failed!!" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
-        exit
-
+        
     - name: Assemble Artifact
       run: |
         mkdir -p ${{ github.workspace }}/artifact
@@ -85,4 +84,4 @@ jobs:
         tag: "Last_release"
         overwrite: true
         file_glob: true
-        
+ 
