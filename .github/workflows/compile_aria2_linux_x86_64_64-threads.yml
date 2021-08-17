@@ -10,14 +10,14 @@ env:
   TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
   TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
   TZ: Asia/Shanghai
-
+        
 on:
   schedule:
     - cron: '00 19 * * 0'
   push:
     paths: 
       - '.github/workflows/compile_aria2_linux_x86_64_64-threads.yml'
-
+        
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -65,12 +65,12 @@ jobs:
             ARIA2_STATIC=yes
         make -j$(nproc)
         strip -s ./src/aria2c
-
+        
     - name: Check compilation
       if: steps.compile.outcome != 'success'
       run: |
         curl -s --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=Compiling aria2 linux_x64 failed!!" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
-
+        
     - name: Assemble Artifact
       run: |
         mkdir -p ${{ github.workspace }}/artifact
