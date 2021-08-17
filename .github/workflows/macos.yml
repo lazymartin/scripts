@@ -28,13 +28,16 @@ jobs:
       # continue-on-error: true
       run: |
         cd ~
-        FILE_VER=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/aria2/aria2/releases/latest|grep tag_name|awk -F "\"" '{print $4}'|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
-        FILE_NAME=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/aria2/aria2/releases/latest|grep $FILE_VER.tar.xz|awk -F "\"" 'NR==1 {print $4}'`
-        DOWNLOAD_LINK=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/aria2/aria2/releases/latest|grep -oE "https://github.com.*$FILE_VER.tar.xz"`
+        # FILE_VER=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/aria2/aria2/releases/latest|grep tag_name|awk -F "\"" '{print $4}'|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
+        # FILE_NAME=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/aria2/aria2/releases/latest|grep $FILE_VER.tar.xz|awk -F "\"" 'NR==1 {print $4}'`
+        # DOWNLOAD_LINK=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/aria2/aria2/releases/latest|grep -oE "https://github.com.*$FILE_VER.tar.xz"`
         
-        wget -q $DOWNLOAD_LINK --show-progress -O $FILE_NAME
-        tar xf $FILE_NAME
-        cd `echo $FILE_NAME|sed "s/.tar.xz//g"`
+        # wget -q $DOWNLOAD_LINK --show-progress -O $FILE_NAME
+        # tar xf $FILE_NAME
+        # cd `echo $FILE_NAME|sed "s/.tar.xz//g"`
+        
+        git clone https://github.com/aria2/aria2.git
+        
         sed -i "" s"/\"1\"\, 1\, 16\, \'x\'/\"1\"\, 1\, 64\, \'x\'/g" ./src/OptionHandlerFactory.cc
         sed -i "" s"/\"5\"\, 1\, -1, \'j\'/\"5\"\, 1\, -1\, \'j\'/g" ./src/OptionHandlerFactory.cc
         sudo make -f makerelease-osx.mk
