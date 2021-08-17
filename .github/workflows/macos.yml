@@ -25,9 +25,9 @@ jobs:
     steps:
     - name: Compile
       id: compile
-      continue-on-error: true
+      # continue-on-error: true
       run: |
-        git clone https://github.com/aria2/aria2
+        git clone https://github.com/aria2/aria2.git
         cd aria2
         sed -i "" s"/\"1\"\, 1\, 16\, \'x\'/\"1\"\, 1\, 64\, \'x\'/g" ./src/OptionHandlerFactory.cc
         sed -i "" s"/\"5\"\, 1\, -1, \'j\'/\"5\"\, 1\, -1\, \'j\'/g" ./src/OptionHandlerFactory.cc
