@@ -18,11 +18,11 @@ on:
   push:
     paths: 
       - '.github/workflows/macos.yml'
-    
+
 jobs:
   build:
     runs-on: macos-latest
-    
+    steps:
     - name: Compile
       id: compile
       continue-on-error: true
@@ -32,16 +32,15 @@ jobs:
         sed -i "" s"/\"1\"\, 1\, 16\, \'x\'/\"1\"\, 1\, 64\, \'x\'/g" ./src/OptionHandlerFactory.cc
         sed -i "" s"/\"5\"\, 1\, -1, \'j\'/\"5\"\, 1\, -1\, \'j\'/g" ./src/OptionHandlerFactory.cc
         sudo make -f makerelease-osx.mk
-        
+
         # mkdir -p ./artifact
         # cp ~/aria2-${FILE_VER}/src/aria2c ./artifact/aria2c_macOS_64-threads
         # chmod +x ~/aria2-${FILE_VER}/src/aria2c
         # ~/aria2-${FILE_VER}/src/aria2c -v
         # ~/aria2-${FILE_VER}/src/aria2c -h
-        
+
     - name: Check compilation
       if: steps.compile.outcome != 'success'
       run: |
         curl -s --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=Compiling aria2 macOS_x86_x64 failed!!" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
         exit
-        
