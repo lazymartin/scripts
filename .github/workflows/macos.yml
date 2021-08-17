@@ -39,8 +39,8 @@ jobs:
         # ~/aria2-${FILE_VER}/src/aria2c -v
         # ~/aria2-${FILE_VER}/src/aria2c -h
 
-    - name: Check compilation
-      if: steps.compile.outcome != 'success'
-      run: |
-        curl -s --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=Compiling aria2 macOS_x86_x64 failed!!" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
-        exit
+    # - name: Check compilation
+      # if: steps.compile.outcome != 'success'
+      # run: |
+        # curl -s --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=Compiling aria2 macOS_x86_x64 failed!!" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
+        # exit
