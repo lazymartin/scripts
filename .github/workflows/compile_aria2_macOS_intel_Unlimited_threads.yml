@@ -17,7 +17,7 @@ on:
     - cron: '00 19 * * 0'
   push:
     paths: 
-      - '.github/workflows/compile_aria2_macOS_64-threads.yml'
+      - '.github/workflows/compile_aria2_macOS_intel_Unlimited_threads.yml'
     
 jobs:
   build:
@@ -48,7 +48,7 @@ jobs:
         tar xf $FILE_NAME
         cd `echo $FILE_NAME|sed "s/.tar.xz//g"`
 
-        # MAX_CONNECTION_PER_SERVER
+        # MAX_CONNECTION_PER_SERVER  change to unlimited threads
         sed -i '' s'/"1", 1, 16/"128", 1, -1/g' ./src/OptionHandlerFactory.cc
         # MIN_SPLIT_SIZE
         sed -i '' s'/"20M", 1_m, 1_g/"4K", 1_k, 1_g/g' ./src/OptionHandlerFactory.cc
@@ -118,23 +118,20 @@ jobs:
             --without-libxml2 \
             ARIA2_STATIC=yes
         
-        # make check
-        sudo make -j99
-        sudo make check -j99
-        sudo make install
-        # strip -s ./src/aria2c
+        sudo make -j$(nproc)
         
     - name: Check compilation
       if: steps.compile.outcome != 'success'
       run: |
         curl -s --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=Compiling aria2 macOS_x86_x64 failed!!" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
+        
     - name: Assemble Artifact
       shell: zsh {0} 
       run: |
         mkdir -p ./artifact
         FILE_VER=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/aria2/aria2/releases/latest|grep tag_name|awk -F "\"" '{print $4}'|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
         ## work_path=`curl -s https://api.github.com/repos/aria2/aria2/releases/latest|grep $FILE_VER.tar.xz|awk -F "\"" 'NR==1 {print $4}'|gsed "s/.tar.xz//g"`
-        cp ~/aria2-${FILE_VER}/src/aria2c ./artifact/aria2c_macOS_64-threads
+        cp ~/aria2-${FILE_VER}/src/aria2c ./artifact/aria2c_macOS_intel_Unlimited_threads
         cd ~/aria2-${FILE_VER}/src/
         chmod +x aria2c
         ./aria2c -v

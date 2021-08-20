@@ -16,7 +16,7 @@ on:
     - cron: '00 19 * * 0'
   push:
     paths: 
-      - '.github/workflows/compile_aria2_linux_x86_64_64-threads.yml'
+      - '.github/workflows/compile_aria2_linux_x86_64_Unlimited_threads.yml'
 
 jobs:
   build:
@@ -85,7 +85,7 @@ jobs:
     - name: Assemble Artifact
       run: |
         mkdir -p ${{ github.workspace }}/artifact
-        cp ${{ github.workspace }}/aria2/src/aria2c ${{ github.workspace }}/artifact/aria2c_Linux_x86_64_64-threads
+        cp ${{ github.workspace }}/aria2/src/aria2c ${{ github.workspace }}/artifact/aria2c_Linux_x86_64_Unlimited_threads
         
     - name: Upload binaries to release
       uses: svenstaro/upload-release-action@v2
