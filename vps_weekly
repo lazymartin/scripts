@@ -25,32 +25,18 @@ del_log(){
   logger "The specified log file has been emptied."
 }
 
-update_freenom(){
-  cd ~/freenom
-  BRANCHNAME=`git checkout|awk -F "/" '{print $2}'|sed "s/'.//g"`
-  # latest_commit=`curl -s https://github.com/luolongfei/freenom/commits/master|grep "data-url"|awk -F "/" 'NR==1 {print $5}'`
-  rollback_commit="f9218406445dd5d7bb29c7562ef720d08fea3a92"
-  git reset --hard ${rollback_commit}
-  git push origin ${BRANCHNAME} --force
-  sleep 60
-  git pull upstream ${BRANCHNAME}
-  git push origin ${BRANCHNAME}
-  logger "Repository of freenom Active status has been updated!"
-  cd ~
-}
-
-update_freenom_old(){
-  cd ~/freenom
+update_renew_freenom(){
+  cd ${HOME}/github/renew_freenom
   if [[ -s check.md ]]; then
       cat /dev/null > check.md
     else
       echo "check update" > check.md
   fi
   git add -A && git commit -a -m "push" && git push
-  logger "Repository of freenom Active status has been updated!"
-  cd ~
+  logger "Repository of renew_freenom Active status has been updated!"
+  cd
 }
 
 update_app
 del_log
-update_freenom
+update_renew_freenom

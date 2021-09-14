@@ -13,7 +13,7 @@ sync_repo(){
       upstream_name=`git remote -v|grep ${owner_list[i]}/${repo_list[i]}`
       [[ -z ${upstream_name} ]] && git remote add upstream git@github.com:${owner_list[i]}/${repo_list[i]}.git
       git pull upstream ${BRANCHNAME}
-      git push origin
+      git push origin ${BRANCHNAME}
       if [[ $? -eq 0 ]];then logger "${repo_list[i]} has synchronized with upstream!";else logger "==ERROR== ${repo_list[i]} failed to synchronize with upstream!";fi
     cd ${HOME}/github
     done

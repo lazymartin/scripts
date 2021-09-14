@@ -8,7 +8,6 @@
   "inbounds": [
     {
       "tag": "http_proxy",
-      //"listen": "127.0.0.1",
       "port": ${local_http_proxy_port},
       "protocol": "http",
       "sniffing": {
@@ -22,7 +21,6 @@
     },
     {
       "tag": "socks_proxy",
-      //"listen": "127.0.0.1",
       "port": ${local_socks_proxy_port},
       "protocol": "socks",
       "sniffing": {
@@ -40,7 +38,6 @@
 //VLESS_XTLS_Fallback
     {
     	"tag": "proxy",
-      //"sendThrough": "192.168.1.1",
       "protocol": "vless",
       "settings": {
         "vnext": [
@@ -68,7 +65,6 @@
     },
     {
       "tag": "direct",
-      //"sendThrough": "192.168.1.1",
       "protocol": "freedom",
       "settings": {
         "domainStrategy": "UseIP"
@@ -76,24 +72,12 @@
     },
     {
       "tag": "block",
-      //"sendThrough": "192.168.1.1",
       "protocol": "blackhole",
       "settings": {
         "response": {
           "type": "http"
         }
       }
-    },
-    {
-      "tag": "dns-out",
-      //"sendThrough": "192.168.1.1",
-      "protocol": "dns"
-      //"settings": {
-      //  "address": "8.8.4.4"
-      //},
-      //"proxySettings": {
-      //  "tag": "proxy"
-      //}
     }
   ],
 
@@ -105,8 +89,7 @@
     },
     "servers": [
       {
-        "address": "${isp_dns}", //中国大陆域名使用ISP DNS, 或公共DNS "223.5.5.5", "https://doh.pub/dns-query", "https://223.5.5.5/dns-query", "202.96.128.166", 
-        "port": 53,
+        "address": "https+local://223.5.5.5/dns-query", //中国大陆域名使用ISP DNS, 或公共DNS "223.5.5.5", "https://doh.pub/dns-query", "https://223.5.5.5/dns-query", "202.96.128.166", 
         "domains": [
           "geosite:cn",
           "ntp.org",   // NTP 服务器
@@ -115,56 +98,18 @@
         "expectIPs": [
           "geoip:cn"
         ]
-      },
-      {
-        "address": "https://dns.google/dns-query", //非中国大陆域名使用 Google 的 DNS "8.8.4.4", "https://1.1.1.1/dns-query", "https://dns.google/dns-query",
-        "port": 53,
-        "domains": [
-          "geosite:geolocation-!cn"
-        ]
       }
     ]
   },
 
   "routing": {
-    "domainStrategy": "IPOnDemand",
+    "domainStrategy": "IPIfNonMatch", //"IPOnDemand" "AsIs" "IPIfNonMatch"
     "rules": [
-      { // 劫持DNS查询流量
-        "type": "field",
-        "inboundTag": [
-          "remote",
-          "http_proxy",
-          "socks_proxy"
-        ],
-        "port": 53,
-        "network": "udp",
-        "outboundTag": "dns-out" 
-      },    
       { // 直连查询授时服务器
-        "type": "field",
-        "inboundTag": [
-          "http_proxy",
-          "socks_proxy"
-        ],
         "port": 123,
         "network": "udp",
         "outboundTag": "direct" 
       },    
-      { // 直连查询国内DNS服务器
-        "type": "field", 
-        "ip": [
-          "223.5.5.5"
-        ],
-        "outboundTag": "direct"
-      },
-      { // 代理查询国际DNS服务器
-        "type": "field",
-        "ip": [
-          "1.1.1.1",
-          "8.8.4.4"
-        ],
-        "outboundTag": "proxy" 
-      },
       { // BT协议直连
         "type": "field",
         "protocol":["bittorrent"], 

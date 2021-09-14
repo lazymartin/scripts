@@ -9,7 +9,6 @@
 //VLESS_XTLS_Fallback
     {
       "port": 443,
-      //"listen": "127.0.0.1",
       "protocol": "vless",
       "sniffing": {
         "enabled": true,
@@ -60,19 +59,10 @@
   "outbounds": [
     {
       "protocol": "freedom",
-      "sendThrough": "0.0.0.0",
       "settings": {
         "domainStrategy": "UseIPv4"
       }
     },
-    //{
-    //  "tag":"IPv6_out",
-    //  "protocol": "freedom",
-    //  "sendThrough": "::",
-    //  "settings": {
-    //    "domainStrategy": "UseIPv6" // 指定使用 IPv6
-    //  }
-    //},
     {
       "protocol": "blackhole",
       "settings": {},
@@ -86,28 +76,13 @@
       "dns.google": "2001:4860:4860::8844"
     },
     "servers": [
-    "https://dns.google/dns-query"
+    "https+local://1.1.1.1/dns-query" //"8.8.4.4" "https+local://dns.google/dns-query"
     ]
   },
 
   "routing": {
     "domainStrategy": "AsIs",
     "rules": [
-      //{
-      //  "type": "field",
-      //  "outboundTag": "IPv6_out",
-      //  "domain": [
-      //    "geosite:netflix",
-      //    "nflxvideo.net",
-      //    "nflxext.com",
-      //    "nflxso.net",
-      //    "scholar.google.cn",
-      //    "scholar.google.com",
-      //    "scholar.google.com.hk",
-      //    "scholar.google.com.tw",
-      //    "scholar.google.com.sg"
-      //  ]
-      //},
       {
         "type": "field",
         "outboundTag": "block",
