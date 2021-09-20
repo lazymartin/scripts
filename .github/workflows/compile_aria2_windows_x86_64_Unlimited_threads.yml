@@ -57,8 +57,8 @@ jobs:
         ZLIB=http://www.zlib.net/zlib-${ZLIB_ver}.tar.gz
 
         # C_ARES=https://c-ares.haxx.se/download/c-ares-1.16.1.tar.gz
-        C_ARES_ver=`curl -s https://c-ares.haxx.se/download/|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"|head -n 1`
-        C_ARES=https://c-ares.haxx.se/download/c-ares-${C_ARES_ver}.tar.gz
+        C_ARES_ver=`curl -s https://c-ares.org/download/|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"|head -n 1`
+        C_ARES=https://c-ares.org/download/c-ares-${C_ARES_ver}.tar.gz
 
         SSH2_ver=`curl -s https://www.libssh2.org|grep "The latest release"|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
         SSH2=https://www.libssh2.org/download/libssh2-${SSH2_ver}.tar.gz
@@ -174,7 +174,7 @@ jobs:
     - name: Check compilation
       if: steps.compile.outcome != 'success'
       run: |
-        curl -s --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=Compiling aria2 linux_x64 failed!!" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
+        curl -s --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=Compiling aria2 windows x86_64 Latest failed!!" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
         exit
         
     - name: Assemble Artifact
