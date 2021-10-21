@@ -42,6 +42,7 @@ jobs:
         CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o xray_win-x64.exe -trimpath -ldflags "-s -w -buildid=" ./main # win_x64
         CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o xray_macos_x86-64 -trimpath -ldflags "-s -w -buildid=" ./main # macOS_x86-64
         CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -o xray_macos_arm64 -trimpath -ldflags "-s -w -buildid=" ./main # macOS_arm64
+        CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o xray_arm64_v8 -trimpath -ldflags "-s -w -buildid=" ./main # linux arm64 v8a
         # wget `curl -s https://api.github.com/repos/v2fly/geoip/releases/latest|grep -oE "https.*geoip.dat\""|sed 's/"//'`
         # wget `curl -s https://api.github.com/repos/v2fly/domain-list-community/releases/latest|grep -oE "https.*dlc.dat\""|sed 's/"//'`
         wget https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat
