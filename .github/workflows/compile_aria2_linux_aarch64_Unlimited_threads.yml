@@ -187,7 +187,7 @@ jobs:
             PKG_CONFIG_PATH="$LOCAL_DIR/lib/pkgconfig" \
             ARIA2_STATIC=yes
         make -j$(nproc)
-        strip -s /tmp/aria2/src/aria2c
+        aarch64-linux-gnu-strip /tmp/aria2/src/aria2c
         
     - name: Check compilation
       if: steps.compile.outcome != 'success'
