@@ -31,14 +31,14 @@ jobs:
         DEBIAN_FRONTEND: noninteractive
       run: |
         sudo apt-get update
-        sudo apt-get install -y g++-8 autoconf automake autotools-dev autopoint libtool pkg-config libssl-dev libc-ares-dev zlib1g-dev libsqlite3-dev libssh2-1-dev libcppunit-dev
+        sudo apt-get install -y autoconf automake autotools-dev autopoint libtool pkg-config libssl-dev libc-ares-dev zlib1g-dev libsqlite3-dev libssh2-1-dev libcppunit-dev
         
     - name: Install dependences and compile
       id: compile
       continue-on-error: true
       run: |
-        CC="gcc-8"
-        CXX="g++-8"
+        CC="gcc"
+        CXX="g++"
         
         git clone https://github.com/aria2/aria2
         cd aria2 && autoreconf -i
