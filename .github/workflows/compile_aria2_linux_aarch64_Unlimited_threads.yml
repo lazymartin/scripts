@@ -4,7 +4,7 @@
 # Author: lazymartin
 #=================================================
 
-name: Compile aria2 linux x86_64 Latest release
+name: Compile aria2 linux aarch64 Latest release
 
 env:
   TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -45,7 +45,7 @@ jobs:
         ## DEPENDENCES ##
         ZLIB=http://sourceforge.net/projects/libpng/files/zlib/1.2.11/zlib-1.2.11.tar.gz
         OPENSSL=http://www.openssl.org/source/openssl-1.0.2o.tar.gz
-        EXPAT=https://sourceforge.net/projects/expat/files/expat/2.2.0/expat-2.2.0.tar.bz2
+        EXPAT=https://sourceforge.net/projects/expat/files/expat/2.4.1/expat-2.4.1.tar.bz2/download
         SQLITE3=http://www.sqlite.org/2018/sqlite-autoconf-3230100.tar.gz
         C_ARES=http://c-ares.haxx.se/download/c-ares-1.14.0.tar.gz
         SSH2=https://www.libssh2.org/download/libssh2-1.7.0.tar.gz
