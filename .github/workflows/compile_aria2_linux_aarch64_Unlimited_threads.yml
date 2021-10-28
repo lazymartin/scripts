@@ -84,7 +84,7 @@ jobs:
           cd ..
           $DOWNLOADER $EXPAT
           tar jxvf expat-2.4.1.tar.bz2
-          cd expat-2.2.0/
+          cd expat-2.4.1/
           PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig/ LD_LIBRARY_PATH=$PREFIX/lib/ CC=$HOST-gcc CXX=$HOST-g++ ./configure --host=$HOST --build=`dpkg-architecture -qDEB_BUILD_GNU_TYPE` --prefix=$PREFIX --enable-static=yes --enable-shared=no
           make -j$(nproc)
           make -j$(nproc) install
