@@ -197,7 +197,7 @@ jobs:
     - name: Assemble Artifact
       run: |
         mkdir -p ${{ github.workspace }}/artifact
-        cp ${{ github.workspace }}/aria2/src/aria2c ${{ github.workspace }}/artifact/aria2c_Linux_aarch64_Unlimited_threads
+        cp /tmp/aria2/src/aria2c ${{ github.workspace }}/artifact/aria2c_Linux_aarch64_Unlimited_threads
         
     - name: Upload binaries to release
       uses: svenstaro/upload-release-action@v2
