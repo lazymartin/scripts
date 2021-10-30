@@ -12,11 +12,12 @@ env:
   TZ: Asia/Shanghai
 
 on:
-  schedule:
-    - cron: '00 19 * * 0'
+  # schedule:
+    # - cron: '00 19 * * 0'
   push:
     paths: 
-      - '.github/workflows/compile_nginx_mainline.yml'
+      # - '.github/workflows/compile_nginx_mainline.yml'
+      - '.github/workflows/nginx_mainline.yml'
 
 jobs:
   build:
