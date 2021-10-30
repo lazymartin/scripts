@@ -39,7 +39,7 @@ jobs:
         git clone https://github.com/XTLS/Xray-core.git
         cd Xray-core/
         CGO_ENABLED=0 go build -o xray_linux_x86_64 -trimpath -ldflags "-s -w -buildid=" ./main  # linux_x86_64
-        CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o xray_win-x64.exe -trimpath -ldflags "-s -w -buildid=" ./main # win_x64
+        CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o xray_win_x64.exe -trimpath -ldflags "-s -w -buildid=" ./main # win_x64
         CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o xray_macos_x86_64 -trimpath -ldflags "-s -w -buildid=" ./main # macOS_x86_64
         CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -o xray_macos_arm64 -trimpath -ldflags "-s -w -buildid=" ./main # macOS_arm64
         CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o xray_linux_arm64_v8a -trimpath -ldflags "-s -w -buildid=" ./main # linux arm64 v8a
