@@ -14,8 +14,8 @@ if [[ -z ${webdav_link} ]]; then
   download_link="https://github.com/lazymartin/scripts/releases/download/Last_release/"
   config_link="https://raw.githubusercontent.com/lazymartin/scripts/master/configurations/xray/"
   else
-  download_link="--http-user=${webdav_username} --http-passwd=${webdav_password} ${webdav_link}/"
-  config_link="--http-user=${webdav_username} --http-passwd=${webdav_password} ${webdav_link}/"
+  download_link="--http-user=${webdav_username} --http-passwd=${webdav_password} ${webdav_link}"
+  config_link="--http-user=${webdav_username} --http-passwd=${webdav_password} ${webdav_link}"
 fi
 
 if [[ -f /usr/local/bin/xray ]]; then
