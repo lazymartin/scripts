@@ -87,4 +87,5 @@ active_stat=`systemctl list-units --type=service --state=active |grep xray`
 [[ -z ${active_stat} ]] && systemctl enable xray &>/dev/null
 
 echo -e "${OK}The xray with latest commit has been ${install_type}!${Font}"
+echo ${download_link}
 
