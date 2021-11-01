@@ -38,7 +38,7 @@ else
   echo && echo -e "${Error}Only supports x86_64 or aarch64 architecture!!${Font}" && echo && exit 1
 fi
 
-if [[ "${system_type}" = "debian" || "${system_type}" = "ubuntu" || "${system_type}" = "Armbian" ]]; then
+if [[ "${system_type}" = "Debian" || "${system_type}" = "Ubuntu" || "${system_type}" = "Armbian" ]]; then
   echo ""
   else
   echo && echo -e "${Error}Only supports Debian or Ubuntu system!!${Font}" && echo && exit 1
