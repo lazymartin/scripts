@@ -8,8 +8,6 @@ update_app(){
   ps -aux|grep -v grep|grep -Ei "nginx|xray"|awk -F " " '{print $2}'|xargs kill -9 &>/dev/null
   apt install -y nginx
   if [[ $? -eq 0 ]];then logger "Nginx upgrade succeeded!";else logger "Nginx upgrade failed!";fi
-  /root/.acme.sh/acme.sh --upgrade &>/dev/null
-  if [[ $? -eq 0 ]];then logger "acme upgrade succeeded!";else logger "acme upgrade failed!";fi
   bash <(curl -Ls https://raw.githubusercontent.com/lazymartin/scripts/master/install_xray.sh)
   if [[ $? -eq 0 ]];then logger "Xray-core upgrade succeeded!";else logger "Xray-core upgrade failed!";fi
   systemctl daemon-reload &>/dev/null
@@ -26,6 +24,8 @@ del_log(){
 }
 
 update_renew_freenom(){
+  cd ${HOME}/github
+  [[ ! -d renew_freenom ]] && git clone git@github.com:lazymartin/renew_freenom.git
   cd ${HOME}/github/renew_freenom
   if [[ -s check.md ]]; then
       cat /dev/null > check.md
