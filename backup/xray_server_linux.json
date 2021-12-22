@@ -7,18 +7,18 @@
   },
 
   "inbounds": [
+//VLESS_XTLS_Fallback
     {
       "port": 443,
       "protocol": "vless",
       "sniffing": {
         "enabled": true,
-        "routeOnly": true,
         "destOverride": ["http", "tls"]
       },
       "settings": {
         "clients": [
           {
-            "id": "${uuid}",
+            "id": "${uuid}", // 填写你的 UUID
             "flow": "xtls-rprx-direct",
             "level": 0,
             "email": "love@v2fly.org"
@@ -27,7 +27,14 @@
         "decryption": "none",
         "fallbacks": [
           {
-            "dest": 1080,
+            //"dest": "/dev/shm/default.sock",
+            "dest": ${fallback_port_http},
+            "xver": 1
+          },
+          {
+            "alpn": "h2",
+            "dest": ${fallback_port_http2},
+            //"dest": "/dev/shm/h2c.sock",
             "xver": 1
           }
         ]
@@ -41,37 +48,10 @@
           "certificates": [
             {
               "ocspStapling": 0,
-              "certificateFile": "/etc/ssl/web.crt",
-              "keyFile": "/etc/ssl/web.key"
+              "certificateFile": "/etc/ssl/web.crt", // 换成你的证书，绝对路径
+              "keyFile": "/etc/ssl/web.key" // 换成你的私钥，绝对路径
             }
           ]
-        }
-      }
-    },
-    {
-      "port": 1080,
-      "listen": "127.0.0.1",
-      "protocol": "trojan",
-      "settings": {
-        "clients": [
-          {
-            "password": "9989c9ca-c7be-4f8b-8122-6293ae0199c6",
-            "level": 0,
-            "email": "love@example.com"
-          }
-        ],
-        "fallbacks": [
-          {
-            "dest": ${fallback_port_http},
-            "xver": 1
-          }
-        ]
-      },
-      "streamSettings": {
-          "network": "tcp",
-          "security": "none",
-          "tcpSettings": {
-            "acceptProxyProtocol": true
         }
       }
     }
@@ -81,7 +61,7 @@
     {
       "protocol": "freedom",
       "settings": {
-        "domainStrategy": "UseIPv4"
+        "domainStrategy": "UseIP"
       }
     },
     {
