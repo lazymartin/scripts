@@ -103,6 +103,7 @@
 
   "routing": {
     "domainStrategy": "AsIs",
+    "domainMatcher": "mph",
     "rules": [
       {
         "type": "field",
