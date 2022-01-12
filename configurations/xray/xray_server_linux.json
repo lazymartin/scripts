@@ -97,7 +97,8 @@
       "dns.google": "2001:4860:4860::8844"
     },
     "servers": [
-    "https+local://1.1.1.1/dns-query" //"8.8.4.4" "https+local://dns.google/dns-query"
+    "https+local://1.1.1.1/dns-query"
+    //"https+local://dns.google/dns-query"
     ]
   },
 
@@ -107,11 +108,19 @@
     "rules": [
       {
         "type": "field",
-        "outboundTag": "block",
-        "protocol": [
-          "bittorrent"
-        ]
+        "protocol": ["bittorrent"],
+        "outboundTag": "block"
       }
+      //{ 
+      //  "type": "field",
+      //  "domain": ["geosite:cn"],
+      //  "outboundTag": "block"
+      //},
+      //{ 
+      //  "type": "field",
+      //  "ip": ["geoip:cn"],
+      //  "outboundTag": "block"
+      //}
     ]
   }
 }
