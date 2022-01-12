@@ -79,10 +79,7 @@
 
   "outbounds": [
     {
-      "protocol": "freedom",
-      "settings": {
-        "domainStrategy": "UseIPv4"
-      }
+      "protocol": "freedom"
     },
     {
       "protocol": "blackhole",
@@ -90,17 +87,6 @@
       "tag": "block"
     }
   ],
-  
-  "dns": {
-    "hosts": {
-      "dns.google": "8.8.8.8",
-      "dns.google": "2001:4860:4860::8844"
-    },
-    "servers": [
-    //"https+local://1.1.1.1/dns-query"
-    "https+local://dns.google/dns-query"
-    ]
-  },
 
   "routing": {
     "domainStrategy": "AsIs",
@@ -111,16 +97,6 @@
         "protocol": ["bittorrent"],
         "outboundTag": "block"
       }
-      //{ 
-      //  "type": "field",
-      //  "domain": ["geosite:cn"],
-      //  "outboundTag": "block"
-      //},
-      //{ 
-      //  "type": "field",
-      //  "ip": ["geoip:cn"],
-      //  "outboundTag": "block"
-      //}
     ]
   }
 }
