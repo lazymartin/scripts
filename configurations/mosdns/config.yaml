@@ -11,9 +11,7 @@ plugin:
     type: server
     args:
       entry:
-        # - mem_cache       # 启用缓存
         - main_sequence   # 运行主执行序列
-        # - modify_ttl      # 修改 ttl
       server:
         - protocol: udp
           addr: 127.0.0.1:53
@@ -27,28 +25,13 @@ plugin:
     type: sequence
     args:
       exec:
-        # - if:
-            # - query_is_ad_domain         # 已知的广告域名
-          # exec:                          
-            # - _block_with_nxdomain       # 生成 NXDOMAIN 应答
-            # - _end
-
-        # - mem_cache                        # 启用缓存
-        # - local_hosts
-
         - if:
             - query_is_local_domain      # 已知的本地域名
             # - '!_query_is_common'        # 和不常见的请求类型
           exec:
-            # - ecs-cn
-            # - _pad_query
             - forward_local              # 用本地服务器
-            # - _prefer_ipv4               # 优先 IPv4
           else_exec:
-            # - ecs-outside
-            # - _pad_query
             - forward_remote             # 用远程服务器
-            # - _prefer_ipv4
             - _return
 
   # 转发请求至本地服务器的插件
@@ -86,10 +69,3 @@ plugin:
         - 'ext:/usr/local/share/xray/geosite.dat:apple-cn'
         - 'ext:/usr/local/share/xray/geosite.dat:category-games@cn'
         - 'ext:/usr/local/share/xray/geosite.dat:cn'
-
-  # 匹配广告域名的插件
-  # - tag: query_is_ad_domain
-    # type: query_matcher
-    # args:
-      # domain:
-        # - 'ext:/usr/local/share/xray/geosite.dat:category-ads-all'
