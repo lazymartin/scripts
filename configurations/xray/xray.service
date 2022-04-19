@@ -4,7 +4,7 @@ Documentation=https://github.com/XTLS/Xray-core
 After=network.target nss-lookup.target
 
 [Service]
-User=nobody
+User=www-data
 Type=simple
 StandardError=journal
 NoNewPrivileges=true
