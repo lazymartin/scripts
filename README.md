@@ -16,7 +16,7 @@ bash <(wget --no-check-certificate -qO- 'https://raw.githubusercontent.com/lazym
 
     Installation parameter description：  
 
-        -d 10     -->  diban 10  
+        -d 11     -->  diban 11  
         -v 64     -->  64 bit  
         -p 'xxx'  -->  setup password
         -a        -->  auto install  
