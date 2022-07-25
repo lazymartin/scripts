@@ -22,3 +22,4 @@ bash <(wget --no-check-certificate -qO- 'https://raw.githubusercontent.com/lazym
         -a        -->  auto install  
         --mirror  -->  mirror site  
 ```
+update
