@@ -39,4 +39,4 @@ update_renew_freenom(){
 
 update_app
 del_log
-update_renew_freenom
+# update_renew_freenom

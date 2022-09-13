@@ -3,8 +3,8 @@ PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
 
 sync_repo(){
-  repo_list=(freenom lede helloworld v2ray-core naiveproxy Xray-core)
-  owner_list=(luolongfei coolsnowwolf fw876 v2fly klzgrad XTLS)
+  repo_list=(lede helloworld v2ray-core naiveproxy Xray-core)
+  owner_list=(coolsnowwolf fw876 v2fly klzgrad XTLS)
   for i in `seq 0 $((${#repo_list[@]}-1))`
     do
       [[ ! -d ${repo_list[i]} ]] && git clone git@github.com:lazymartin/${repo_list[i]}.git

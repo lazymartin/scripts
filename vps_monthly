@@ -27,5 +27,5 @@ rollback_renew_freenom(){
   cd
 }
 
-rollback_renew_freenom
+# rollback_renew_freenom
 update_crt
