@@ -27,7 +27,7 @@
         "decryption": "none",
         "fallbacks": [
           {
-            "dest": 1080,
+            "dest": ${fallback_port_http},
             "xver": 1
           }
         ]
@@ -45,33 +45,6 @@
               "keyFile": "/etc/ssl/web.key"
             }
           ]
-        }
-      }
-    },
-    {
-      "port": 1080,
-      "listen": "127.0.0.1",
-      "protocol": "trojan",
-      "settings": {
-        "clients": [
-          {
-            "password": "9989c9ca-c7be-4f8b-8122-6293ae0199c6",
-            "level": 0,
-            "email": "love@example.com"
-          }
-        ],
-        "fallbacks": [
-          {
-            "dest": ${fallback_port_http},
-            "xver": 1
-          }
-        ]
-      },
-      "streamSettings": {
-          "network": "tcp",
-          "security": "none",
-          "tcpSettings": {
-            "acceptProxyProtocol": true
         }
       }
     }
