@@ -67,9 +67,8 @@ mkdir -p /usr/local/share/xray
 mkdir -p /var/log/xray
 touch /var/log/xray/error.log
 touch /var/log/xray/access.log
-chown nobody:adm /var/log/xray
-chown nobody:nogroup /var/log/xray/*
-
+chown www-data:adm /var/log/xray
+chown www-data:www-data /var/log/xray/*
 mv xray /usr/local/bin/ && chmod +x /usr/local/bin/xray
 mv {geoip.dat,geosite.dat} /usr/local/share/xray/
 
