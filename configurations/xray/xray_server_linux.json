@@ -19,9 +19,7 @@
         "clients": [
           {
             "id": "${uuid}",
-            "flow": "xtls-rprx-direct",
-            "level": 0,
-            "email": "love@v2fly.org"
+            "flow": "xtls-rprx-vision",
           }
         ],
         "decryption": "none",
@@ -34,8 +32,8 @@
       },
       "streamSettings": {
         "network": "tcp",
-        "security": "xtls",
-        "xtlsSettings": {
+        "security": "tls",
+        "tlsSettings": {
           "alpn": ["http/1.1","h2"],
           "minVersion": "1.3",
           "certificates": [
@@ -63,7 +61,7 @@
 
   "routing": {
     "domainStrategy": "AsIs",
-    "domainMatcher": "mph",
+    "domainMatcher": "hybrid",
     "rules": [
       {
         "type": "field",
