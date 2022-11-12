@@ -43,7 +43,8 @@
               "keyFile": "/etc/ssl/web.key"
             }
           ]
-        }
+        },
+        "sockopt": {"tcpFastOpen": 32768}
       }
     }
   ],
