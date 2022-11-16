@@ -27,6 +27,11 @@
           {
             "dest": ${fallback_port_http},
             "xver": 1
+          },
+          {
+            "path": "/webdav", // 必须换成自定义的 PATH
+            "dest": 1080,
+            "xver": 1
           }
         ]
       },
@@ -35,7 +40,7 @@
         "security": "tls",
         "tlsSettings": {
           "alpn": ["http/1.1","h2"],
-          "minVersion": "1.3",
+          "minVersion": "1.2",
           "certificates": [
             {
               "ocspStapling": 0,
@@ -46,6 +51,30 @@
         },
         "sockopt": {"tcpFastOpen": 32768}
       }
+    },
+    {
+      "port": 1080,
+      "listen": "127.0.0.1",
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          {
+            "id": "9989c9ca-c7be-4f8b-8122-6293ae0199c6", // 填写你的 UUID
+            "level": 0,
+            "email": "love@example.com"
+          }
+        ],
+        "decryption": "none"
+      },
+      "streamSettings": {
+        "network": "ws",
+        "security": "none",
+        "wsSettings": {
+          "acceptProxyProtocol": true, // 提醒：若你用 Nginx/Caddy 等反代 WS，需要删掉这行
+          "path": "/webdav" // 必须换成自定义的 PATH，需要和上面的一致
+        }
+      },
+      "sockopt": {"tcpFastOpen": 32768}
     }
   ],
 
