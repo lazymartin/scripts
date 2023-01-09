@@ -11,6 +11,7 @@ update_app(){
   bash <(curl -Ls https://raw.githubusercontent.com/lazymartin/scripts/master/install_xray.sh)
   if [[ $? -eq 0 ]];then logger "Xray-core upgrade succeeded!";else logger "Xray-core upgrade failed!";fi
   systemctl daemon-reload &>/dev/null
+  systemctl unmask nginx &>/dev/null
   systemctl start nginx &>/dev/null
   systemctl start xray &>/dev/null
 }
