@@ -12,7 +12,7 @@ The original system recommends using ubuntu 18.04 or centos 7.6
 
 ### `Useage`
 ```
-bash <(wget --no-check-certificate -qO- 'https://raw.githubusercontent.com/lazymartin/scripts/master/dd.sh') -d 10 -v 64 -p 'xxx' -a --mirror 'http://mirrors.aliyun.com/debian'
+bash <(wget --no-check-certificate -qO- 'https://raw.githubusercontent.com/lazymartin/scripts/master/dd.sh') -d 11 -v 64 -p 'xxx' -a --mirror 'http://mirrors.aliyun.com/debian'
 
     Installation parameter description：  
 
