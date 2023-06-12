@@ -61,7 +61,7 @@ jobs:
     - name: Assemble Artifact
       run: |
         mkdir -p ./artifact
-        cp ${{ github.workspace }}/v2dat/v2dat* ./artifact/
+        cp ${{ github.workspace }}/v2dat/v2dat_* artifact/
         # cp ${{ github.workspace }}/v2dat/geoip.dat artifact/
         # cp ${{ github.workspace }}/v2dat/dlc.dat artifact/geosite.dat
         # cp ${{ github.workspace }}/v2dat/geosite.dat artifact/
