@@ -31,7 +31,7 @@ jobs:
     - name: Initialization environment
       uses: actions/setup-go@v4
       with:
-        stable: 'true'
+        # stable: 'true'
         go-version: '^1.20' # The Go version to download (if necessary) and use.
         check-latest: true
 
