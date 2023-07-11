@@ -106,8 +106,8 @@ http://192.168.1.1:33888/rtp/239.77.1.144:5146
 # #EXTINF:-1 tvg-id="1" tvg-name="CCTV1" tvg-logo="http://epg.51zmt.top:8000/tb1/CCTV/CCTV1.png" group-title="",CCTV-1 综合 超清
 # http://192.168.1.1:33888/rtp/239.77.0.129:5146
 
-#EXTINF:-1 tvg-id="8" tvg-name="CCTV7" tvg-logo="http://epg.51zmt.top:8000/tb1/CCTV/CCTV6.png" group-title="",CCTV-6 电影
-http://192.168.1.1:33888/rtp/239.77.0.35:5146
+# #EXTINF:-1 tvg-id="8" tvg-name="CCTV7" tvg-logo="http://epg.51zmt.top:8000/tb1/CCTV/CCTV6.png" group-title="",CCTV-6 电影
+# http://192.168.1.1:33888/rtp/239.77.0.35:5146
 #EXTINF:-1 tvg-id="8" tvg-name="CCTV7" tvg-logo="http://epg.51zmt.top:8000/tb1/CCTV/CCTV6.png" group-title="",CCTV-6 电影 高清
 http://192.168.1.1:33888/rtp/239.77.0.171:5146
 # #EXTINF:-1 tvg-id="8" tvg-name="CCTV7" tvg-logo="http://epg.51zmt.top:8000/tb1/CCTV/CCTV6.png" group-title="",CCTV-6 电影 超清
