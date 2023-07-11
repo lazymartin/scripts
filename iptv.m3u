@@ -43,10 +43,10 @@ http://192.168.1.1:33888/rtp/239.77.0.127:5146
 # http://192.168.1.1:33888/rtp/239.77.1.33:5146
 # #EXTINF:-1 tvg-id="28" tvg-name="浙江卫视" tvg-logo="http://epg.51zmt.top:8000/tb1/ws/zhejiang.png" group-title="",浙江卫视 高清
 # http://192.168.1.1:33888/rtp/239.77.1.150:5146
-# #EXTINF:-1 tvg-id="28" tvg-name="浙江卫视" tvg-logo="http://epg.51zmt.top:8000/tb1/ws/zhejiang.png" group-title="",浙江卫视 高清
-# http://192.168.1.1:33888/rtp/239.77.0.89:5146
-#EXTINF:-1 tvg-id="28" tvg-name="浙江卫视" tvg-logo="http://epg.51zmt.top:8000/tb1/ws/zhejiang.png" group-title="",浙江卫视 超清
-http://192.168.1.1:33888/rtp/239.77.0.125:5146
+#EXTINF:-1 tvg-id="28" tvg-name="浙江卫视" tvg-logo="http://epg.51zmt.top:8000/tb1/ws/zhejiang.png" group-title="",浙江卫视 高清
+http://192.168.1.1:33888/rtp/239.77.0.89:5146
+# #EXTINF:-1 tvg-id="28" tvg-name="浙江卫视" tvg-logo="http://epg.51zmt.top:8000/tb1/ws/zhejiang.png" group-title="",浙江卫视 超清
+# http://192.168.1.1:33888/rtp/239.77.0.125:5146
 
 # #EXTINF:-1 tvg-id="33" tvg-name="广东卫视" tvg-logo="http://epg.51zmt.top:8000/tb1/ws/guangdong.png" group-title="",广东卫视 高清
 # http://192.168.1.1:33888/rtp/239.77.1.19:5146
