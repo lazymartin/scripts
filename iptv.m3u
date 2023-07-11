@@ -48,6 +48,26 @@ http://192.168.1.1:33888/rtp/239.77.0.89:5146
 # #EXTINF:-1 tvg-id="28" tvg-name="浙江卫视" tvg-logo="http://epg.51zmt.top:8000/tb1/ws/zhejiang.png" group-title="",浙江卫视 超清
 # http://192.168.1.1:33888/rtp/239.77.0.125:5146
 
+# #EXTINF:-1 tvg-id="7251" tvg-name="广东综艺" tvg-logo="http://epg.51zmt.top:8000/tb1/sheng/GDTVENT.png" group-title="",广东综艺4K 4K50p
+# http://192.168.1.1:33888/rtp/239.77.1.236:5146
+# #EXTINF:-1 tvg-id="7251" tvg-name="广东综艺" tvg-logo="http://epg.51zmt.top:8000/tb1/sheng/GDTVENT.png" group-title="",广东综艺4K
+# http://192.168.1.1:33888/rtp/239.77.1.237:5146
+# #EXTINF:-1 tvg-id="7251" tvg-name="广东综艺" tvg-logo="http://epg.51zmt.top:8000/tb1/sheng/GDTVENT.png" group-title="",广东综艺4K
+# http://192.168.1.1:33888/rtp/239.77.0.244:5146
+#EXTINF:-1 tvg-id="7251" tvg-name="广东综艺" tvg-logo="http://epg.51zmt.top:8000/tb1/sheng/GDTVENT.png" group-title="",广东综艺4K 宽色域(4k)
+http://192.168.1.1:33888/rtp/239.77.0.246:5146
+# #EXTINF:-1 tvg-id="7251" tvg-name="广东综艺" tvg-logo="http://epg.51zmt.top:8000/tb1/sheng/GDTVENT.png" group-title="",广东综艺4K
+# http://192.168.1.1:33888/rtp/239.77.0.245:5146
+# #EXTINF:-1 tvg-id="7251" tvg-name="广东综艺" tvg-logo="http://epg.51zmt.top:8000/tb1/sheng/GDTVENT.png" group-title="",广东综艺4K 宽色域AVS2(4k)
+# http://192.168.1.1:33888/rtp/239.77.0.252:5146
+
+# #EXTINF:-1 tvg-id="60" tvg-name="南方卫视" tvg-logo="http://epg.51zmt.top:8000/tb1/ws/nanfang.png" group-title="",大湾区卫视
+# http://192.168.1.1:33888/rtp/239.77.0.9:5146
+# #EXTINF:-1 tvg-id="60" tvg-name="南方卫视" tvg-logo="http://epg.51zmt.top:8000/tb1/ws/nanfang.png" group-title="",大湾区卫视
+# http://192.168.1.1:33888/rtp/239.77.1.12:5146
+#EXTINF:-1 tvg-id="60" tvg-name="南方卫视" tvg-logo="http://epg.51zmt.top:8000/tb1/ws/nanfang.png" group-title="",大湾区卫视
+http://192.168.1.1:33888/rtp/239.77.0.215:5146
+
 # #EXTINF:-1 tvg-id="33" tvg-name="广东卫视" tvg-logo="http://epg.51zmt.top:8000/tb1/ws/guangdong.png" group-title="",广东卫视 高清
 # http://192.168.1.1:33888/rtp/239.77.1.19:5146
 # #EXTINF:-1 tvg-id="33" tvg-name="广东卫视" tvg-logo="http://epg.51zmt.top:8000/tb1/ws/guangdong.png" group-title="",广东卫视 高清
@@ -72,13 +92,6 @@ http://192.168.1.1:33888/rtp/239.77.0.225:5146
 #EXTINF:-1 tvg-id="6016" tvg-name="广东新闻" tvg-logo="http://epg.51zmt.top:8000/tb1/sheng/GDTV6.png" group-title="",广东新闻 高清
 http://192.168.1.1:33888/rtp/239.77.0.173:5146
 
-# #EXTINF:-1 tvg-id="60" tvg-name="南方卫视" tvg-logo="http://epg.51zmt.top:8000/tb1/ws/nanfang.png" group-title="",大湾区卫视
-# http://192.168.1.1:33888/rtp/239.77.0.9:5146
-# #EXTINF:-1 tvg-id="60" tvg-name="南方卫视" tvg-logo="http://epg.51zmt.top:8000/tb1/ws/nanfang.png" group-title="",大湾区卫视
-# http://192.168.1.1:33888/rtp/239.77.1.12:5146
-#EXTINF:-1 tvg-id="60" tvg-name="南方卫视" tvg-logo="http://epg.51zmt.top:8000/tb1/ws/nanfang.png" group-title="",大湾区卫视
-http://192.168.1.1:33888/rtp/239.77.0.215:5146
-
 # #EXTINF:-1 tvg-id="" tvg-name="" tvg-logo="https://iptv-pro.github.io/logo/%E5%B9%BF%E5%B7%9E%E6%96%B0%E9%97%BB.png" group-title="",广州新闻
 # http://192.168.1.1:33888/rtp/239.253.43.67:5146
 #EXTINF:-1 tvg-id="" tvg-name="" tvg-logo="https://iptv-pro.github.io/logo/%E5%B9%BF%E5%B7%9E%E6%96%B0%E9%97%BB.png" group-title="",广州新闻 高清
@@ -86,16 +99,6 @@ http://192.168.1.1:33888/rtp/239.253.43.72:5146
 
 #EXTINF:-1 tvg-id="" tvg-name="" tvg-logo="http://epg.51zmt.top:8000/tb1/qt/CHC3.jpg" group-title="",CHC电影
 http://192.168.1.1:33888/rtp/239.77.0.27:5146
-
-#EXTINF:-1 tvg-id="6563" tvg-name="兵器科技" tvg-logo="http://epg.51zmt.top:8000/tb1/qt/CCTVPAYFEE8.jpg" group-title="",兵器科技 高清
-http://192.168.1.1:33888/rtp/239.253.43.18:5146
-# #EXTINF:-1 tvg-id="6563" tvg-name="兵器科技" tvg-logo="http://epg.51zmt.top:8000/tb1/qt/CCTVPAYFEE8.jpg" group-title="",兵器科技 高清
-# http://192.168.1.1:33888/rtp/239.253.43.9:5146
-
-#EXTINF:-1 tvg-id="6560" tvg-name="世界地理" tvg-logo="http://epg.51zmt.top:8000/tb1/CCTV/CCTVshijiedili.png" group-title="",世界地理
-http://192.168.1.1:33888/rtp/239.253.43.24:5146
-# #EXTINF:-1 tvg-id="6560" tvg-name="世界地理" tvg-logo="http://epg.51zmt.top:8000/tb1/CCTV/CCTVshijiedili.png" group-title="",世界地理
-# http://192.168.1.1:33888/rtp/239.253.43.7:5146
 
 # #EXTINF:-1 tvg-id="1" tvg-name="CCTV1" tvg-logo="http://epg.51zmt.top:8000/tb1/CCTV/CCTV1.png" group-title="",CCTV-1 综合 高清
 # http://192.168.1.1:33888/rtp/239.77.1.17:5146
@@ -137,19 +140,15 @@ http://192.168.1.1:33888/rtp/239.77.0.136:5146
 #EXTINF:-1 tvg-id="14" tvg-name="CCTV13" tvg-logo="http://epg.51zmt.top:8000/tb1/CCTV/CCTV13.png" group-title="",CCTV-13 新闻 高清
 http://192.168.1.1:33888/rtp/239.253.43.196:5146
 
+#EXTINF:-1 tvg-id="6563" tvg-name="兵器科技" tvg-logo="http://epg.51zmt.top:8000/tb1/qt/CCTVPAYFEE8.jpg" group-title="",兵器科技 高清
+http://192.168.1.1:33888/rtp/239.253.43.18:5146
+# #EXTINF:-1 tvg-id="6563" tvg-name="兵器科技" tvg-logo="http://epg.51zmt.top:8000/tb1/qt/CCTVPAYFEE8.jpg" group-title="",兵器科技 高清
+# http://192.168.1.1:33888/rtp/239.253.43.9:5146
 
-# #EXTINF:-1 tvg-id="7251" tvg-name="广东综艺" tvg-logo="http://epg.51zmt.top:8000/tb1/sheng/GDTVENT.png" group-title="",广东综艺4K 4K50p
-# http://192.168.1.1:33888/rtp/239.77.1.236:5146
-# #EXTINF:-1 tvg-id="7251" tvg-name="广东综艺" tvg-logo="http://epg.51zmt.top:8000/tb1/sheng/GDTVENT.png" group-title="",广东综艺4K
-# http://192.168.1.1:33888/rtp/239.77.1.237:5146
-# #EXTINF:-1 tvg-id="7251" tvg-name="广东综艺" tvg-logo="http://epg.51zmt.top:8000/tb1/sheng/GDTVENT.png" group-title="",广东综艺4K
-# http://192.168.1.1:33888/rtp/239.77.0.244:5146
-#EXTINF:-1 tvg-id="7251" tvg-name="广东综艺" tvg-logo="http://epg.51zmt.top:8000/tb1/sheng/GDTVENT.png" group-title="",广东综艺4K 宽色域(4k)
-http://192.168.1.1:33888/rtp/239.77.0.246:5146
-# #EXTINF:-1 tvg-id="7251" tvg-name="广东综艺" tvg-logo="http://epg.51zmt.top:8000/tb1/sheng/GDTVENT.png" group-title="",广东综艺4K
-# http://192.168.1.1:33888/rtp/239.77.0.245:5146
-# #EXTINF:-1 tvg-id="7251" tvg-name="广东综艺" tvg-logo="http://epg.51zmt.top:8000/tb1/sheng/GDTVENT.png" group-title="",广东综艺4K 宽色域AVS2(4k)
-# http://192.168.1.1:33888/rtp/239.77.0.252:5146
+#EXTINF:-1 tvg-id="6560" tvg-name="世界地理" tvg-logo="http://epg.51zmt.top:8000/tb1/CCTV/CCTVshijiedili.png" group-title="",世界地理
+http://192.168.1.1:33888/rtp/239.253.43.24:5146
+# #EXTINF:-1 tvg-id="6560" tvg-name="世界地理" tvg-logo="http://epg.51zmt.top:8000/tb1/CCTV/CCTVshijiedili.png" group-title="",世界地理
+# http://192.168.1.1:33888/rtp/239.253.43.7:5146
 
 # #EXTINF:-1 tvg-id="106" tvg-name="广东体育" tvg-logo="https://iptv-pro.github.io/logo/%E5%B9%BF%E4%B8%9C%E4%BD%93%E8%82%B2.png" group-title="",广东体育 高清-测试
 # http://192.168.1.1:33888/rtp/239.77.0.112:5146
