@@ -106,31 +106,31 @@ http://192.168.1.1:33888/rtp/239.253.43.24:5146
 #EXTINF:-1 tvg-id="1" tvg-name="CCTV1" tvg-logo="http://epg.51zmt.top:8000/tb1/CCTV/CCTV1.png" group-title="",CCTV-1 综合 超清
 http://192.168.1.1:33888/rtp/239.77.0.129:5146
 
-# #EXTINF:-1 tvg-id="8" tvg-name="CCTV7" tvg-logo="http://epg.51zmt.top:8000/tb1/CCTV/CCTV6.png" group-title="",CCTV-6 电影 高清
-# http://192.168.1.1:33888/rtp/239.77.0.171:5146
-#EXTINF:-1 tvg-id="8" tvg-name="CCTV7" tvg-logo="http://epg.51zmt.top:8000/tb1/CCTV/CCTV6.png" group-title="",CCTV-6 电影 超清
-http://192.168.1.1:33888/rtp/239.77.0.178:5146
+#EXTINF:-1 tvg-id="8" tvg-name="CCTV7" tvg-logo="http://epg.51zmt.top:8000/tb1/CCTV/CCTV6.png" group-title="",CCTV-6 电影 高清
+http://192.168.1.1:33888/rtp/239.77.0.171:5146
+# #EXTINF:-1 tvg-id="8" tvg-name="CCTV7" tvg-logo="http://epg.51zmt.top:8000/tb1/CCTV/CCTV6.png" group-title="",CCTV-6 电影 超清
+# http://192.168.1.1:33888/rtp/239.77.0.178:5146
 
 # #EXTINF:-1 tvg-id="8" tvg-name="CCTV7" tvg-logo="http://epg.51zmt.top:8000/tb1/CCTV/CCTV7.png" group-title="",CCTV-7 国防军事 高清
 # http://192.168.1.1:33888/rtp/239.77.1.159:5146
-#EXTINF:-1 tvg-id="8" tvg-name="CCTV7" tvg-logo="http://epg.51zmt.top:8000/tb1/CCTV/CCTV7.png" group-title="",CCTV-7 国防军事 高清
-http://192.168.1.1:33888/rtp/239.77.1.167:5146
-# #EXTINF:-1 tvg-id="8" tvg-name="CCTV7" tvg-logo="http://epg.51zmt.top:8000/tb1/CCTV/CCTV7.png" group-title="",CCTV-7 国防军事 军事农业高清
-# http://192.168.1.1:33888/rtp/239.77.0.138:5146
+# #EXTINF:-1 tvg-id="8" tvg-name="CCTV7" tvg-logo="http://epg.51zmt.top:8000/tb1/CCTV/CCTV7.png" group-title="",CCTV-7 国防军事 高清
+# http://192.168.1.1:33888/rtp/239.77.1.167:5146
+#EXTINF:-1 tvg-id="8" tvg-name="CCTV7" tvg-logo="http://epg.51zmt.top:8000/tb1/CCTV/CCTV7.png" group-title="",CCTV-7 国防军事 军事农业高清
+http://192.168.1.1:33888/rtp/239.77.0.138:5146
 
 # #EXTINF:-1 tvg-id="10" tvg-name="CCTV9" tvg-logo="http://epg.51zmt.top:8000/tb1/CCTV/CCTV9.png" group-title="",CCTV-9 纪录 高清
 # http://192.168.1.1:33888/rtp/239.77.1.160:5146
-#EXTINF:-1 tvg-id="10" tvg-name="CCTV9" tvg-logo="http://epg.51zmt.top:8000/tb1/CCTV/CCTV9.png" group-title="",CCTV-9 纪录 高清
-http://192.168.1.1:33888/rtp/239.77.1.168:5146
-# # #EXTINF:-1 tvg-id="10" tvg-name="CCTV9" tvg-logo="http://epg.51zmt.top:8000/tb1/CCTV/CCTV9.png" group-title="",CCTV-9 纪录 高清测试
-# http://192.168.1.1:33888/rtp/239.77.0.135:5146
+# #EXTINF:-1 tvg-id="10" tvg-name="CCTV9" tvg-logo="http://epg.51zmt.top:8000/tb1/CCTV/CCTV9.png" group-title="",CCTV-9 纪录 高清
+# http://192.168.1.1:33888/rtp/239.77.1.168:5146
+#EXTINF:-1 tvg-id="10" tvg-name="CCTV9" tvg-logo="http://epg.51zmt.top:8000/tb1/CCTV/CCTV9.png" group-title="",CCTV-9 纪录 高清测试
+http://192.168.1.1:33888/rtp/239.77.0.135:5146
 
 # #EXTINF:-1 tvg-id="13" tvg-name="CCTV12" tvg-logo="http://epg.51zmt.top:8000/tb1/CCTV/CCTV12.png" group-title="",CCTV-12 社会与法 高清
 # http://192.168.1.1:33888/rtp/239.77.1.109:5146
-#EXTINF:-1 tvg-id="13" tvg-name="CCTV12" tvg-logo="http://epg.51zmt.top:8000/tb1/CCTV/CCTV12.png" group-title="",CCTV-12 社会与法 高清
-http://192.168.1.1:33888/rtp/239.77.1.170:5146
-# #EXTINF:-1 tvg-id="13" tvg-name="CCTV12" tvg-logo="http://epg.51zmt.top:8000/tb1/CCTV/CCTV12.png" group-title="",CCTV-12 社会与法 高清测试
-# http://192.168.1.1:33888/rtp/239.77.0.136:5146
+# #EXTINF:-1 tvg-id="13" tvg-name="CCTV12" tvg-logo="http://epg.51zmt.top:8000/tb1/CCTV/CCTV12.png" group-title="",CCTV-12 社会与法 高清
+# http://192.168.1.1:33888/rtp/239.77.1.170:5146
+#EXTINF:-1 tvg-id="13" tvg-name="CCTV12" tvg-logo="http://epg.51zmt.top:8000/tb1/CCTV/CCTV12.png" group-title="",CCTV-12 社会与法 高清测试
+http://192.168.1.1:33888/rtp/239.77.0.136:5146
 
 # #EXTINF:-1 tvg-id="14" tvg-name="CCTV13" tvg-logo="http://epg.51zmt.top:8000/tb1/CCTV/CCTV13.png" group-title="",CCTV-13 新闻 高清
 # http://192.168.1.1:33888/rtp/239.77.0.188:5146
