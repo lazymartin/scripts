@@ -2,10 +2,10 @@
 #EXTINF:-1 tvg-id="" tvg-name="" tvg-logo="https://iptv-pro.github.io/logo/%E5%B9%BF%E5%B7%9E%E7%BB%BC%E5%90%88.png" group-title="",广州综合
 http://192.168.1.1:33888/rtp/239.253.43.71:5146
 
-# #EXTINF:-1 tvg-id="9" tvg-name="CCTV-8" tvg-logo="http://epg.51zmt.top:8000/tb1/CCTV/CCTV8.png" group-title="",CCTV-8 电视剧 高清
-# http://192.168.1.1:33888/rtp/239.77.0.172:5146
-#EXTINF:-1 tvg-id="9" tvg-name="CCTV-8" tvg-logo="http://epg.51zmt.top:8000/tb1/CCTV/CCTV8.png" group-title="",CCTV-8 电视剧 超清
-http://192.168.1.1:33888/rtp/239.77.0.181:5146
+#EXTINF:-1 tvg-id="9" tvg-name="CCTV-8" tvg-logo="http://epg.51zmt.top:8000/tb1/CCTV/CCTV8.png" group-title="",CCTV-8 电视剧 高清
+http://192.168.1.1:33888/rtp/239.77.0.172:5146
+# #EXTINF:-1 tvg-id="9" tvg-name="CCTV-8" tvg-logo="http://epg.51zmt.top:8000/tb1/CCTV/CCTV8.png" group-title="",CCTV-8 电视剧 超清
+# http://192.168.1.1:33888/rtp/239.77.0.181:5146
 
 # #EXTINF:-1 tvg-id="30" tvg-name="北京卫视" tvg-logo="http://epg.51zmt.top:8000/tb1/ws/beijing.png" group-title="",北京卫视 高清
 # http://192.168.1.1:33888/rtp/239.77.1.4:5146
@@ -18,10 +18,10 @@ http://192.168.1.1:33888/rtp/239.77.0.91:5146
 # http://192.168.1.1:33888/rtp/239.77.1.18:5146
 # #EXTINF:-1 tvg-id="29" tvg-name="江苏卫视" tvg-logo="http://epg.51zmt.top:8000/tb1/ws/jiangsu.png" group-title="",江苏卫视 高清
 # http://192.168.1.1:33888/rtp/239.77.1.149:5146
-# #EXTINF:-1 tvg-id="29" tvg-name="江苏卫视" tvg-logo="http://epg.51zmt.top:8000/tb1/ws/jiangsu.png" group-title="",江苏卫视 高清
-# http://192.168.1.1:33888/rtp/239.77.0.90:5146
-#EXTINF:-1 tvg-id="29" tvg-name="江苏卫视" tvg-logo="http://epg.51zmt.top:8000/tb1/ws/jiangsu.png" group-title="",江苏卫视 超清
-http://192.168.1.1:33888/rtp/239.77.0.126:5146
+#EXTINF:-1 tvg-id="29" tvg-name="江苏卫视" tvg-logo="http://epg.51zmt.top:8000/tb1/ws/jiangsu.png" group-title="",江苏卫视 高清
+http://192.168.1.1:33888/rtp/239.77.0.90:5146
+# #EXTINF:-1 tvg-id="29" tvg-name="江苏卫视" tvg-logo="http://epg.51zmt.top:8000/tb1/ws/jiangsu.png" group-title="",江苏卫视 超清
+# http://192.168.1.1:33888/rtp/239.77.0.126:5146
 
 # #EXTINF:-1 tvg-id="31" tvg-name="东方卫视" tvg-logo="http://epg.51zmt.top:8000/tb1/ws/dongfang.png" group-title="",东方卫视 高清
 # http://192.168.1.1:33888/rtp/239.77.1.218:5146
