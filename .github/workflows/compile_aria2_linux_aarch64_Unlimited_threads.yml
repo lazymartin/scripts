@@ -16,7 +16,7 @@ on:
     #- cron: '00 19 * * 0'
   push:
     paths: 
-      - '.github/workflows/compile_aria2_linux_aarch64_Unlimited_threads.yml'
+#      - '.github/workflows/compile_aria2_linux_aarch64_Unlimited_threads.yml'
 
 jobs:
   build:

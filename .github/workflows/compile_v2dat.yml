@@ -15,10 +15,10 @@ env:
 
 on:
   schedule:
-    - cron: '00 19 * * *'
+#    - cron: '00 19 * * *'
   push:
     paths: 
-      - '.github/workflows/compile_v2dat.yml'
+#      - '.github/workflows/compile_v2dat.yml'
 
 jobs:
   build:
