@@ -18,7 +18,7 @@ on:
 #    - cron: '00 19 * * *'
   push:
     paths: 
-#      - '.github/workflows/compile_xray.yml'
+      - '.github/workflows/compile_xray.yml'
 
 jobs:
   build:
