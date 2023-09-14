@@ -90,12 +90,18 @@
   ],
 
   "routing": {
-    "domainStrategy": "AsIs",
+    "domainStrategy": "IPIfNonMatch",
     "domainMatcher": "hybrid",
     "rules": [
       {
         "type": "field",
         "protocol": ["bittorrent"],
+        "outboundTag": "block"
+      },
+      {
+        "tag": "CN_IP",
+        "type": "field",
+        "ip": ["geoip:private","geoip:cn"],
         "outboundTag": "block"
       }
     ]
