@@ -12,72 +12,27 @@
       "protocol": "vless",
       "sniffing": {
         "enabled": true,
-        "routeOnly": true,
-        "destOverride": ["http", "tls", "quic"]
+        "destOverride": ["http","tls","quic"]
       },
       "settings": {
         "clients": [
           {
-            "id": "${uuid}",
-            "flow": "xtls-rprx-vision"
-          }
-        ],
-        "decryption": "none",
-        "fallbacks": [
-          {
-            "dest": ${fallback_port_http},
-            "xver": 1
-          },
-          {
-            "path": "/webdav", // 必须换成自定义的 PATH
-            "dest": 1080,
-            "xver": 1
-          }
-        ]
-      },
-      "streamSettings": {
-        "sockopt": {"tcpFastOpen": 32768},
-        "network": "tcp",
-        "security": "tls",
-        "tlsSettings": {
-          "alpn": ["http/1.1","h2"],
-          "minVersion": "1.2",
-          "certificates": [
-            {
-              "ocspStapling": 0,
-              "certificateFile": "/etc/ssl/web.crt",
-              "keyFile": "/etc/ssl/web.key"
-            }
-          ]
-        }
-      }
-    },
-    {
-      "port": 1080,
-      "listen": "127.0.0.1",
-      "protocol": "vless",
-      "sniffing": {
-        "enabled": true,
-        "routeOnly": true,
-        "destOverride": ["http", "tls", "quic"]
-      },
-      "settings": {
-        "clients": [
-          {
-            "id": "9989c9ca-c7be-4f8b-8122-6293ae0199c6", // 填写你的 UUID
-            "level": 0,
-            "email": "love@example.com"
+              "id": "${uuid}", // 必填，执行 ./xray uuid 生成，或 1-30 字节的字符串
+              "flow": "xtls-rprx-vision" // 选填，若有，客户端必须启用 XTLS
           }
         ],
         "decryption": "none"
       },
       "streamSettings": {
+        "network": "tcp",
+        "security": "reality",
         "sockopt": {"tcpFastOpen": 32768},
-        "network": "ws",
-        "security": "none",
-        "wsSettings": {
-          "acceptProxyProtocol": true, // 提醒：若你用 Nginx/Caddy 等反代 WS，需要删掉这行
-          "path": "/webdav" // 必须换成自定义的 PATH，需要和上面的一致
+        "realitySettings": {
+            "dest": ${fallback_port_http}, // 必填，格式同 VLESS fallbacks 的 dest
+            "xver": 1, // 选填，格式同 VLESS fallbacks 的 xver
+            "serverNames": ["${x_domain}"], // 与 Nginx 配置中的 server_name 一致
+            "privateKey": "${xray_privateKey}", // 必填，执行 ./xray x25519 生成
+            "shortIds": ["${xray_shortIds}"] // 0 到 f，长度为 2 的倍数，长度上限为 16，可留空(客户端 shortId 可为空)，或执行 openssl rand -hex 8 生成
         }
       }
     }
@@ -85,12 +40,12 @@
 
   "outbounds": [
     {
+      "tag": "direct",
       "protocol": "freedom"
     },
     {
-      "protocol": "blackhole",
-      "settings": {},
-      "tag": "block"
+      "tag": "block",
+      "protocol": "blackhole"
     }
   ],
 
@@ -99,6 +54,7 @@
     "domainMatcher": "hybrid",
     "rules": [
       {
+        "tag": "BT_protocol",
         "type": "field",
         "protocol": ["bittorrent"],
         "outboundTag": "block"
@@ -112,3 +68,4 @@
     ]
   }
 }
+
