@@ -12,7 +12,7 @@ env:
   TZ: Asia/Shanghai
 
 on:
-  schedule:
+#  schedule:
     #- cron: '00 19 * * 0'
   push:
     paths: 

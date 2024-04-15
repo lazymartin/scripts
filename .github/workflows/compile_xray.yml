@@ -14,8 +14,8 @@ env:
   TZ: Asia/Shanghai
 
 on:
-  schedule:
-    - cron: '00 19 * * *'
+#  schedule:
+#    - cron: '00 19 * * *'
   push:
     paths: 
       - '.github/workflows/compile_xray.yml'
