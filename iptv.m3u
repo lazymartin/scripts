@@ -15,7 +15,7 @@ http://192.168.1.1:33888/udp/239.77.0.90:5146
 http://192.168.1.1:33888/udp/239.77.0.98:5146
 
 #EXTINF:-1 tvg-name="湖南卫视" tvg-logo="https://raw.githubusercontent.com/iptv-pro/iptv-pro.github.io/main/logo/%E6%B9%96%E5%8D%97%E5%8D%AB%E8%A7%86.png" group-title="",湖南卫视
-http://192.168.1.1:33888/udp/239.77.0.127:5146
+http://192.168.1.1:33888/udp/239.77.0.88:5146
 
 #EXTINF:-1 tvg-name="浙江卫视" tvg-logo="https://raw.githubusercontent.com/iptv-pro/iptv-pro.github.io/main/logo/%E6%B5%99%E6%B1%9F%E5%8D%AB%E8%A7%86.png" group-title="",浙江卫视
 http://192.168.1.1:33888/udp/239.77.0.89:5146
