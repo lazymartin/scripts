@@ -23,10 +23,10 @@ http://192.168.1.1:33888/udp/239.77.0.89:5146
 #EXTINF:-1 tvg-name="广东卫视4K" tvg-logo="https://raw.githubusercontent.com/iptv-pro/iptv-pro.github.io/main/logo/%E5%B9%BF%E4%B8%9C%E7%BB%BC%E8%89%BA-B.png" group-title="",广东卫视 4K
 http://192.168.1.1:33888/udp/239.77.0.27:5146
 
-#EXTINF:-1 tvg-name="广东综艺" tvg-logo="https://raw.githubusercontent.com/iptv-pro/iptv-pro.github.io/main/logo/%E5%B9%BF%E4%B8%9C%E7%BB%BC%E8%89%BA-B.png" group-title="",广东综艺 4K
+#EXTINF:-1 tvg-name="广东综艺4k" tvg-logo="https://raw.githubusercontent.com/iptv-pro/iptv-pro.github.io/main/logo/%E5%B9%BF%E4%B8%9C%E7%BB%BC%E8%89%BA-B.png" group-title="",广东综艺 4K
 http://192.168.1.1:33888/udp/239.77.0.245:5146
 
-#EXTINF:-1 tvg-name="南国都市" tvg-logo="https://raw.githubusercontent.com/iptv-pro/iptv-pro.github.io/main/logo/%E5%8D%97%E5%9B%BD%E9%83%BD%E5%B8%824K.png" group-title="",南国都市 4K
+#EXTINF:-1 tvg-name="南国都市4k" tvg-logo="https://raw.githubusercontent.com/iptv-pro/iptv-pro.github.io/main/logo/%E5%8D%97%E5%9B%BD%E9%83%BD%E5%B8%824K.png" group-title="",南国都市 4K
 http://192.168.1.1:33888/udp/239.253.43.99:5146
 
 #EXTINF:-1 tvg-name="深圳卫视4K" tvg-logo="https://raw.githubusercontent.com/iptv-pro/iptv-pro.github.io/main/logo/%E5%B9%BF%E4%B8%9C%E7%BB%BC%E8%89%BA-B.png" group-title="",深圳卫视 4K
