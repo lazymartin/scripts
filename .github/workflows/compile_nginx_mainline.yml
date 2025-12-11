@@ -1,0 +1,118 @@
+#=================================================
+# Description: Build OpenWrt using GitHub Actions
+# Lisence: GPL-3.0
+# Author: lazymartin
+#=================================================
+
+name: Compile Nginx mainline Latest release
+
+env:
+  TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+  TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+  TZ: Asia/Shanghai
+
+#on:
+#  schedule:
+#    - cron: '00 19 * * 0'
+#  push:
+#    paths: 
+#      # - '.github/workflows/compile_nginx_mainline.yml'
+#      - '.github/workflows/nginx_mainline.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@master
+
+    - name: Initialization environment
+      env:
+        DEBIAN_FRONTEND: noninteractive
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential libpcre3 libpcre3-dev zlib1g-dev git libxslt-dev libssl-dev
+        # git clone https://github.com/nginx/nginx.git
+        
+        FILE_VER=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/nginx/nginx/tags|grep name|head -1|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
+        wget https://github.com/nginx/nginx/archive/release-${FILE_VER}.tar.gz
+        tar xf release-${FILE_VER}.tar.gz
+        cd nginx-release-${FILE_VER}
+        git clone https://github.com/chobits/ngx_http_proxy_connect_module.git
+        git clone https://github.com/arut/nginx-dav-ext-module.git
+        git clone https://github.com/openresty/headers-more-nginx-module.git
+        
+    - name: Compile
+      id: compile
+      continue-on-error: true
+      run: |
+        FILE_VER=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/nginx/nginx/tags|grep name|head -1|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
+        cd /home/runner/work/scripts/scripts/nginx-release-${FILE_VER}
+        ./auto/configure \
+            --prefix=/etc/nginx \
+            --sbin-path=/usr/sbin/nginx \
+            --modules-path=/usr/lib/nginx/modules \
+            --conf-path=/etc/nginx/nginx.conf \
+            --error-log-path=/var/log/nginx/error.log \
+            --http-log-path=/var/log/nginx/access.log \
+            --pid-path=/var/run/nginx.pid \
+            --lock-path=/var/run/nginx.lock \
+            --http-client-body-temp-path=/var/cache/nginx/client_temp \
+            --http-proxy-temp-path=/var/cache/nginx/proxy_temp \
+            --http-fastcgi-temp-path=/var/cache/nginx/fastcgi_temp \
+            --http-uwsgi-temp-path=/var/cache/nginx/uwsgi_temp \
+            --http-scgi-temp-path=/var/cache/nginx/scgi_temp \
+            --user=nginx \
+            --group=nginx \
+            --with-compat \
+            --with-file-aio \
+            --with-threads \
+            --with-http_addition_module \
+            --with-http_auth_request_module \
+            --with-http_dav_module \
+            --with-http_flv_module \
+            --with-http_gunzip_module \
+            --with-http_gzip_static_module \
+            --with-http_mp4_module \
+            --with-http_random_index_module \
+            --with-http_realip_module \
+            --with-http_secure_link_module \
+            --with-http_slice_module \
+            --with-http_ssl_module \
+            --with-http_stub_status_module \
+            --with-http_sub_module --with-http_v2_module \
+            --with-mail \
+            --with-mail_ssl_module \
+            --with-stream \
+            --with-stream_realip_module \
+            --with-stream_ssl_module \
+            --with-stream_ssl_preread_module \
+            --with-cc-opt='-g -O2 -fdebug-prefix-map=/data/builder/debuild/nginx/debian/debuild-base/nginx=. -fstack-protector-strong -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -fPIC' \
+            --with-ld-opt='-Wl,-z,relro -Wl,-z,now -Wl,--as-needed -pie' \
+            --add-module=nginx-dav-ext-module \
+            --add-module=headers-more-nginx-module
+            # --add-module=nginx_forward_proxy \
+        make -j$(nproc)
+        strip -s ./objs/nginx
+        
+    - name: Check compilation
+      if: steps.compile.outcome != 'success'
+      run: |
+        curl -s --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=Compiling Nginx linux-amd64 failed!!" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
+
+    - name: Assemble Artifact
+      run: |
+        mkdir -p ./artifact
+        FILE_VER=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/nginx/nginx/tags|grep name|head -1|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
+        # cp /home/runner/work/scripts/scripts/nginx-release-${FILE_VER}/objs/nginx ./artifact/nginx_${FILE_VER}
+        cp /home/runner/work/scripts/scripts/nginx-release-${FILE_VER}/objs/nginx ./artifact/nginx
+        
+    - name: Upload binaries to release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: ./artifact/*
+        tag: "Last_release"
+        overwrite: true
+        file_glob: true

@@ -1,0 +1,75 @@
+#=================================================
+# Description: Build OpenWrt using GitHub Actions
+# Lisence: GPL-3.0
+# Author: lazymartin
+#=================================================
+
+name: Compile NaiveProxy
+
+env:
+  TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+  TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+  TZ: Asia/Shanghai
+
+#on:
+#  # schedule:
+#    # - cron: '00 19 * * 0'
+#  push:
+#    paths: 
+#      # - '.github/workflows/compile_NaiveProxy.yml'
+#      - '.github/workflows/NaiveProxy.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@master
+
+    - name: Initialization environment
+      uses: actions/setup-go@v2
+      env:
+        DEBIAN_FRONTEND: noninteractive
+      with:
+        stable: 'true'
+        go-version: '^1.16' # The Go version to download (if necessary) and use.
+       
+    - name: Compile
+      id: compile
+      continue-on-error: true
+      run: |
+        sudo apt-get update
+        # Nginx,Caddy,NaiveProxy Dependent library
+        sudo apt-get install -y build-essential libtool libpcre3 libpcre3-dev zlib1g-dev openssl gcc make ninja-build pkg-config libnss3-dev ccache curl unzip wget libxslt-dev
+        export PATH=$PATH:/usr/local/go/bin
+        git clone -b naive https://github.com/klzgrad/forwardproxy
+        go get -u github.com/caddyserver/xcaddy/cmd/xcaddy
+        ~/go/bin/xcaddy build --with github.com/caddyserver/forwardproxy=$PWD/forwardproxy
+        git clone --depth 1 https://github.com/klzgrad/naiveproxy.git
+        cd naiveproxy/src
+        ./get-clang.sh
+        ./build.sh
+
+    - name: Check compilation
+      if: steps.compile.outcome != 'success'
+      run: |
+        curl -s --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=Compiling NaiveProxy linux-amd64 failed!!" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
+
+    - name: Assemble Artifact
+      run: |
+        cd /home/runner/work/scripts/scripts
+        mkdir -p ./artifact
+        caddy_version=`./caddy version|awk '{print $1}'`
+        cp ./caddy ./artifact/caddy
+        naiveproxy_version=`./naiveproxy/src/out/Release/naive --version|awk '{print $2}'`
+        cp ./naiveproxy/src/out/Release/naive ./artifact/naive
+       
+    - name: Upload binaries to release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: ./artifact/*
+        tag: "Last_release"
+        overwrite: true
+        file_glob: true

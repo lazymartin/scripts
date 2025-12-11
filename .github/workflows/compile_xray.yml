@@ -1,0 +1,75 @@
+#=================================================
+# Description: Build OpenWrt using GitHub Actions
+# Lisence: GPL-3.0
+# Author: lazymartin
+#=================================================
+
+# update 1
+
+name: Compile Xray-core with Latest commits
+
+env:
+  TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+  TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+  TZ: Asia/Shanghai
+
+#on:
+#  schedule:
+#    - cron: '00 19 * * *'
+#  push:
+#    paths: 
+#      - '.github/workflows/compile_xray.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@master
+
+    - name: Initialization environment
+      uses: actions/setup-go@v4
+      with:
+        # stable: 'true'
+        go-version: '^1.21' # The Go version to download (if necessary) and use.
+        check-latest: true
+
+    - name: Compile
+      id: compile
+      continue-on-error: true
+      run: |
+        git clone https://github.com/XTLS/Xray-core.git
+        cd Xray-core/
+        CGO_ENABLED=0 go build -o xray_linux_x86_64 -trimpath -ldflags "-s -w -buildid=" ./main  # linux_x86_64
+        CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o xray_win_x64.exe -trimpath -ldflags "-s -w -buildid=" ./main # win_x64
+        CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o xray_macos_x86_64 -trimpath -ldflags "-s -w -buildid=" ./main # macOS_x86_64
+        CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -o xray_macos_arm64 -trimpath -ldflags "-s -w -buildid=" ./main # macOS_arm64
+        CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o xray_linux_arm64_v8a -trimpath -ldflags "-s -w -buildid=" ./main # linux arm64 v8a
+        # wget `curl -s https://api.github.com/repos/v2fly/geoip/releases/latest|grep -oE "https.*geoip.dat\""|sed 's/"//'`
+        # wget `curl -s https://api.github.com/repos/v2fly/domain-list-community/releases/latest|grep -oE "https.*dlc.dat\""|sed 's/"//'`
+        wget https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat
+        wget https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat
+        ${{ github.workspace }}/Xray-core/xray_linux_x86_64 version
+
+    - name: Check compilation
+      if: steps.compile.outcome != 'success'
+      run: |
+        curl -s --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=Compiling xray-core failed!!" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
+
+    - name: Assemble Artifact
+      run: |
+        mkdir -p ./artifact
+        cp ${{ github.workspace }}/Xray-core/xray* artifact/
+        cp ${{ github.workspace }}/Xray-core/geoip.dat artifact/
+        # cp ${{ github.workspace }}/Xray-core/dlc.dat artifact/geosite.dat
+        cp ${{ github.workspace }}/Xray-core/geosite.dat artifact/
+
+    - name: Upload binaries to release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: ./artifact/*
+        tag: "Last_release"
+        overwrite: true
+        file_glob: true

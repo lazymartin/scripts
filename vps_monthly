@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
+export PATH
+
+update_crt(){
+  systemctl stop nginx &>/dev/null
+  systemctl stop xray &>/dev/null
+  ps -aux|grep -v grep|grep -E "nginx|xray"|awk -F " " '{print $2}'|xargs kill -9 &>/dev/null
+  curl -Rso /etc/ssl/web.crt -u ${webdav_username}:${webdav_password} ${webdav_link}/documents/ssl/${domain}.crt
+  curl -Rso /etc/ssl/web.key -u ${webdav_username}:${webdav_password} ${webdav_link}/documents/ssl/${domain}.key
+  systemctl daemon-reload &>/dev/null
+  systemctl start nginx &>/dev/null
+  systemctl start xray &>/dev/null
+}
+
+rollback_renew_freenom(){
+  cd ${HOME}/github/renew_freenom
+  BRANCHNAME=`git checkout|awk -F "/" '{print $2}'|sed "s/'.//g"`
+  # latest_commit=`curl -s https://github.com/luolongfei/freenom/commits/master|grep "data-url"|awk -F "/" 'NR==1 {print $5}'`
+  rollback_commit="c3e21cedeb25a5be74e28b7400bd5fd4439e7e00"
+  git reset --hard ${rollback_commit}
+  git push origin ${BRANCHNAME} --force
+  # sleep 60
+  # git pull upstream ${BRANCHNAME}
+  # git push origin ${BRANCHNAME}
+  logger "Repository of renew_freenom has been rollbacked!"
+  cd
+}
+
+# rollback_renew_freenom
+update_crt

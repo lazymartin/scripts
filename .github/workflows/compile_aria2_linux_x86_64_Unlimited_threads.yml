@@ -1,0 +1,100 @@
+#=================================================
+# Description: Build OpenWrt using GitHub Actions
+# Lisence: GPL-3.0
+# Author: lazymartin
+#=================================================
+
+# update 1
+
+name: Compile aria2 linux x86_64 Latest release
+
+env:
+  TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+  TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+  TZ: Asia/Shanghai
+
+#on:
+##  schedule:
+##    - cron: '00 19 * * 0'
+#  push:
+#    paths: 
+##      - '.github/workflows/compile_aria2_linux_x86_64_Unlimited_threads.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@master
+
+    - name: Initialization environment
+      env:
+        DEBIAN_FRONTEND: noninteractive
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y autoconf automake autotools-dev autopoint libtool pkg-config libssl-dev libc-ares-dev zlib1g-dev libsqlite3-dev libssh2-1-dev libcppunit-dev
+        
+    - name: Install dependences and compile
+      id: compile
+      continue-on-error: true
+      run: |
+        CC="gcc"
+        CXX="g++"
+        
+        git clone https://github.com/aria2/aria2
+        cd aria2 && autoreconf -i
+    
+        # MAX_CONNECTION_PER_SERVER
+        sed -i 's/"1", 1, 16/"128", 1, -1/g' ./src/OptionHandlerFactory.cc
+        # MIN_SPLIT_SIZE
+        sed -i 's/"20M", 1_m, 1_g/"4K", 1_k, 1_g/g' ./src/OptionHandlerFactory.cc
+        # CONNECT_TIMEOUT
+        sed -i 's/PREF_CONNECT_TIMEOUT, TEXT_CONNECT_TIMEOUT, "60", 1, 600/PREF_CONNECT_TIMEOUT, TEXT_CONNECT_TIMEOUT, "15", 1, 600/g' ./src/OptionHandlerFactory.cc
+        # PIECE_LENGTH
+        sed -i 's/PREF_PIECE_LENGTH, TEXT_PIECE_LENGTH, "1M", 1_m, 1_g/PREF_PIECE_LENGTH, TEXT_PIECE_LENGTH, "4k", 1_k, 1_g/g' ./src/OptionHandlerFactory.cc
+        # RETRY_WAIT
+        sed -i 's/new NumberOptionHandler(PREF_RETRY_WAIT, TEXT_RETRY_WAIT, "0", 0, 600/new NumberOptionHandler(PREF_RETRY_WAIT, TEXT_RETRY_WAIT, "2", 0, 600/g' ./src/OptionHandlerFactory.cc
+        # SPLIT
+        sed -i 's/new NumberOptionHandler(PREF_SPLIT, TEXT_SPLIT, "5", 1, -1,/new NumberOptionHandler(PREF_SPLIT, TEXT_SPLIT, "128", 1, -1,/g' ./src/OptionHandlerFactory.cc
+           
+        ./configure \
+            --prefix=$PREFIX \
+            --disable-nls \
+            --without-libxml2 \
+            --without-libgcrypt \
+            --with-openssl \
+            --without-gnutls \
+            --without-libnettle \
+            --without-libgmp \
+            --with-libcares \
+            --with-libz \
+            --with-libexpat \
+            --with-libssl \
+            --with-libssh2 \
+            --with-sqlite3 \
+            --with-ca-bundle='/etc/ssl/certs/ca-certificates.crt' \
+            --enable-shared=no \
+            ARIA2_STATIC=yes
+        make -j$(nproc)
+        strip -s ./src/aria2c
+        
+    - name: Check compilation
+      if: steps.compile.outcome != 'success'
+      run: |
+        curl -s --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=Compiling aria2 linux_x64 failed!!" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
+        
+    - name: Assemble Artifact
+      run: |
+        mkdir -p ${{ github.workspace }}/artifact
+        cp ${{ github.workspace }}/aria2/src/aria2c ${{ github.workspace }}/artifact/aria2c_Linux_x86_64_Unlimited_threads
+        
+    - name: Upload binaries to release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: ./artifact/*
+        tag: "Last_release"
+        overwrite: true
+        file_glob: true
+ 

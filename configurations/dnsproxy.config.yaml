@@ -1,0 +1,31 @@
+# 监听端口
+listen-ports:
+  - 53
+
+# 监听地址 (仅限本地 IPv4 和 IPv6，不提供对外服务)
+listen-addrs:
+  - "127.0.0.1"
+  - "::1"
+
+# 上游 DNS 服务器列表
+upstream:
+  # 默认上游：Cloudflare DNS over TLS
+  - "tls://1.1.1.1"
+  
+  # 指定 gzljt.win 及其子域名使用的上游
+  # 注意：dnsproxy 暂不支持在单实例中通过配置强制禁用特定域名的缓存。
+  # 它将遵循上游返回的 TTL。
+  - "[/${domain}/]tls://1.1.1.1"
+
+# 缓存设置
+cache: true
+cache-size: 33554432        # 缓存大小，可根据内存情况调整
+cache-min-ttl: 0        # 最小 TTL，设为 0 以完全尊重上游返回的 TTL（对不缓存域名很重要）
+cache-max-ttl: 3600     # 最大 TTL，防止过时记录缓存太久
+cache-optimistic: false # 关闭乐观缓存，防止返回过期数据（对实时性要求高的域名很重要）
+
+# 其他优化
+ratelimit: 0            # 速率限制 (0 表示禁用，仅本地使用通常不需要限制)
+verbose: false          # 日志详细程度
+insecure: false         # 验证上游 TLS 证书 (设为 false 保证安全)
+ipv6-disabled: false    # 启用内部 IPv6 解析支持

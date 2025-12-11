@@ -1,0 +1,194 @@
+#=================================================
+# Description: Build OpenWrt using GitHub Actions
+# Lisence: GPL-3.0
+# Author: lazymartin
+#=================================================
+
+# update 1
+
+name: Compile aria2 windows x86_64 Latest release
+
+env:
+  TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+  TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+  TZ: Asia/Shanghai
+
+#on:
+##  schedule:
+##    - cron: '00 19 * * 0'
+#  push:
+#    paths: 
+##      - '.github/workflows/compile_aria2_windows_x86_64_Unlimited_threads.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@master
+
+    - name: Initialization environment
+      env:
+        DEBIAN_FRONTEND: noninteractive
+        
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y make binutils autoconf automake autotools-dev libtool pkg-config git curl dpkg-dev gcc-mingw-w64 g++-mingw-w64 autopoint libcppunit-dev libxml2-dev libgcrypt20-dev lzip
+        
+    - name: Install dependences and compile
+      id: compile
+      continue-on-error: true
+      run: |
+        HOST=x86_64-w64-mingw32
+        PREFIX=/usr/local/$HOST
+        
+        GMP_ver1=`curl -s https://gmplib.org/|grep -oE 'gmp-([0-9]{1,3}\.){3}tar.lz'|head -n 1`
+        GMP_ver2=`echo ${GMP_ver1}|sed "s/.tar.lz//"`
+        GMP=https://gmplib.org/download/gmp/${GMP_ver1}
+
+        EXPAT_ver_1=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/libexpat/libexpat/releases/latest|grep tag_name|awk -F "\"" '{print $4}'`
+        EXPAT_ver_2=`echo ${EXPAT_ver_1}|sed "s/R_//g;s/_/\./g"`
+        EXPAT=https://github.com/libexpat/libexpat/releases/download/${EXPAT_ver_1}/expat-${EXPAT_ver_2}.tar.bz2
+
+        SQLITE3_add=`curl -s https://www.sqlite.org/download.html|grep -oE "[0-9]{1,4}/sqlite-autoconf-[0-9]{1,7}.tar.gz"|head -n 1`
+        SQLITE3_ver=`echo ${SQLITE3_add}|grep -oE "[0-9]{7}"`
+        SQLITE3="https://sqlite.org/${SQLITE3_add}"
+
+        ZLIB_ver=`curl -s http://www.zlib.net/|grep -A 3 "Current release"|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
+        ZLIB=http://www.zlib.net/zlib-${ZLIB_ver}.tar.gz
+
+        # C_ARES=https://c-ares.haxx.se/download/c-ares-1.16.1.tar.gz
+        C_ARES_ver=`curl -s https://c-ares.org/download/|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"|head -n 1`
+        C_ARES=https://c-ares.org/download/c-ares-${C_ARES_ver}.tar.gz
+
+        SSH2_ver=`curl -s https://www.libssh2.org|grep "The latest release"|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
+        SSH2=https://www.libssh2.org/download/libssh2-${SSH2_ver}.tar.gz
+
+        OPENSSL_ver=`curl -s https://www.openssl.org/source/|grep -oE "[0-9]\.[0-9]{1,2}\.[0-9]{1,2}[a-z]"|sort|uniq|tail -n 1`
+        OPENSSL=http://www.openssl.org/source/openssl-${OPENSSL_ver}.tar.gz
+
+        curl -L -O ${GMP}
+        tar xf ${GMP_ver1} && \
+        cd ${GMP_ver2} && \
+        ./configure \
+            --disable-shared \
+            --enable-static \
+            --prefix=/usr/local/$HOST \
+            --host=$HOST \
+            --disable-cxx \
+            --enable-fat \
+            CFLAGS="-mtune=generic -O2 -g0" && \
+        sudo make -j$(nproc) install
+        cd ..
+
+        curl -L -O ${EXPAT}
+        tar xf expat-${EXPAT_ver_2}.tar.bz2 && \
+        cd expat-${EXPAT_ver_2} && \
+        ./configure \
+            --disable-shared \
+            --enable-static \
+            --prefix=/usr/local/$HOST \
+            --host=$HOST \
+            --build=`dpkg-architecture -qDEB_BUILD_GNU_TYPE` && \
+        sudo make -j$(nproc) install
+        cd ..
+
+        curl -L -O ${SQLITE3}
+        tar xf sqlite-autoconf-${SQLITE3_ver}.tar.gz && \
+        cd sqlite-autoconf-${SQLITE3_ver} && \
+        ./configure \
+            --disable-shared \
+            --enable-static \
+            --prefix=/usr/local/$HOST \
+            --host=$HOST \
+            --build=`dpkg-architecture -qDEB_BUILD_GNU_TYPE` && \
+        sudo make -j$(nproc) install
+        cd ..
+
+        curl -L -O ${ZLIB}
+        tar xf zlib-${ZLIB_ver}.tar.gz && \
+        cd zlib-${ZLIB_ver} && \
+        CC=$HOST-gcc \
+        AR=$HOST-ar \
+        LD=$HOST-ld \
+        RANLIB=$HOST-ranlib \
+        STRIP=$HOST-strip \
+        ./configure \
+            --prefix=/usr/local/$HOST \
+            --libdir=/usr/local/$HOST/lib \
+            --includedir=/usr/local/$HOST/include \
+            --static && \
+        sudo make -j$(nproc) install
+        cd ..
+
+        curl -L -O ${C_ARES}
+        tar xf c-ares-${C_ARES_ver}.tar.gz && \
+        cd c-ares-${C_ARES_ver} && \
+        ./configure \
+            --disable-shared \
+            --enable-static \
+            --without-random \
+            --prefix=/usr/local/$HOST \
+            --host=$HOST \
+            --build=`dpkg-architecture -qDEB_BUILD_GNU_TYPE` \
+            LIBS="-lws2_32" && \
+        sudo make -j$(nproc) install
+        cd ..
+
+        curl -L -O ${SSH2}
+        tar xf libssh2-${SSH2_ver}.tar.gz && \
+        cd libssh2-${SSH2_ver} && \
+        ./configure \
+            --disable-shared \
+            --enable-static \
+            --prefix=/usr/local/$HOST \
+            --host=$HOST \
+            --build=`dpkg-architecture -qDEB_BUILD_GNU_TYPE` \
+            --without-openssl \
+            --with-wincng \
+            LIBS="-lws2_32" && \
+        sudo make -j$(nproc) install
+        cd ..
+
+        git clone https://github.com/aria2/aria2
+        cd aria2 && autoreconf -i
+        # x86_64 arch
+        sed -i "s/HOST=i686-w64-mingw32/HOST=x86_64-w64-mingw32/g" ./mingw-config
+        
+        # MAX_CONNECTION_PER_SERVER
+        sed -i 's/"1", 1, 16/"128", 1, -1/g' ./src/OptionHandlerFactory.cc
+        # MIN_SPLIT_SIZE
+        sed -i 's/"20M", 1_m, 1_g/"4K", 1_k, 1_g/g' ./src/OptionHandlerFactory.cc
+        # CONNECT_TIMEOUT
+        sed -i 's/PREF_CONNECT_TIMEOUT, TEXT_CONNECT_TIMEOUT, "60", 1, 600/PREF_CONNECT_TIMEOUT, TEXT_CONNECT_TIMEOUT, "15", 1, 600/g' ./src/OptionHandlerFactory.cc
+        # PIECE_LENGTH
+        sed -i 's/PREF_PIECE_LENGTH, TEXT_PIECE_LENGTH, "1M", 1_m, 1_g/PREF_PIECE_LENGTH, TEXT_PIECE_LENGTH, "4k", 1_k, 1_g/g' ./src/OptionHandlerFactory.cc
+        # RETRY_WAIT
+        sed -i 's/new NumberOptionHandler(PREF_RETRY_WAIT, TEXT_RETRY_WAIT, "0", 0, 600/new NumberOptionHandler(PREF_RETRY_WAIT, TEXT_RETRY_WAIT, "2", 0, 600/g' ./src/OptionHandlerFactory.cc
+        # SPLIT
+        sed -i 's/new NumberOptionHandler(PREF_SPLIT, TEXT_SPLIT, "5", 1, -1,/new NumberOptionHandler(PREF_SPLIT, TEXT_SPLIT, "128", 1, -1,/g' ./src/OptionHandlerFactory.cc
+        
+        ./mingw-config
+        sudo make -j$(nproc)
+        sudo $HOST-strip src/aria2c.exe
+        
+    - name: Check compilation
+      if: steps.compile.outcome != 'success'
+      run: |
+        curl -s --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=Compiling aria2 windows x86_64 Latest failed!!" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
+        exit
+        
+    - name: Assemble Artifact
+      run: |
+        mkdir -p ${{ github.workspace }}/artifact
+        cp ${{ github.workspace }}/aria2/src/aria2c.exe ${{ github.workspace }}/artifact/aria2c_windows_x86_64_Unlimited_threads.exe
+        
+    - name: Upload binaries to release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: ./artifact/*
+        tag: "Last_release"
+        overwrite: true
+        file_glob: true

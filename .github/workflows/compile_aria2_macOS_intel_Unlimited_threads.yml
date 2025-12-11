@@ -1,0 +1,150 @@
+#=================================================
+# Description: Build OpenWrt using GitHub Actions
+# Lisence: GPL-3.0
+# Author: lazymartin
+#=================================================
+
+# update 1
+
+name: Compile aria2 macOS Latest release
+
+env:
+  TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+  TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+  shell: bash
+  TZ: Asia/Shanghai
+
+#on:
+##  schedule:
+##    - cron: '00 19 * * 0'
+#  push:
+#    paths: 
+##      - '.github/workflows/compile_aria2_macOS_intel_Unlimited_threads.yml'
+    
+jobs:
+  build:
+    runs-on: macos-latest
+    
+    steps:
+    - name: Install dependences
+      id: dependences
+      continue-on-error: true
+      run: |
+        brew install --force libtool c-ares libgcrypt pkg-config libssh2 gmp autoconf automake cppunit libtool libxml2 gettext openssl pkg-config sqlite zlib
+        brew link --force libtool c-ares libgcrypt pkg-config libssh2 gmp autoconf automake cppunit libtool libxml2 gettext openssl pkg-config sqlite zlib
+    - name: Check dependency installation
+      # if: steps.dependences.outcome != 'success' || steps.compile.outcome != 'success'
+      if: steps.dependences.outcome != 'success'
+      run: |
+        curl -s --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=Failed to install aria2 macOS_x86_x64 dependency, compilation terminated!!" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
+    - name: Compile
+      id: compile
+      continue-on-error: true
+      run: |
+        cd ~
+        FILE_VER=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/aria2/aria2/releases/latest|grep tag_name|awk -F "\"" '{print $4}'|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
+        FILE_NAME=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/aria2/aria2/releases/latest|grep $FILE_VER.tar.xz|awk -F "\"" 'NR==1 {print $4}'`
+        DOWNLOAD_LINK=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/aria2/aria2/releases/latest|grep -oE "https://github.com.*$FILE_VER.tar.xz"`
+        
+        wget -q $DOWNLOAD_LINK --show-progress -O $FILE_NAME
+        tar xf $FILE_NAME
+        cd `echo $FILE_NAME|sed "s/.tar.xz//g"`
+
+        # MAX_CONNECTION_PER_SERVER  change to unlimited threads
+        sed -i '' s'/"1", 1, 16/"128", 1, -1/g' ./src/OptionHandlerFactory.cc
+        # MIN_SPLIT_SIZE
+        sed -i '' s'/"20M", 1_m, 1_g/"4K", 1_k, 1_g/g' ./src/OptionHandlerFactory.cc
+        # CONNECT_TIMEOUT
+        sed -i '' s'/PREF_CONNECT_TIMEOUT, TEXT_CONNECT_TIMEOUT, "60", 1, 600/PREF_CONNECT_TIMEOUT, TEXT_CONNECT_TIMEOUT, "15", 1, 600/g' ./src/OptionHandlerFactory.cc
+        # PIECE_LENGTH
+        sed -i '' s'/PREF_PIECE_LENGTH, TEXT_PIECE_LENGTH, "1M", 1_m, 1_g/PREF_PIECE_LENGTH, TEXT_PIECE_LENGTH, "4k", 1_k, 1_g/g' ./src/OptionHandlerFactory.cc
+        # RETRY_WAIT
+        sed -i '' s'/new NumberOptionHandler(PREF_RETRY_WAIT, TEXT_RETRY_WAIT, "0", 0, 600/new NumberOptionHandler(PREF_RETRY_WAIT, TEXT_RETRY_WAIT, "2", 0, 600/g' ./src/OptionHandlerFactory.cc
+        # SPLIT
+        sed -i '' s'/new NumberOptionHandler(PREF_SPLIT, TEXT_SPLIT, "5", 1, -1,/new NumberOptionHandler(PREF_SPLIT, TEXT_SPLIT, "128", 1, -1,/g' ./src/OptionHandlerFactory.cc
+   
+        export PATH="/usr/local/opt/libxml2/bin:$PATH"
+        export LDFLAGS="-L/usr/local/opt/libxml2/lib"
+        export CPPFLAGS="-I/usr/local/opt/libxml2/include"
+        export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/local/opt/libxml2/lib/pkgconfig"
+        
+        export PATH="/usr/local/opt/libssh2/bin:$PATH"        
+        export LDFLAGS="-L/usr/local/opt/libssh2/lib"         
+        export CPPFLAGS="-I/usr/local/opt/libssh2/include"    
+        export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/local/opt/libssh2/lib/pkgconfig"
+
+        export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"
+        export LDFLAGS="-L/usr/local/opt/openssl@1.1/lib"
+        export CPPFLAGS="-I/usr/local/opt/openssl@1.1/include"
+        export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/local/opt/openssl@1.1/lib/pkgconfig"
+
+        export PATH="/usr/local/opt/sqlite/bin:$PATH"
+        export LDFLAGS="-L/usr/local/opt/sqlite/lib"
+        export CPPFLAGS="-I/usr/local/opt/sqlite/include"
+        export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/local/opt/sqlite/lib/pkgconfig"
+
+        export LDFLAGS="-L/usr/local/opt/zlib/lib"
+        export CPPFLAGS="-I/usr/local/opt/zlib/include"
+        export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/local/opt/zlib/lib/pkgconfig"
+
+        export LIBEXPAT_LIBS="-L/usr/local/opt/expat/lib"
+        export LIBEXPAT_CFLAGS="-I/usr/local/opt/expat/include"
+        export LDFLAGS="-L/usr/local/lib"
+        export CPPFLAGS="-I/usr/local/include"
+
+        CC="gcc-8"
+        CXX="g++-8"
+ 
+        # autoreconf -i
+        # autoconf -i
+        # ./configure ARIA2_STATIC=yes
+        # ./configure -h
+        ./configure  \
+            --enable-static \
+            --disable-shared \
+            --enable-metalink \
+            --enable-bittorrent \
+            --disable-nls \
+            --with-appletls \
+            --with-libgmp \
+            --with-sqlite3 \
+            --with-libz \
+            --with-libexpat \
+            --with-libcares \
+            --with-libgcrypt \
+            --with-libssh2 \
+            --without-libuv \
+            --without-gnutls \
+            --without-openssl \
+            --without-libnettle \
+            --without-libxml2 \
+            ARIA2_STATIC=yes
+        
+        sudo make -j$(nproc)
+        
+    - name: Check compilation
+      if: steps.compile.outcome != 'success'
+      run: |
+        curl -s --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=Compiling aria2 macOS_x86_x64 failed!!" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
+        
+    - name: Assemble Artifact
+      shell: zsh {0} 
+      run: |
+        mkdir -p ./artifact
+        FILE_VER=`curl -s --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/aria2/aria2/releases/latest|grep tag_name|awk -F "\"" '{print $4}'|grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}"`
+        ## work_path=`curl -s https://api.github.com/repos/aria2/aria2/releases/latest|grep $FILE_VER.tar.xz|awk -F "\"" 'NR==1 {print $4}'|gsed "s/.tar.xz//g"`
+        cp ~/aria2-${FILE_VER}/src/aria2c ./artifact/aria2c_macOS_intel_Unlimited_threads
+        cd ~/aria2-${FILE_VER}/src/
+        chmod +x aria2c
+        ./aria2c -v
+        ./aria2c -h
+        
+    - name: Upload binaries to release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: ./artifact/*
+        tag: "Last_release"
+        overwrite: true
+        file_glob: true
+

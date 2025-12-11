@@ -1,0 +1,139 @@
+{
+  "log": {
+    "loglevel": "none", //  "debug" | "info" | "warning" | "error" | "none"
+    //"access": "D://tools//xray-win//access.log",
+    //"error": "D://tools//xray-win//error.log",
+    "dnslog": true
+  },
+  
+  "inbounds": [
+    {
+      "tag": "http_proxy",
+      "port": ${local_http_proxy_port},
+      "protocol": "http",
+      "sniffing": {
+        "enabled": true,
+        "destOverride": ["http", "tls"]
+      },
+      "settings": {
+        "auth": "noauth",
+        "udp": false
+      }
+    },
+    {
+      "tag": "socks_proxy",
+      "port": ${local_socks_proxy_port},
+      "protocol": "socks",
+      "sniffing": {
+        "enabled": true,
+        "destOverride": ["http", "tls"]
+      },
+      "settings": {
+        "auth": "noauth",
+        "udp": false
+      }
+    }
+  ],
+
+  "outbounds": [
+    //VLESS+TLS+Fallback协议
+    {
+    	"tag": "proxy",
+      "protocol": "vless",
+      "settings": {
+        "vnext": [
+          {
+            "address": "${vps_ip}", // 换成你的域名或服务器 IP（发起请求时无需解析域名了）
+            "port": 443,
+            "users": [
+              {
+                "id": "${uuid}", // 填写你的 UUID
+                "flow": "xtls-rprx-direct", //"xtls-rprx-direct", "xtls-rprx-splice",
+                "encryption": "none",
+                "level": 0
+              }
+            ]
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "tcp",
+        "security": "xtls",
+        "xtlsSettings": {
+          "serverName": "${x_domain}" // 换成你的域名
+        }
+      }
+    },
+    {
+      "tag": "direct",
+      "protocol": "freedom",
+      "settings": {
+        "domainStrategy": "UseIP"
+      }
+    },
+    {
+      "tag": "block",
+      "protocol": "blackhole",
+      "settings": {
+        "response": {
+          "type": "http"
+        }
+      }
+    }
+  ],
+
+  "dns": {
+    "servers": [
+        "https+local://223.5.5.5/dns-query"
+    ]
+  },
+
+  "routing": {
+    "domainStrategy": "AsIs", //"IPOnDemand" "AsIs" "IPIfNonMatch"
+    "rules": [
+      { // 直连查询授时服务器
+        "type": "field",
+        "port": 123,
+        "network": "udp",
+        "outboundTag": "direct" 
+      },    
+      { // BT协议直连
+        "type": "field",
+        "protocol":["bittorrent"], 
+        //"port": "21301,26701",  //指定端口
+        "outboundTag": "direct"
+      },
+      { // 广告拦截
+        "type": "field", 
+        "domain": [
+          "geosite:category-ads-all"
+        ],
+        "outboundTag": "block"
+      },
+      { // 直连中国大陆域名及指定域名
+        "type": "field",
+        "domain": [
+          "${domain}",
+          "speedtest.net",
+          "geosite:category-games@cn",
+          "tmall.hk",
+          "geosite:cn"
+        ],
+        "outboundTag": "direct"
+      },
+      { // 直连中国大陆主流网站 ip 和 保留 ip
+        "type": "field", 
+        "ip": [
+          "geoip:private",
+          "geoip:cn"
+        ],
+        "outboundTag": "direct"
+      },
+      { // 国外IP走代理
+        "type": "field",
+        "network": "tcp,udp",
+        "outboundTag": "proxy"
+      }
+    ]
+  }
+}
