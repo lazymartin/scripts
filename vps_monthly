@@ -13,19 +13,4 @@ update_crt(){
   systemctl start xray &>/dev/null
 }
 
-rollback_renew_freenom(){
-  cd ${HOME}/github/renew_freenom
-  BRANCHNAME=`git checkout|awk -F "/" '{print $2}'|sed "s/'.//g"`
-  # latest_commit=`curl -s https://github.com/luolongfei/freenom/commits/master|grep "data-url"|awk -F "/" 'NR==1 {print $5}'`
-  rollback_commit="c3e21cedeb25a5be74e28b7400bd5fd4439e7e00"
-  git reset --hard ${rollback_commit}
-  git push origin ${BRANCHNAME} --force
-  # sleep 60
-  # git pull upstream ${BRANCHNAME}
-  # git push origin ${BRANCHNAME}
-  logger "Repository of renew_freenom has been rollbacked!"
-  cd
-}
-
-# rollback_renew_freenom
 update_crt
