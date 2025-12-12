@@ -2,6 +2,35 @@
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
 
+update_geofiles(){
+  count=0
+  cp -p /usr/local/share/xray/geoip.dat /usr/local/share/xray/geoip.dat.bak && rm /usr/local/share/xray/geoip.dat
+  cp -p /usr/local/share/xray/geosite.dat /usr/local/share/xray/geosite.dat.bak && rm /usr/local/share/xray/geosite.dat
+
+  # get latest version
+  LATEST_VERSION=`curl -LsH 'Accept: application/json' https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest|jq -r .tag_name`
+
+  # download geoip.dat
+  wget -q --show-progress -O /usr/local/share/xray/geoip.dat "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/download/${LATEST_VERSION}/geoip.dat"
+  if [[ -s /usr/local/share/xray/geoip.dat ]]; then
+    logger "Failed to update \"geoip.dat\", using the original file."
+    cp -p /usr/local/share/xray/geoip.dat.bak /usr/local/share/xray/geoip.dat
+    count=$((${count} + 1))
+    else
+      logger "The file \"geoip.dat\" was successfully updated!";
+  fi
+
+  # download geosite.dat
+  wget -q --show-progress -O /usr/local/share/xray/geosite.dat "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/download/${LATEST_VERSION}/geosite.dat"
+  if [[ -s /usr/local/share/xray/geosite.dat ]]; then
+    logger "Failed to update \"geosite.dat\", using the original file."
+    cp -p /usr/local/share/xray/geosite.dat.bak /usr/local/share/xray/geosite.dat
+    count=$((${count} + 1))
+    else
+      logger "The file \"geosite.dat\" was successfully updated!"
+  fi
+}
+
 update_crt(){
   systemctl stop nginx &>/dev/null
   systemctl stop xray &>/dev/null
@@ -13,4 +42,5 @@ update_crt(){
   systemctl start xray &>/dev/null
 }
 
+update_geofiles
 update_crt
