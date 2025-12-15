@@ -54,6 +54,12 @@
     "domainMatcher": "hybrid",
     "rules": [
       {
+        "ip":[
+          "10.0.0.1/16"
+        ],
+        "outboundTag": "direct"
+      },
+      {
         "tag": "BT_protocol",
         "type": "field",
         "protocol": ["bittorrent"],
