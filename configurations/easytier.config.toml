@@ -1,4 +1,4 @@
-hostname = "${x_domain_reg}"
+hostname = "${set_hostname}"
 ipv4 = "10.0.0.10/24"
 listeners = [
     "tcp://0.0.0.0:${easytier_port}",
