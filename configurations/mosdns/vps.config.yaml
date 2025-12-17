@@ -1,5 +1,5 @@
 log:
-  level: error #info debug
+  level: erro #info debug
   file: "/var/log/mosdns.log"
 
 plugins:
@@ -11,39 +11,19 @@ plugins:
         #- "full:test.${domain} 192.168.2.3"
         - "time.android.com 203.107.6.88"
 
-  ## 国内解析域名
-  - tag: "geosite_direct"
-    type: "domain_set"
-    args:
-      exps:
-        - "${domain}"
-      files:
-        - "/etc/mosdns/rules/geosite_cn.txt"
-        - "/etc/mosdns/rules/geosite_geolocation-cn.txt"
-        - "/etc/mosdns/rules/geosite_apple-cn.txt"
-        - "/etc/mosdns/rules/geosite_category-games@cn.txt"
-        - "/etc/mosdns/rules/geosite_category-games-cn.txt"
-
   ## 黑名单域名
   - tag: "blocked_domain"
     type: "domain_set"
     args:
       files:
-        - "/etc/mosdns/rules/geosite_xiaomi-ads.txt"
-
-  ## 国内 IP
-  - tag: "geoip_cn"
-    type: "ip_set"
-    args:
-      files:
-        - "/etc/mosdns/rules/geoip_cn.txt"
+        - "/usr/local/etc/mosdns/rules/geosite_xiaomi-ads.txt"
 
   ## 国外流媒体域名
   - tag: "streaming_media_domains"
     type: "domain_set"
     args:
       files:
-        - "/etc/mosdns/rules/geosite_netflix.txt"
+        - "/usr/local/etc/mosdns/rules/geosite_netflix.txt"
 
   ## 缓存
   - tag: "lazy_cache"
@@ -51,34 +31,9 @@ plugins:
     args:
       size: 20480
       lazy_cache_ttl: 86400
-      #dump_file: "/etc/mosdns/cache.dump"
-      #dump_interval: 600
 
-  ## 转发至本地服务器
+  ## 转发至上游服务器
   - tag: "forward_local"
-    type: "forward"
-    args:
-      concurrent: 2
-      upstreams:
-        - tag: "DNSPodDOT"
-          addr: "tls://dot.pub"
-          enable_pipeline: true
-          dial_addr: "1.12.12.21"
-        - tag: "Ali DOT"
-          addr: "tls://dns.alidns.com"
-          dial_addr: "223.6.6.6"
-        #- tag: DNSPod DOH
-        #  addr: "https://doh.pub/dns-query"
-        #  dial_addr: "1.12.12.21"
-        #- tag: Ali DOH
-        #  addr: "https://dns.alidns.com/dns-query"
-        #  dial_addr: "223.6.6.6"
-        #- tag: Chinatelecom UDP
-        #  addr: "202.96.128.166"
-        #  addr: "202.96.134.133"
-
-  ## 转发至远程服务器
-  - tag: "forward_remote"
     type: "forward"
     args:
       concurrent: 2
@@ -87,12 +42,10 @@ plugins:
           addr: "tls://one.one.one.one"
           dial_addr: "1.1.1.1"
           enable_pipeline: true
-          socks5: "127.0.0.1:1070"
         - tag: "Google DOT"
           addr: "tls://dns.google"
           dial_addr: "8.8.8.8"
           enable_pipeline: true
-          socks5: "127.0.0.1:1070"
         #- tag: Google DOH
         #  addr: "https://dns.google/dns-query"
         #  dial_addr: "8.8.8.8"
@@ -107,9 +60,8 @@ plugins:
     type: "forward"
     args:
       upstreams:
-        - addr: "138.2.89.178"
-          dial_addr: "138.2.89.178"
-          socks5: "127.0.0.1:1071"
+        - addr: "${netflix_dns}"
+          dial_addr: "${netflix_dns}"
 
   ## 有响应终止返回
   - tag: "has_resp_test"
@@ -132,13 +84,6 @@ plugins:
       - matches: "!qname ${domain}"
         exec: $lazy_cache
 
-  ## 指定国内解析域名
-  - tag: "local_resolve_domains"
-    type: "sequence"
-    args:
-      - matches: qname $geosite_direct
-        exec: $forward_local
-
   ## 解析国外流媒体域名
   - tag: "resolve_treaming_media_domains"
     type: "sequence"
@@ -160,8 +105,8 @@ plugins:
   - tag: main_sequence
     type: sequence
     args:
-      ## 优先使用IPv4
-      - exec: prefer_ipv4
+      ### 优先使用IPv4
+      #- exec: prefer_ipv4
       ## 黑名单
       - exec: $query_is_blocked
       - exec: jump has_resp_test
@@ -171,28 +116,23 @@ plugins:
       ## 查询缓存
       - exec: $query_in_cache
       - exec: jump has_resp_test
-      ## 指定国内解析域名
-      - exec: $local_resolve_domains
-      - exec: jump has_resp_test
       ## 解析国外流媒体域名
       - exec: $resolve_treaming_media_domains
       - exec: jump has_resp_test
       ## 国外解析域名，返回国内IP则丢弃
       - exec: $remote_resolve_sequence
       - exec: jump has_resp_test
-      ## 国内解析兜底
-      - exec: $forward_local
 
   ## 启动 udp 服务器
   - tag: udp_server
     type: udp_server
     args:
       entry: main_sequence
-      listen: ":5335"
+      listen: ":53"
 
   ## 启动 tcp 服务器
   - tag: tcp_server
     type: tcp_server
     args:
       entry: main_sequence
-      listen: ":5335"
+      listen: ":53"
