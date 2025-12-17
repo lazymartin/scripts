@@ -18,7 +18,7 @@ plugins:
       files:
         - "/usr/local/etc/mosdns/rules/geosite_xiaomi-ads.txt"
 
-  ## 国外流媒体域名
+  ## 流媒体域名
   - tag: "streaming_media_domains"
     type: "domain_set"
     args:
@@ -55,7 +55,7 @@ plugins:
         #  dial_addr: "104.16.248.249"
         #  socks5: "127.0.0.1:1081"
           
-  ## 转发至国外流媒体专用服务器
+  ## 流媒体专用服务器
   - tag: "forward_remote_streaming_media"
     type: "forward"
     args:
@@ -91,8 +91,8 @@ plugins:
       - matches: qname $streaming_media_domains
         exec: $forward_remote_streaming_media
 
-  ## 国外解析域名
-  - tag: "remote_resolve_sequence"
+  ## 解析域名
+  - tag: "resolve_sequence"
     type: "sequence"
     args:
       - exec: $forward_remote
@@ -116,11 +116,11 @@ plugins:
       ## 查询缓存
       - exec: $query_in_cache
       - exec: jump has_resp_test
-      ## 解析国外流媒体域名
+      ## 指定服务器解析流媒体域名
       - exec: $resolve_treaming_media_domains
       - exec: jump has_resp_test
-      ## 国外解析域名，返回国内IP则丢弃
-      - exec: $remote_resolve_sequence
+      ## 解析域名
+      - exec: $resolve_sequence
       - exec: jump has_resp_test
 
   ## 启动 udp 服务器
