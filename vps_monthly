@@ -12,22 +12,22 @@ update_geofiles(){
 
   # download geoip.dat
   wget -q --show-progress -O /usr/local/share/xray/geoip.dat "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/download/${LATEST_VERSION}/geoip.dat"
-  if [[ -s /usr/local/share/xray/geoip.dat ]]; then
+  if [[ ! -s /usr/local/share/xray/geoip.dat ]]; then
     logger "Failed to update \"geoip.dat\", using the original file."
     cp -p /usr/local/share/xray/geoip.dat.bak /usr/local/share/xray/geoip.dat
     count=$((${count} + 1))
-    else
-      logger "The file \"geoip.dat\" was successfully updated!";
+  else
+    logger "The file \"geoip.dat\" was successfully updated!";
   fi
 
   # download geosite.dat
   wget -q --show-progress -O /usr/local/share/xray/geosite.dat "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/download/${LATEST_VERSION}/geosite.dat"
-  if [[ -s /usr/local/share/xray/geosite.dat ]]; then
+  if [[ ! -s /usr/local/share/xray/geosite.dat ]]; then
     logger "Failed to update \"geosite.dat\", using the original file."
     cp -p /usr/local/share/xray/geosite.dat.bak /usr/local/share/xray/geosite.dat
     count=$((${count} + 1))
-    else
-      logger "The file \"geosite.dat\" was successfully updated!"
+  else
+    logger "The file \"geosite.dat\" was successfully updated!"
   fi
 }
 
