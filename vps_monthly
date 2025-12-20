@@ -4,8 +4,8 @@ export PATH
 
 update_geofiles(){
   count=0
-  cp -p /usr/local/share/xray/geoip.dat /usr/local/share/xray/geoip.dat.bak && rm /usr/local/share/xray/geoip.dat
-  cp -p /usr/local/share/xray/geosite.dat /usr/local/share/xray/geosite.dat.bak && rm /usr/local/share/xray/geosite.dat
+  mv /usr/local/share/xray/geoip.dat /usr/local/share/xray/geoip.dat.bak
+  mv /usr/local/share/xray/geosite.dat /usr/local/share/xray/geosite.dat.bak
 
   # get latest version
   LATEST_VERSION=`curl -LsH 'Accept: application/json' https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest|jq -r .tag_name`
