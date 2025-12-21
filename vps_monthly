@@ -39,7 +39,7 @@ update_geofiles(){
     geoview -type geosite -action convert -input /usr/local/share/xray/geosite.dat -list netflix -output /root/scripts/configurations/streaming-media.srs
 
     # geoip
-    geoview -type geoip -action convert -input /usr/local/share/xray/geoip.dat -list telegram -output /root/scripts/configurations/geoip-spec-proxy.srs
+    geoview -type geoip -action convert -input /usr/local/share/xray/geoip.dat -list telegram,google -output /root/scripts/configurations/geoip-spec-proxy.srs
     geoview -type geoip -action convert -input /usr/local/share/xray/geoip.dat -list cn -output /root/scripts/configurations/geoip-cn.srs
 
     cd /root/scripts
