@@ -7,39 +7,19 @@ listen-addrs:
   - "127.0.0.1"
   - "::1"
 
+# 指定流媒体解锁DNS
+upstream-streaming_dns:
+  - ${streaming_dns}
+
 # 上游 DNS 服务器列表
 upstream:
-  # 指定 netflix 域名使用的上游
-  - "[/fast.com/]${netflix_dns}"
-  - "[/netflix.ca/]${netflix_dns}"
-  - "[/netflix.com/]${netflix_dns}"
-  - "[/netflix.com.edgesuite.net/]${netflix_dns}"
-  - "[/netflix.net/]${netflix_dns}"
-  - "[/netflixdnstest0.com/]${netflix_dns}"
-  - "[/netflixdnstest1.com/]${netflix_dns}"
-  - "[/netflixdnstest10.com/]${netflix_dns}"
-  - "[/netflixdnstest2.com/]${netflix_dns}"
-  - "[/netflixdnstest3.com/]${netflix_dns}"
-  - "[/netflixdnstest4.com/]${netflix_dns}"
-  - "[/netflixdnstest5.com/]${netflix_dns}"
-  - "[/netflixdnstest6.com/]${netflix_dns}"
-  - "[/netflixdnstest7.com/]${netflix_dns}"
-  - "[/netflixdnstest8.com/]${netflix_dns}"
-  - "[/netflixdnstest9.com/]${netflix_dns}"
-  - "[/netflixinvestor.com/]${netflix_dns}"
-  - "[/netflixtechblog.com/]${netflix_dns}"
-  - "[/nflxext.com/]${netflix_dns}"
-  - "[/nflximg.com/]${netflix_dns}"
-  - "[/nflximg.net/]${netflix_dns}"
-  - "[/nflxsearch.net/]${netflix_dns}"
-  - "[/nflxso.net/]${netflix_dns}"
-  - "[/nflxvideo.net/]${netflix_dns}"
   # 解析 ${mirror_name} 镜像地址
   - "[/${mirror_site}/]${mirror_site_dns}"
-  # 指定 ${domain} 及其子域名使用的上游
-  - "[/*.${domain}/]tls://1.1.1.1"
   # 默认上游：Cloudflare DNS over TLS
   - "tls://1.1.1.1"
+
+# 域名集
+forwarding-rules: streaming_domain.txt
 
 # 缓存设置
 cache: true
