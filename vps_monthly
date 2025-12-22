@@ -37,7 +37,9 @@ update_geofiles(){
     geoview -type geosite -input /usr/local/share/xray/geosite.dat -action convert -list telegram,github,x,facebook,instagram,reddit,z-library -output /root/scripts/configurations/passwall.srs
     geoview -type geosite -input /usr/local/share/xray/geosite.dat -action convert -list cn,geolocation-cn,apple-cn,category-games@cn -output /root/scripts/configurations/spec-direct.srs
     geoview -type geosite -input /usr/local/share/xray/geosite.dat -action convert -list netflix,primevideo,disney -output /root/scripts/configurations/streaming-media.srs
+
     geoview -type geosite -input /usr/local/share/xray/geosite.dat -list netflix,primevideo,disney -output /usr/local/etc/streaming_domain.txt
+    sed -i 's/$/ streaming_dns/' /usr/local/etc/streaming_domain.txt
 
     # geoip
     geoview -type geoip -input /usr/local/share/xray/geoip.dat -action convert -list telegram,google -output /root/scripts/configurations/geoip-spec-proxy.srs
