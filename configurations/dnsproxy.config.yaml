@@ -7,7 +7,7 @@ listen-addrs:
   - "127.0.0.1"
   - "::1"
 
-# 指定流媒体解锁DNS
+# 指定 streaming 解锁DNS
 upstream-streaming_dns:
   - ${streaming_dns}
 
@@ -18,7 +18,7 @@ upstream:
   # 默认上游：Cloudflare DNS over TLS
   - "tls://1.1.1.1"
 
-# 域名集
+# streaming 域名集
 forwarding-rules: streaming_domain.txt
 
 # 缓存设置
