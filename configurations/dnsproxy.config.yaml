@@ -213,6 +213,8 @@ upstream:
   - "[/thisispolaris.com/]${streaming_dns}"
   - "[/watchdisneyfe.com/]${streaming_dns}"
   - "[/watchespn.com/]${streaming_dns}"
+  # 指定 ${domain} 及其子域名直接查询
+  - "[/*.${domain}/]tls://1.1.1.1"
   # 解析 ${mirror_name} 镜像地址
   - "[/${mirror_site}/]${mirror_site_dns}"
   # 默认上游：Cloudflare DNS over TLS
