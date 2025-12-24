@@ -34,7 +34,7 @@ update_geofiles(){
   if [[ -d /root/scripts ]]; then
     # gesosite
     geoview -type geosite -input /usr/local/share/xray/geosite.dat -action convert -list category-ai-\!cn,category-ai-chat-\!cn,google,telegram,github,x,facebook,instagram,reddit,z-library,netflix,primevideo,disney -output /root/scripts/configurations/rule-set/spec-sg-domain.srs
-    geoview -type geosite -input /usr/local/share/xray/geosite.dat -action convert -list cn,geolocation-cn,apple-cn,category-games@cn -output /root/scripts/configurations/rule-set/spec-direct-domain.srs
+    geoview -type geosite -input /usr/local/share/xray/geosite.dat -action convert -list cn,geolocation-cn,apple-cn,category-games@cn,private -output /root/scripts/configurations/rule-set/spec-direct-domain.srs
     #geoview -type geosite -input /usr/local/share/xray/geosite.dat -list netflix,primevideo,disney -output /usr/local/etc/streaming_domain.txt
     #sed -i "s|^|[/|; s|$|/]|; s|$|${streaming_dns}|" /usr/local/etc/streaming_domain.txt
 
