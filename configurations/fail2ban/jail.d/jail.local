@@ -20,7 +20,7 @@ backend = systemd
 journalmatch = _SYSTEMD_UNIT=nginx.service + _COMM=sshd
 
 [easytier]
-enabled = false
+enabled = true
 filter  = easytier
 backend = systemd
 journalmatch = '_SYSTEMD_UNIT=easytier.service'
