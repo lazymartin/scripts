@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
+export PATH
+
+update_geofiles(){
+  count=0
+  mv /usr/local/share/xray/geoip.dat /usr/local/share/xray/geoip.dat.bak
+  mv /usr/local/share/xray/geosite.dat /usr/local/share/xray/geosite.dat.bak
+
+  # get latest version
+  LATEST_VERSION=`curl -LsH 'Accept: application/json' https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest|jq -r .tag_name`
+
+  # download geoip.dat
+  wget -q --show-progress -O /usr/local/share/xray/geoip.dat "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/download/${LATEST_VERSION}/geoip.dat"
+  if [[ ! -s /usr/local/share/xray/geoip.dat ]]; then
+    logger "Failed to update \"geoip.dat\", using the original file."
+    cp -p /usr/local/share/xray/geoip.dat.bak /usr/local/share/xray/geoip.dat
+    count=$((${count} + 1))
+  else
+    logger "The file \"geoip.dat\" was successfully updated!";
+  fi
+
+  # download geosite.dat
+  wget -q --show-progress -O /usr/local/share/xray/geosite.dat "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/download/${LATEST_VERSION}/geosite.dat"
+  if [[ ! -s /usr/local/share/xray/geosite.dat ]]; then
+    logger "Failed to update \"geosite.dat\", using the original file."
+    cp -p /usr/local/share/xray/geosite.dat.bak /usr/local/share/xray/geosite.dat
+    count=$((${count} + 1))
+  else
+    logger "The file \"geosite.dat\" was successfully updated!"
+  fi
+
+  # update srs file
+  if [[ -d /root/scripts ]]; then
+    # gesosite
+    geoview -type geosite -input /usr/local/share/xray/geosite.dat -action convert -list category-ai-\!cn,category-ai-chat-\!cn,google,telegram,github,x,facebook,instagram,reddit,z-library,netflix,primevideo,disney -output /root/scripts/configurations/rule-set/spec-sg-domain.srs
+    geoview -type geosite -input /usr/local/share/xray/geosite.dat -action convert -list category-ads-all -output /root/scripts/configurations/rule-set/block-list-domain.srs
+    geoview -type geosite -input /usr/local/share/xray/geosite.dat -action convert -list cn,private -output /root/scripts/configurations/rule-set/spec-direct-domain.srs
+    #geoview -type geosite -input /usr/local/share/xray/geosite.dat -list netflix,primevideo,disney -output /usr/local/etc/streaming_domain.txt
+    #sed -i "s|^|[/|; s|$|/]|; s|$|${streaming_dns}|" /usr/local/etc/streaming_domain.txt
+
+    # geoip
+    geoview -type geoip -input /usr/local/share/xray/geoip.dat -action convert -list telegram,google -output /root/scripts/configurations/rule-set/spec-sg-ip.srs
+    geoview -type geoip -input /usr/local/share/xray/geoip.dat -action convert -list cn -output /root/scripts/configurations/rule-set/spec-direct-ip.srs
+
+    cd /root/scripts
+    git add . && git commit -am "push" && git push origin main
+    #systemctl restart dnsproxy
+  fi
+}
+
+update_crt(){
+  systemctl stop nginx &>/dev/null
+  systemctl stop xray &>/dev/null
+  ps -aux|grep -v grep|grep -E "nginx|xray"|awk -F " " '{print $2}'|xargs kill -9 &>/dev/null
+  curl -Rso /etc/ssl/web.crt -u ${webdav_username}:${webdav_password} ${webdav_link}/documents/ssl/${domain}.crt
+  curl -Rso /etc/ssl/web.key -u ${webdav_username}:${webdav_password} ${webdav_link}/documents/ssl/${domain}.key
+  systemctl daemon-reload &>/dev/null
+  systemctl start nginx &>/dev/null
+  systemctl start xray &>/dev/null
+}
+
+update_geofiles
+update_crt

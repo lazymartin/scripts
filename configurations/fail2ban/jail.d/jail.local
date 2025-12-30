@@ -1,0 +1,26 @@
+## test command
+## fail2ban-regex /var/log/auth.log /etc/fail2ban/filter.d/dropbear.conf
+
+[DEFAULT]
+banaction = nftables-allports
+protocol = tcp, udp, icmp
+findtime = 1d
+bantime = 2d
+maxretry = 3
+
+[sshd]
+enabled = true
+port = ${ssh_port}
+backend = systemd
+journalmatch = '_SYSTEMD_UNIT=ssh.service'
+
+[nginx-http-auth]
+enabled = true
+backend = systemd
+journalmatch = '_SYSTEMD_UNIT=nginx.service'
+
+[easytier]
+enabled = true
+filter  = easytier
+backend = systemd
+journalmatch = '_SYSTEMD_UNIT=easytier.service'

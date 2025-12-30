@@ -1,0 +1,114 @@
+{
+  "log": {
+    "loglevel": "none", //  "debug" | "info" | "warning" | "error" | "none"
+    "access": "/var/log/xray/access.log",
+    "error": "/var/log/xray/error.log",
+    "dnslog": true
+  },
+
+  "inbounds": [
+    {
+      "port": 443,
+      "protocol": "vless",
+      "sniffing": {
+        "enabled": true,
+        "routeOnly": true,
+        "destOverride": ["http", "tls", "quic"]
+      },
+      "settings": {
+        "clients": [
+          {
+            "id": "${uuid}",
+            "flow": "xtls-rprx-vision"
+          }
+        ],
+        "decryption": "none",
+        "fallbacks": [
+          {
+            "dest": ${fallback_port_http},
+            "xver": 1
+          },
+          {
+            "path": "/webdav", // 必须换成自定义的 PATH
+            "dest": 1080,
+            "xver": 1
+          }
+        ]
+      },
+      "streamSettings": {
+        "sockopt": {"tcpFastOpen": 32768},
+        "network": "tcp",
+        "security": "tls",
+        "tlsSettings": {
+          "alpn": ["http/1.1","h2"],
+          "minVersion": "1.2",
+          "certificates": [
+            {
+              "ocspStapling": 0,
+              "certificateFile": "/etc/ssl/web.crt",
+              "keyFile": "/etc/ssl/web.key"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "port": 1080,
+      "listen": "127.0.0.1",
+      "protocol": "vless",
+      "sniffing": {
+        "enabled": true,
+        "routeOnly": true,
+        "destOverride": ["http", "tls", "quic"]
+      },
+      "settings": {
+        "clients": [
+          {
+            "id": "9989c9ca-c7be-4f8b-8122-6293ae0199c6", // 填写你的 UUID
+            "level": 0,
+            "email": "love@example.com"
+          }
+        ],
+        "decryption": "none"
+      },
+      "streamSettings": {
+        "sockopt": {"tcpFastOpen": 32768},
+        "network": "ws",
+        "security": "none",
+        "wsSettings": {
+          "acceptProxyProtocol": true, // 提醒：若你用 Nginx/Caddy 等反代 WS，需要删掉这行
+          "path": "/webdav" // 必须换成自定义的 PATH，需要和上面的一致
+        }
+      }
+    }
+  ],
+
+  "outbounds": [
+    {
+      "protocol": "freedom"
+    },
+    {
+      "protocol": "blackhole",
+      "settings": {},
+      "tag": "block"
+    }
+  ],
+
+  "routing": {
+    "domainStrategy": "IPIfNonMatch",
+    "domainMatcher": "hybrid",
+    "rules": [
+      {
+        "type": "field",
+        "protocol": ["bittorrent"],
+        "outboundTag": "block"
+      },
+      {
+        "tag": "CN_IP",
+        "type": "field",
+        "ip": ["geoip:private","geoip:cn"],
+        "outboundTag": "block"
+      }
+    ]
+  }
+}

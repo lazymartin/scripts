@@ -1,0 +1,77 @@
+{
+  "log": {
+    "loglevel": "none", //  "debug" | "info" | "warning" | "error" | "none"
+    "access": "/var/log/xray/access.log",
+    "error": "/var/log/xray/error.log",
+    "dnslog": true
+  },
+
+  "inbounds": [
+    {
+      "port": 443,
+      "protocol": "vless",
+      "sniffing": {
+        "enabled": true,
+        "destOverride": ["http","tls","quic"]
+      },
+      "settings": {
+        "clients": [
+          {
+              "id": "${uuid}", // 必填，执行 ./xray uuid 生成，或 1-30 字节的字符串
+              "flow": "xtls-rprx-vision" // 选填，若有，客户端必须启用 XTLS
+          }
+        ],
+        "decryption": "none"
+      },
+      "streamSettings": {
+        "network": "tcp",
+        "security": "reality",
+        "sockopt": {"tcpFastOpen": 32768},
+        "realitySettings": {
+            "dest": ${fallback_port_http}, // 必填，格式同 VLESS fallbacks 的 dest
+            "xver": 1, // 选填，格式同 VLESS fallbacks 的 xver
+            "serverNames": ["${x_domain}"], // 与 Nginx 配置中的 server_name 一致
+            "privateKey": "${xray_privateKey}", // 必填，执行 ./xray x25519 生成
+            "shortIds": ["${xray_shortIds}"] // 0 到 f，长度为 2 的倍数，长度上限为 16，可留空(客户端 shortId 可为空)，或执行 openssl rand -hex 8 生成
+        }
+      }
+    }
+  ],
+
+  "outbounds": [
+    {
+      "tag": "direct",
+      "protocol": "freedom"
+    },
+    {
+      "tag": "block",
+      "protocol": "blackhole"
+    }
+  ],
+
+  "routing": {
+    "domainStrategy": "IPIfNonMatch",
+    "domainMatcher": "hybrid",
+    "rules": [
+      {
+        "ip":[
+          "10.0.0.1/16"
+        ],
+        "outboundTag": "direct"
+      },
+      {
+        "tag": "BT_protocol",
+        "type": "field",
+        "protocol": ["bittorrent"],
+        "outboundTag": "block"
+      },
+      {
+        "tag": "CN_IP",
+        "type": "field",
+        "ip": ["geoip:private","geoip:cn"],
+        "outboundTag": "block"
+      }
+    ]
+  }
+}
+

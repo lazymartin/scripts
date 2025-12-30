@@ -1,0 +1,193 @@
+log:
+  level: error #info debug
+  file: "/var/log/mosdns.log"
+
+plugins:
+  ## 域名劫持
+  - tag: "local_hosts"
+    type: "hosts"
+    args:
+      entries:
+        - "time.android.com 203.107.6.88"
+
+  ## 国内解析域名
+  - tag: "geosite_direct"
+    type: "domain_set"
+    args:
+      exps:
+        - "${domain}"
+      files:
+        - "/etc/mosdns/rules/geosite_cn.txt"
+
+  ## 黑名单域名
+  - tag: "blocked_domain"
+    type: "domain_set"
+    args:
+      files:
+        - "/etc/mosdns/rules/geosite_category-ads-all.txt"
+
+  ## 国内 IP
+  - tag: "geoip_cn"
+    type: "ip_set"
+    args:
+      files:
+        - "/etc/mosdns/rules/geoip_cn.txt"
+
+  ## 国外流媒体域名
+  - tag: "streaming_media_domains"
+    type: "domain_set"
+    args:
+      files:
+        - "/etc/mosdns/rules/streaming_media_domains.txt"
+
+  ## 缓存
+  - tag: "lazy_cache"
+    type: "cache"
+    args:
+      size: 20480
+      lazy_cache_ttl: 86400
+
+  ## 转发至本地服务器
+  - tag: "forward_local"
+    type: "forward"
+    args:
+      concurrent: 2
+      upstreams:
+        - tag: "DNSPodDOT"
+          addr: "tls://dot.pub"
+          enable_pipeline: true
+          dial_addr: "1.12.12.21"
+        - tag: "Ali DOT"
+          addr: "tls://dns.alidns.com"
+          dial_addr: "223.5.5.5"
+
+  ## 转发至远程服务器
+  - tag: "forward_remote"
+    type: "forward"
+    args:
+      concurrent: 2
+      upstreams:
+        - tag: "Cloudflare DOT"
+          addr: "tls://one.one.one.one"
+          dial_addr: "1.1.1.1"
+          enable_pipeline: true
+          socks5: "127.0.0.1:1070"
+        - tag: "Google DOT"
+          addr: "tls://dns.google"
+          dial_addr: "8.8.8.8"
+          enable_pipeline: true
+          socks5: "127.0.0.1:1070"
+
+  ## 转发至国外流媒体专用服务器
+  - tag: "forward_remote_streaming_media"
+    type: "forward"
+    args:
+      upstreams:
+        - addr: "${streaming_dns}"
+          dial_addr: "${streaming_dns}"
+          socks5: "127.0.0.1:1071"
+
+  ## 有响应终止返回
+  - tag: "has_resp_test"
+    type: "sequence"
+    args:
+      - matches: has_resp
+        exec: accept
+
+  ## 拦截 HTTPS (Type 65) 记录
+  - tag: "block_https_type"
+    type: "sequence"
+    args:
+      - matches: qtype 65
+        exec: accept 
+
+  ## 查询黑名单
+  - tag: "query_is_blocked"
+    type: "sequence"
+    args:
+      - matches: qname $blocked_domain
+        exec: reject
+
+  ## 查询缓存
+  - tag: "query_in_cache"
+    type: "sequence"
+    args:
+      - matches: "!qname ${domain}"
+        exec: $lazy_cache
+
+  ## 指定国内解析域名
+  - tag: "local_resolve_domains"
+    type: "sequence"
+    args:
+      - matches: qname $geosite_direct
+        exec: $forward_local
+
+  ## 解析国外流媒体域名
+  - tag: "resolve_streaming_media_domains"
+    type: "sequence"
+    args:
+      - matches: qname $streaming_media_domains
+        exec: $forward_remote_streaming_media
+
+  ## 国外解析域名序列
+  - tag: "remote_resolve_sequence"
+    type: "sequence"
+    args:
+      - exec: $forward_remote
+      # 如果远程 DNS 返回了国内 IP (通常是污染或者 CDN 分流)，则丢弃结果，触发 Fallback
+      - matches: "resp_ip $geoip_cn"
+        exec: drop_resp
+
+  ## 主要的运行逻辑插件
+  - tag: main_sequence
+    type: sequence
+    args:
+      ## 1. 拦截 Type 65 (HTTPS) 防止 iOS 等设备查询变慢
+      - exec: $block_https_type
+      - exec: jump has_resp_test
+
+      ## 2. 优先使用IPv4
+      - exec: prefer_ipv4
+
+      ## 3. 黑名单检查
+      - exec: $query_is_blocked
+      - exec: jump has_resp_test
+
+      ## 4. 域名劫持/Hosts
+      - exec: $local_hosts
+      - exec: jump has_resp_test
+
+      ## 5. 查询缓存
+      - exec: $query_in_cache
+      - exec: jump has_resp_test
+
+      ## 6. 指定国内域名 -> 走国内 DNS
+      - exec: $local_resolve_domains
+      - exec: jump has_resp_test
+
+      ## 7. 指定流媒体域名 -> 走流媒体专用 DNS
+      - exec: $resolve_streaming_media_domains
+      - exec: jump has_resp_test
+
+      ## 8. 默认走国外 DNS (如果返回国内 IP 则丢弃)
+      - exec: $remote_resolve_sequence
+      - exec: jump has_resp_test
+
+      ## 9. 兜底/Fallback -> 走国内 DNS
+      # 如果上面的 remote_resolve_sequence 失败（超时）或被丢弃（因为是国内 IP）
+      # 则执行这一步，确保国内域名能被正确解析
+      - exec: $forward_local
+
+  ## 启动 udp 服务器
+  - tag: udp_server
+    type: udp_server
+    args:
+      entry: main_sequence
+      listen: ":5335"
+
+  ## 启动 tcp 服务器
+  - tag: tcp_server
+    type: tcp_server
+    args:
+      entry: main_sequence
+      listen: ":5335"

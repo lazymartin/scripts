@@ -1,0 +1,21 @@
+hostname = "${set_hostname}"
+ipv4 = "10.0.0.10/24"
+listeners = [
+    "tcp://0.0.0.0:${easytier_port}",
+    "udp://0.0.0.0:${easytier_port}",
+]
+rpc-portal-whitelist = [
+    "127.0.0.1/32"
+]
+tcp_whitelist = []
+udp_whitelist = []
+
+[network_identity]
+network_name = "${et_network_name}"
+network_secret = "${et_network_secret}"
+
+[flags]
+# disable_p2p = true
+private_mode = true
+enable_ipv6 = false
+
