@@ -4,7 +4,7 @@ Documentation=https://github.com/AdguardTeam/dnsproxy
 After=network.target nss-lookup.target
 
 [Service]
-User=nobody
+User=root
 Type=simple
 StandardError=journal
 NoNewPrivileges=true
