@@ -5,27 +5,6 @@ http://192.168.1.1:33888/udp/239.253.43.71:5146
 #EXTINF:-1 tvg-name="CCTV-8" tvg-logo="https://raw.githubusercontent.com/iptv-pro/iptv-pro.github.io/main/logo/CCTV8.png" group-title="",CCTV-8 电视剧
 http://192.168.1.1:33888/udp/239.77.0.172:5146
 
-#EXTINF:-1 tvg-name="北京卫视" tvg-logo="https://raw.githubusercontent.com/iptv-pro/iptv-pro.github.io/main/logo/%E5%8C%97%E4%BA%AC%E5%8D%AB%E8%A7%86.png" group-title="",北京卫视
-http://192.168.1.1:33888/udp/239.77.0.91:5146
-
-#EXTINF:-1 tvg-name="江苏卫视" tvg-logo="https://raw.githubusercontent.com/iptv-pro/iptv-pro.github.io/main/logo/%E6%B1%9F%E8%8B%8F%E5%8D%AB%E8%A7%86.png" group-title="",江苏卫视
-http://192.168.1.1:33888/udp/239.77.0.90:5146
-
-#EXTINF:-1 tvg-name="东方卫视" tvg-logo="https://raw.githubusercontent.com/iptv-pro/iptv-pro.github.io/main/logo/%E4%B8%9C%E6%96%B9%E5%8D%AB%E8%A7%86.png" group-title="",东方卫视
-http://192.168.1.1:33888/udp/239.77.0.98:5146
-
-#EXTINF:-1 tvg-name="湖南卫视" tvg-logo="https://raw.githubusercontent.com/iptv-pro/iptv-pro.github.io/main/logo/%E6%B9%96%E5%8D%97%E5%8D%AB%E8%A7%86.png" group-title="",湖南卫视
-http://192.168.1.1:33888/udp/239.77.1.5:5146
-
-#EXTINF:-1 tvg-name="浙江卫视" tvg-logo="https://raw.githubusercontent.com/iptv-pro/iptv-pro.github.io/main/logo/%E6%B5%99%E6%B1%9F%E5%8D%AB%E8%A7%86.png" group-title="",浙江卫视
-http://192.168.1.1:33888/udp/239.77.0.89:5146
-
-#EXTINF:-1 tvg-name="广东卫视4K" tvg-logo="https://raw.githubusercontent.com/iptv-pro/iptv-pro.github.io/main/logo/%E5%B9%BF%E4%B8%9C%E7%BB%BC%E8%89%BA-B.png" group-title="",广东卫视 4K
-http://192.168.1.1:33888/udp/239.77.0.65:5146
-
-#EXTINF:-1 tvg-name="广东 4k" tvg-logo="https://raw.githubusercontent.com/iptv-pro/iptv-pro.github.io/main/logo/%E5%B9%BF%E4%B8%9C%E7%BB%BC%E8%89%BA-B.png" group-title="",广东 4K
-http://192.168.1.1:33888/udp/239.77.0.244:5146
-
 #EXTINF:-1 tvg-name="湖南卫视 4k" tvg-logo="https://raw.githubusercontent.com/iptv-pro/iptv-pro.github.io/main/logo/%E6%B9%96%E5%8D%97%E5%8D%AB%E8%A7%86.png" group-title="",湖南卫视 4k
 http://192.168.1.1:33888/udp/239.77.0.56:5146
 
@@ -41,10 +20,11 @@ http://192.168.1.1:33888/udp/239.77.0.59:5146
 #EXTINF:-1 tvg-name="北京卫视 4K" tvg-logo="https://raw.githubusercontent.com/iptv-pro/iptv-pro.github.io/main/logo/%E5%B9%BF%E4%B8%9C%E7%BB%BC%E8%89%BA-B.png" group-title="",北京卫视 4K
 http://192.168.1.1:33888/udp/239.77.1.13:5146
 
-#
-##EXTINF:-1 tvg-name="南国都市 4k" tvg-logo="https://raw.githubusercontent.com/iptv-pro/iptv-pro.github.io/main/logo/%E5%8D%97%E5%9B%BD%E9%83%BD%E5%B8%824K.png" group-title="",南国都市 4K
-#http://192.168.1.1:33888/udp/239.253.43.99:5146
-#
+#EXTINF:-1 tvg-name="广东卫视4K" tvg-logo="https://raw.githubusercontent.com/iptv-pro/iptv-pro.github.io/main/logo/%E5%B9%BF%E4%B8%9C%E7%BB%BC%E8%89%BA-B.png" group-title="",广东卫视 4K
+http://192.168.1.1:33888/udp/239.77.0.65:5146
+
+#EXTINF:-1 tvg-name="广东 4k" tvg-logo="https://raw.githubusercontent.com/iptv-pro/iptv-pro.github.io/main/logo/%E5%B9%BF%E4%B8%9C%E7%BB%BC%E8%89%BA-B.png" group-title="",广东 4K
+http://192.168.1.1:33888/udp/239.77.0.244:5146
 
 #EXTINF:-1 tvg-name="深圳卫视 4K" tvg-logo="https://raw.githubusercontent.com/iptv-pro/iptv-pro.github.io/main/logo/%E5%B9%BF%E4%B8%9C%E7%BB%BC%E8%89%BA-B.png" group-title="",深圳卫视 4K
 http://192.168.1.1:33888/udp/239.77.1.14:5146
