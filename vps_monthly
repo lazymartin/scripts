@@ -35,7 +35,7 @@ update_geofiles(){
     # gesosite
     geoview -type geosite -input /usr/local/share/xray/geosite.dat -action convert -list telegram,github,x,facebook,instagram,reddit,z-library,geolocation-\!cn -output /root/scripts/configurations/rule-set/oversea-domain.srs
     geoview -type geosite -input /usr/local/share/xray/geosite.dat -action convert -list category-ai-\!cn,category-ai-chat-\!cn,google -output /root/scripts/configurations/rule-set/oversea-ai-domain.srs
-    geoview -type geosite -input /usr/local/share/xray/geosite.dat -action convert -list netflix,primevideo,disney,hulu,hbo -output /root/scripts/configurations/rule-set/streaming-media-domain.srs
+    geoview -type geosite -input /usr/local/share/xray/geosite.dat -action convert -list netflix,primevideo,disney,hulu,hbo,youtube -output /root/scripts/configurations/rule-set/streaming-media-domain.srs
     geoview -type geosite -input /usr/local/share/xray/geosite.dat -action convert -list category-ads-all -output /root/scripts/configurations/rule-set/block-list-domain.srs
     geoview -type geosite -input /usr/local/share/xray/geosite.dat -action convert -list apple-cn,google-cn,cn,private -output /root/scripts/configurations/rule-set/direct-domain.srs
     #geoview -type geosite -input /usr/local/share/xray/geosite.dat -list netflix,primevideo,disney,hulu,hbo -output /usr/local/etc/streaming_domain.txt
