@@ -27,7 +27,7 @@ http://192.168.1.1:33888/rtp/239.77.0.65:5146
 #EXTINF:-1 tvg-id="广东4K超" tvg-name="广东 4k" tvg-logo="https://raw.githubusercontent.com/fanmingming/live/main/tv/%E5%B9%BF%E4%B8%9C4K.png" group-title="4K",广东 4K
 http://192.168.1.1:33888/rtp/239.77.0.244:5146
 
-#EXTINF:-1 tvg-id="南国都市" tvg-name="南国都市 4k" tvg-logo="https://raw.githubusercontent.com/fanmingming/live/main/tv/%E5%B9%BF%E4%B8%9C4K.png" group-title="4K",南国都市 4k
+#EXTINF:-1 tvg-id="南国都市" tvg-name="南国都市 4k" tvg-logo="https://iptv-pro.github.io/logo/%E5%8D%97%E5%9B%BD%E9%83%BD%E5%B8%824K.png" group-title="4K",南国都市 4k
 http://192.168.1.1:33888/rtp/239.253.43.99:5146
 
 #EXTINF:-1 tvg-id="湖南卫视" tvg-name="湖南卫视 4k" tvg-logo="https://iptv-pro.github.io/logo/%E6%B9%96%E5%8D%97%E5%8D%AB%E8%A7%86.png" group-title="4K",湖南卫视 4k
