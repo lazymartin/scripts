@@ -1,5 +1,5 @@
 #EXTM3U name="广东电信IPTV"
-#EXTM3U x-tvg-url="https://raw.githubusercontent.com/fanmingming/live/main/e.xml"
+#EXTM3U tvg-url="https://raw.githubusercontent.com/fanmingming/live/main/e.xml"
 #EXTINF:-1 tvg-name="广州综合" tvg-logo="https://iptv-pro.github.io/logo/%E5%B9%BF%E5%B7%9E%E7%BB%BC%E5%90%88.png" group-title="HD",广州综合
 http://192.168.1.1:33888/rtp/239.253.43.71:5146
 
