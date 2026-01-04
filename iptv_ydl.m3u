@@ -1,4 +1,5 @@
 #EXTM3U name="广东电信IPTV"
+#EXTM3U x-tvg-url="https://raw.githubusercontent.com/fanmingming/live/main/e.xml"
 #EXTINF:-1 tvg-name="广州综合" tvg-logo="https://iptv-pro.github.io/logo/%E5%B9%BF%E5%B7%9E%E7%BB%BC%E5%90%88.png" group-title="HD",广州综合
 http://192.168.1.1:33888/rtp/239.253.43.71:5146
 
@@ -20,10 +21,10 @@ http://192.168.1.1:33888/rtp/239.77.1.5:5146
 #EXTINF:-1 tvg-name="浙江卫视" tvg-logo="https://iptv-pro.github.io/logo/%E6%B5%99%E6%B1%9F%E5%8D%AB%E8%A7%86.png" group-title="HD",浙江卫视
 http://192.168.1.1:33888/rtp/239.77.0.89:5146
 
-#EXTINF:-1 tvg-name="广东卫视4K" tvg-logo="https://iptv-pro.github.io/logo/%E5%B9%BF%E4%B8%9C%E7%BB%BC%E8%89%BA-B.png" group-title="HD",广东卫视 4K
+#EXTINF:-1 tvg-name="广东卫视4K" tvg-logo="https://raw.githubusercontent.com/fanmingming/live/main/tv/%E5%B9%BF%E4%B8%9C%E5%8D%AB%E8%A7%864K.png" group-title="HD",广东卫视 4K
 http://192.168.1.1:33888/rtp/239.77.0.65:5146
 
-#EXTINF:-1 tvg-name="广东 4k" tvg-logo="https://iptv-pro.github.io/logo/%E5%B9%BF%E4%B8%9C%E7%BB%BC%E8%89%BA-B.png" group-title="4K",广东 4K
+#EXTINF:-1 tvg-name="广东 4k" tvg-logo="https://raw.githubusercontent.com/fanmingming/live/main/tv/%E5%B9%BF%E4%B8%9C4K.png" group-title="4K",广东 4K
 http://192.168.1.1:33888/rtp/239.77.0.244:5146
 
 #EXTINF:-1 tvg-name="湖南卫视 4k" tvg-logo="https://iptv-pro.github.io/logo/%E6%B9%96%E5%8D%97%E5%8D%AB%E8%A7%86.png" group-title="4K",湖南卫视 4k
