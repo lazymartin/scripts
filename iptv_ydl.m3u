@@ -22,7 +22,7 @@ http://192.168.1.1:33888/rtp/239.77.1.5:5146
 http://192.168.1.1:33888/rtp/239.77.0.89:5146
 
 #EXTINF:-1 tvg-id="广东卫视" tvg-name="广东卫视4K" tvg-logo="https://raw.githubusercontent.com/fanmingming/live/main/tv/%E5%B9%BF%E4%B8%9C%E5%8D%AB%E8%A7%864K.png" group-title="HD",广东卫视 4K
-http://192.168.1.1:33888/rtp/239.77.0.65:5146
+http://192.168.1.1:33888/rtp/239.77.0.66:5146
 
 #EXTINF:-1 tvg-id="广东4K超" tvg-name="广东 4k" tvg-logo="https://raw.githubusercontent.com/fanmingming/live/main/tv/%E5%B9%BF%E4%B8%9C4K.png" group-title="4K",广东 4K
 http://192.168.1.1:33888/rtp/239.77.0.244:5146
@@ -43,10 +43,10 @@ http://192.168.1.1:33888/rtp/239.77.0.57:5146
 http://192.168.1.1:33888/rtp/239.77.0.59:5146
 
 #EXTINF:-1 tvg-id="北京卫视" tvg-name="北京卫视 4K" tvg-logo="https://iptv-pro.github.io/logo/%E5%B9%BF%E4%B8%9C%E7%BB%BC%E8%89%BA-B.png" group-title="4K",北京卫视 4K
-http://192.168.1.1:33888/rtp/239.77.1.13:5146
+http://192.168.1.1:33888/rtp/239.77.0.2:5146
 
 #EXTINF:-1 tvg-id="深圳卫视" tvg-name="深圳卫视 4K" tvg-logo="https://iptv-pro.github.io/logo/%E5%B9%BF%E4%B8%9C%E7%BB%BC%E8%89%BA-B.png" group-title="4K",深圳卫视 4K
-http://192.168.1.1:33888/rtp/239.77.1.14:5146
+http://192.168.1.1:33888/rtp/239.77.0.67:5146
 
 #EXTINF:-1 tvg-id="山东卫视" tvg-name="山东卫视 4K" tvg-logo="https://iptv-pro.github.io/logo/%E5%B1%B1%E4%B8%9C%E5%8D%AB%E8%A7%86.png" group-title="4K",山东卫视 4K
 http://192.168.1.1:33888/rtp/239.77.0.61:5146
