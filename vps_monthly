@@ -33,7 +33,7 @@ update_geofiles(){
   # update srs file
   if [[ -d /root/scripts ]]; then
     # gesosite
-    geoview -type geosite -input /usr/local/share/xray/geosite.dat -action convert -list telegram,github,x,facebook,instagram,reddit,z-library -output /root/scripts/configurations/rule-set/oversea-domain.srs
+    geoview -type geosite -input /usr/local/share/xray/geosite.dat -action convert -list geolocation-\!cn -output /root/scripts/configurations/rule-set/oversea-domain.srs
     geoview -type geosite -input /usr/local/share/xray/geosite.dat -action convert -list category-ai-\!cn,category-ai-chat-\!cn -output /root/scripts/configurations/rule-set/oversea-ai-domain.srs
     geoview -type geosite -input /usr/local/share/xray/geosite.dat -action convert -list netflix,primevideo,disney,hulu,hbo -output /root/scripts/configurations/rule-set/streaming-media-domain.srs
     geoview -type geosite -input /usr/local/share/xray/geosite.dat -action convert -list youtube -output /root/scripts/configurations/rule-set/youtube-domain.srs
