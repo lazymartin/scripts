@@ -38,7 +38,7 @@ update_geofiles(){
     geoview -type geosite -input /usr/local/share/xray/geosite.dat -action convert -list netflix,primevideo,disney,hulu,hbo -output /root/scripts/configurations/rule-set/streaming-media-domain.srs
     geoview -type geosite -input /usr/local/share/xray/geosite.dat -action convert -list youtube -output /root/scripts/configurations/rule-set/youtube-domain.srs
     geoview -type geosite -input /usr/local/share/xray/geosite.dat -action convert -list category-ads-all -output /root/scripts/configurations/rule-set/block-list-domain.srs
-    geoview -type geosite -input /usr/local/share/xray/geosite.dat -action convert -list apple,google-cn,cn,private -output /root/scripts/configurations/rule-set/direct-domain.srs
+    geoview -type geosite -input /usr/local/share/xray/geosite.dat -action convert -list apple,google-cn,cn,private,tld-cn,category-games@cn -output /root/scripts/configurations/rule-set/direct-domain.srs
 
     # geoip
     geoview -type geoip -input /usr/local/share/xray/geoip.dat -action convert -list google -output /root/scripts/configurations/rule-set/oversea-ai-ip.srs
