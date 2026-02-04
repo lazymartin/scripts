@@ -1,112 +1,113 @@
 #EXTM3U name="广东电信IPTV"
 #EXTM3U x-tvg-url="https://raw.githubusercontent.com/fanmingming/live/main/e.xml" tvg-url="https://raw.githubusercontent.com/fanmingming/live/main/e.xml"
 #EXTINF:-1 tvg-id="广州综合台" tvg-name="广州综合" tvg-logo="https://iptv-pro.github.io/logo/%E5%B9%BF%E5%B7%9E%E7%BB%BC%E5%90%88.png" group-title="HD",广州综合
-http://192.168.1.1:33888/rtp/239.253.43.71:5146
+http://192.168.1.1:33888/rtp/239.253.43.71:5146?fcc=183.59.156.166:8027
 
 #EXTINF:-1 tvg-id="CCTV8" tvg-name="CCTV-8" tvg-logo="https://iptv-pro.github.io/logo/CCTV8.png" group-title="HD",CCTV-8 电视剧
-http://192.168.1.1:33888/rtp/239.77.0.172:5146
+http://192.168.1.1:33888/rtp/239.77.0.172:5146?fcc=183.59.156.166:8027
 
 #EXTINF:-1 tvg-id="北京卫视" tvg-name="北京卫视" tvg-logo="https://iptv-pro.github.io/logo/%E5%8C%97%E4%BA%AC%E5%8D%AB%E8%A7%86.png" group-title="HD",北京卫视
-http://192.168.1.1:33888/rtp/239.77.0.91:5146
+http://192.168.1.1:33888/rtp/239.77.0.91:5146?fcc=183.59.156.166:8027
 
 #EXTINF:-1 tvg-id="江苏卫视" tvg-name="江苏卫视" tvg-logo="https://iptv-pro.github.io/logo/%E6%B1%9F%E8%8B%8F%E5%8D%AB%E8%A7%86.png" group-title="HD",江苏卫视
-http://192.168.1.1:33888/rtp/239.77.0.90:5146
+http://192.168.1.1:33888/rtp/239.77.0.90:5146?fcc=183.59.156.166:8027
 
 #EXTINF:-1 tvg-id="东方卫视" tvg-name="东方卫视" tvg-logo="https://iptv-pro.github.io/logo/%E4%B8%9C%E6%96%B9%E5%8D%AB%E8%A7%86.png" group-title="HD",东方卫视
-http://192.168.1.1:33888/rtp/239.77.0.98:5146
+http://192.168.1.1:33888/rtp/239.77.0.98:5146?fcc=183.59.156.166:8027
 
 #EXTINF:-1 tvg-id="湖南卫视" tvg-name="湖南卫视" tvg-logo="https://iptv-pro.github.io/logo/%E6%B9%96%E5%8D%97%E5%8D%AB%E8%A7%86.png" group-title="HD",湖南卫视
-http://192.168.1.1:33888/rtp/239.77.1.5:5146
+http://192.168.1.1:33888/rtp/239.77.1.5:5146?fcc=183.59.156.166:8027
 
 #EXTINF:-1 tvg-id="浙江卫视" tvg-name="浙江卫视" tvg-logo="https://iptv-pro.github.io/logo/%E6%B5%99%E6%B1%9F%E5%8D%AB%E8%A7%86.png" group-title="HD",浙江卫视
-http://192.168.1.1:33888/rtp/239.77.0.89:5146
+http://192.168.1.1:33888/rtp/239.77.0.89:5146?fcc=183.59.156.166:8027
 
 #EXTINF:-1 tvg-id="广东卫视" tvg-name="广东卫视4K" tvg-logo="https://raw.githubusercontent.com/fanmingming/live/main/tv/%E5%B9%BF%E4%B8%9C%E5%8D%AB%E8%A7%864K.png" group-title="HD",广东卫视 4K
-http://192.168.1.1:33888/rtp/239.77.0.66:5146
+http://192.168.1.1:33888/rtp/239.77.0.66:5146?fcc=183.59.156.166:8027
 
 #EXTINF:-1 tvg-id="广东4K超" tvg-name="广东 4k" tvg-logo="https://raw.githubusercontent.com/fanmingming/live/main/tv/%E5%B9%BF%E4%B8%9C4K.png" group-title="4K",广东 4K
-http://192.168.1.1:33888/rtp/239.77.0.244:5146
+http://192.168.1.1:33888/rtp/239.77.0.244:5146?fcc=183.59.156.166:8027
 
 #EXTINF:-1 tvg-id="南国都市" tvg-name="南国都市 4k" tvg-logo="https://iptv-pro.github.io/logo/%E5%8D%97%E5%9B%BD%E9%83%BD%E5%B8%824K.png" group-title="4K",南国都市 4k
-http://192.168.1.1:33888/rtp/239.253.43.99:5146
+http://192.168.1.1:33888/rtp/239.253.43.99:5146?fcc=183.59.156.166:8027
 
 #EXTINF:-1 tvg-id="湖南卫视" tvg-name="湖南卫视 4k" tvg-logo="https://iptv-pro.github.io/logo/%E6%B9%96%E5%8D%97%E5%8D%AB%E8%A7%86.png" group-title="4K",湖南卫视 4k
-http://192.168.1.1:33888/rtp/239.77.0.56:5146
+http://192.168.1.1:33888/rtp/239.77.0.56:5146?fcc=183.59.156.166:8027
 
 #EXTINF:-1 tvg-id="浙江卫视" tvg-name="浙江卫视 4k" tvg-logo="https://iptv-pro.github.io/logo/%E6%B5%99%E6%B1%9F%E5%8D%AB%E8%A7%86.png" group-title="4K",浙江卫视 4k
-http://192.168.1.1:33888/rtp/239.77.0.58:5146
+http://192.168.1.1:33888/rtp/239.77.0.58:5146?fcc=183.59.156.166:8027
 
 #EXTINF:-1 tvg-id="江苏卫视" tvg-name="江苏卫视 4k" tvg-logo="https://iptv-pro.github.io/logo/%E6%B1%9F%E8%8B%8F%E5%8D%AB%E8%A7%86.png" group-title="4K",江苏卫视 4k
-http://192.168.1.1:33888/rtp/239.77.0.57:5146
+http://192.168.1.1:33888/rtp/239.77.0.57:5146?fcc=183.59.156.166:8027
 
 #EXTINF:-1 tvg-id="东方卫视" tvg-name="东方卫视 4k" tvg-logo="https://iptv-pro.github.io/logo/%E4%B8%9C%E6%96%B9%E5%8D%AB%E8%A7%86.png" group-title="4K",东方卫视 4k
-http://192.168.1.1:33888/rtp/239.77.0.59:5146
+http://192.168.1.1:33888/rtp/239.77.0.59:5146?fcc=183.59.156.166:8027
 
 #EXTINF:-1 tvg-id="北京卫视" tvg-name="北京卫视 4K" tvg-logo="https://iptv-pro.github.io/logo/%E5%B9%BF%E4%B8%9C%E7%BB%BC%E8%89%BA-B.png" group-title="4K",北京卫视 4K
-http://192.168.1.1:33888/rtp/239.77.0.2:5146
+http://192.168.1.1:33888/rtp/239.77.0.2:5146?fcc=183.59.156.166:8027
 
 #EXTINF:-1 tvg-id="深圳卫视" tvg-name="深圳卫视 4K" tvg-logo="https://iptv-pro.github.io/logo/%E5%B9%BF%E4%B8%9C%E7%BB%BC%E8%89%BA-B.png" group-title="4K",深圳卫视 4K
-http://192.168.1.1:33888/rtp/239.77.0.67:5146
+http://192.168.1.1:33888/rtp/239.77.0.67:5146?fcc=183.59.156.166:8027
 
 #EXTINF:-1 tvg-id="山东卫视" tvg-name="山东卫视 4K" tvg-logo="https://iptv-pro.github.io/logo/%E5%B1%B1%E4%B8%9C%E5%8D%AB%E8%A7%86.png" group-title="4K",山东卫视 4K
-http://192.168.1.1:33888/rtp/239.77.0.61:5146
+http://192.168.1.1:33888/rtp/239.77.0.61:5146?fcc=183.59.156.166:8027
 
 #EXTINF:-1 tvg-id="四川卫视" tvg-name="四川卫视 4K" tvg-logo="https://iptv-pro.github.io/logo/%E5%9B%9B%E5%B7%9D%E5%8D%AB%E8%A7%86.png" group-title="4K",四川卫视 4K
-http://192.168.1.1:33888/rtp/239.77.0.60:5146
+http://192.168.1.1:33888/rtp/239.77.0.60:5146?fcc=183.59.156.166:8027
 
 #EXTINF:-1 tvg-id="CCTV4K" tvg-name="CCTV4K" tvg-logo="https://iptv-pro.github.io/logo/CCTV4k.png" group-title="4K",CCTV-4K
-http://192.168.1.1:33888/rtp/239.77.1.180:5146
+http://192.168.1.1:33888/rtp/239.77.1.180:5146?fcc=183.59.156.166:8027
 
 #EXTINF:-1 tvg-id="大湾区卫视" tvg-name="大湾区卫视" tvg-logo="https://raw.githubusercontent.com/fanmingming/live/main/tv/%E5%A4%A7%E6%B9%BE%E5%8C%BA%E5%8D%AB%E8%A7%86.png" group-title="HD",大湾区卫视
-http://192.168.1.1:33888/rtp/239.77.0.215:5146
+http://192.168.1.1:33888/rtp/239.77.0.215:5146?fcc=183.59.156.166:8027
 
 #EXTINF:-1 tvg-id="广东卫视" tvg-name="广东卫视" tvg-logo="https://iptv-pro.github.io/logo/%E5%B9%BF%E4%B8%9C%E5%8D%AB%E8%A7%86.png" group-title="HD",广东卫视
-http://192.168.1.1:33888/rtp/239.77.0.166:5146
+http://192.168.1.1:33888/rtp/239.77.0.166:5146?fcc=183.59.156.166:8027
 
 #EXTINF:-1 tvg-id="广东珠江" tvg-name="广东珠江" tvg-logo="https://iptv-pro.github.io/logo/%E5%B9%BF%E4%B8%9C%E7%8F%A0%E6%B1%9F.png" group-title="HD",广东珠江
-http://192.168.1.1:33888/rtp/239.77.0.114:5146
+http://192.168.1.1:33888/rtp/239.77.0.114:5146?fcc=183.59.156.166:8027
 
 #EXTINF:-1 tvg-id="广东公共" tvg-name="广东民生" tvg-logo="http://epg.51zmt.top:8000/tb1/sheng/GDTV4.png" group-title="HD",广东民生
-http://192.168.1.1:33888/rtp/239.77.0.225:5146
+http://192.168.1.1:33888/rtp/239.77.0.225:5146?fcc=183.59.156.166:8027
 
 #EXTINF:-1 tvg-id="广东新闻" tvg-name="广东新闻" tvg-logo="https://iptv-pro.github.io/logo/%E5%B9%BF%E4%B8%9C%E6%96%B0%E9%97%BB.png" group-title="HD",广东新闻
-http://192.168.1.1:33888/rtp/239.77.0.173:5146
+http://192.168.1.1:33888/rtp/239.77.0.173:5146?fcc=183.59.156.166:8027
 
 #EXTINF:-1 tvg-id="广州新闻" tvg-name="广州新闻" tvg-logo="https://iptv-pro.github.io/logo/%E5%B9%BF%E5%B7%9E%E6%96%B0%E9%97%BB.png" group-title="HD",广州新闻
-http://192.168.1.1:33888/rtp/239.253.43.72:5146
+http://192.168.1.1:33888/rtp/239.253.43.72:5146?fcc=183.59.156.166:8027
 
 #EXTINF:-1 tvg-id="CCTV1" tvg-name="CCTV-1 综合" tvg-logo="https://iptv-pro.github.io/logo/CCTV1.png" group-title="HD",CCTV-1 综合
-http://192.168.1.1:33888/rtp/239.77.0.129:5146
+http://192.168.1.1:33888/rtp/239.77.0.129:5146?fcc=183.59.156.166:8027
 
 #EXTINF:-1 tvg-id="CCTV6" tvg-name="CCTV-6 电影" tvg-logo="https://iptv-pro.github.io/logo/CCTV6.png" group-title="HD",CCTV-6 电影
-http://192.168.1.1:33888/rtp/239.77.0.171:5146
+http://192.168.1.1:33888/rtp/239.77.0.171:5146?fcc=183.59.156.166:8027
 
 #EXTINF:-1 tvg-id="CCTV7" tvg-name="CCTV-7 国防军事" tvg-logo="https://iptv-pro.github.io/logo/CCTV7.png" group-title="HD",CCTV-7 国防军事
-http://192.168.1.1:33888/rtp/239.77.1.159:5146
+http://192.168.1.1:33888/rtp/239.77.1.159:5146?fcc=183.59.156.166:8027
 
 #EXTINF:-1 tvg-id="CCTV9" tvg-name="CCTV-9 纪录" tvg-logo="https://iptv-pro.github.io/logo/CCTV9.png" group-title="HD",CCTV-9 纪录
-http://192.168.1.1:33888/rtp/239.77.1.160:5146
+http://192.168.1.1:33888/rtp/239.77.1.160:5146?fcc=183.59.156.166:8027
 
 #EXTINF:-1 tvg-id="CCTV12" tvg-name="CCTV-12 社会与法" tvg-logo="https://iptv-pro.github.io/logo/CCTV12.png" group-title="HD",CCTV-12 社会与法
-http://192.168.1.1:33888/rtp/239.77.1.109:5146
+http://192.168.1.1:33888/rtp/239.77.1.109:5146?fcc=183.59.156.166:8027
 
 #EXTINF:-1 tvg-id="CCTV13" tvg-name="CCTV-13 新闻" tvg-logo="https://iptv-pro.github.io/logo/CCTV13.png" group-title="HD",CCTV-13 新闻
-http://192.168.1.1:33888/rtp/239.77.0.188:5146
+http://192.168.1.1:33888/rtp/239.77.0.188:5146?fcc=183.59.156.166:8027
 
 #EXTINF:-1 tvg-id="兵器科技" tvg-name="CCTV兵器科技" tvg-logo="https://iptv-pro.github.io/logo/CCTV%E5%85%B5%E5%99%A8%E7%A7%91%E6%8A%80.png" group-title="HD",兵器科技
-http://192.168.1.1:33888/rtp/239.253.43.18:5146
+http://192.168.1.1:33888/rtp/239.253.43.18:5146?fcc=183.59.156.166:8027
 
 #EXTINF:-1 tvg-id="世界地理" tvg-name="CCTV世界地理" tvg-logo="https://iptv-pro.github.io/logo/CCTV%E4%B8%96%E7%95%8C%E5%9C%B0%E7%90%86.png" group-title="HD",世界地理
-http://192.168.1.1:33888/rtp/239.253.43.24:5146
+http://192.168.1.1:33888/rtp/239.253.43.24:5146?fcc=183.59.156.166:8027
 
 #EXTINF:-1 tvg-id="广东体育" tvg-name="广东体育" tvg-logo="https://iptv-pro.github.io/logo/%E5%B9%BF%E4%B8%9C%E4%BD%93%E8%82%B2.png" group-title="HD",广东体育
-http://192.168.1.1:33888/rtp/239.77.0.168:5146
+http://192.168.1.1:33888/rtp/239.77.0.168:5146?fcc=183.59.156.166:8027
 
 #EXTINF:-1 tvg-id="CCTV5" tvg-name="CCTV-5 体育" tvg-logo="https://iptv-pro.github.io/logo/CCTV5.png" group-title="HD",CCTV-5 体育
-http://192.168.1.1:33888/rtp/239.77.0.170:5146
+http://192.168.1.1:33888/rtp/239.77.0.170:5146?fcc=183.59.156.166:8027
 
 #EXTINF:-1 tvg-id="CCTV5+" tvg-name="CCTV-5+ 体育赛事" tvg-logo="https://iptv-pro.github.io/logo/CCTV-5+.png" group-title="HD",CCTV-5+ 体育赛事
-http://192.168.1.1:33888/rtp/239.77.1.31:5146
+http://192.168.1.1:33888/rtp/239.77.1.31:5146?fcc=183.59.156.166:8027
 
 #EXTINF:-1 tvg-id="CCTV16" tvg-name="CCTV-16 奥林匹克" tvg-logo="https://iptv-pro.github.io/logo/CCTV16.png" group-title="HD",CCTV-16 奥林匹克
-http://192.168.1.1:33888/rtp/239.77.0.165:5146
+http://192.168.1.1:33888/rtp/239.77.0.165:5146?fcc=183.59.156.166:8027
+
