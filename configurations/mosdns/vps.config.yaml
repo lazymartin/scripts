@@ -1,0 +1,123 @@
+log:
+  level: error #info debug
+  file: "/var/log/mosdns.log"
+
+plugins:
+  ## 黑名单域名
+  - tag: "blocked_domain"
+    type: "domain_set"
+    args:
+      files:
+        - "/etc/mosdns/rules/geosite_category-ads-all.txt"
+
+  ## 国外流媒体域名
+  - tag: "streaming_media_domains"
+    type: "domain_set"
+    args:
+      files:
+        - "/etc/mosdns/rules/streaming_media_domains.txt"
+
+  ## 缓存
+  - tag: "lazy_cache"
+    type: "cache"
+    args:
+      size: 20480
+      lazy_cache_ttl: 86400
+
+  ## 转发至远程服务器
+  - tag: "forward_remote"
+    type: "forward"
+    args:
+      concurrent: 2
+      upstreams:
+        - tag: "Cloudflare DOT"
+          addr: "tls://one.one.one.one"
+          dial_addr: "1.1.1.1"
+          enable_pipeline: true
+        - tag: "Google DOT"
+          addr: "tls://dns.google"
+          dial_addr: "8.8.8.8"
+          enable_pipeline: true
+
+  ## 转发至国外流媒体专用服务器
+  - tag: "forward_remote_streaming_media"
+    type: "forward"
+    args:
+      upstreams:
+        - addr: "${streaming_dns}"
+          dial_addr: "${streaming_dns}"
+
+  ## 有响应终止返回
+  - tag: "has_resp_test"
+    type: "sequence"
+    args:
+      - matches: has_resp
+        exec: accept
+
+  ## 拦截 HTTPS (Type 65) 记录
+  - tag: "block_https_type"
+    type: "sequence"
+    args:
+      - matches: qtype 65
+        exec: accept 
+
+  ## 查询黑名单
+  - tag: "query_is_blocked"
+    type: "sequence"
+    args:
+      - matches: qname $blocked_domain
+        exec: reject
+
+  ## 查询缓存
+  - tag: "query_in_cache"
+    type: "sequence"
+    args:
+      - matches: "!qname ${domain}"
+        exec: $lazy_cache
+
+  ## 解析国外流媒体域名
+  - tag: "resolve_streaming_media_domains"
+    type: "sequence"
+    args:
+      - matches: qname $streaming_media_domains
+        exec: $forward_remote_streaming_media
+
+  ## 主要的运行逻辑插件
+  - tag: main_sequence
+    type: sequence
+    args:
+      ## 1. 拦截 Type 65 (HTTPS) 防止 iOS 等设备查询变慢
+      - exec: $block_https_type
+      - exec: jump has_resp_test
+
+      ## 2. 优先使用IPv4
+      - exec: prefer_ipv4
+
+      ## 3. 黑名单检查
+      - exec: $query_is_blocked
+      - exec: jump has_resp_test
+
+      ## 5. 查询缓存
+      - exec: $query_in_cache
+      - exec: jump has_resp_test
+
+      ## 7. 指定流媒体域名 -> 走流媒体专用 DNS
+      - exec: $resolve_streaming_media_domains
+      - exec: jump has_resp_test
+
+      ## 8. 默认走国外 DNS (如果返回国内 IP 则丢弃)
+      - exec: $forward_remote
+
+  ## 启动 udp 服务器
+  - tag: udp_server
+    type: udp_server
+    args:
+      entry: main_sequence
+      listen: ":53"
+
+  ## 启动 tcp 服务器
+  - tag: tcp_server
+    type: tcp_server
+    args:
+      entry: main_sequence
+      listen: ":53"

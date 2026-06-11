@@ -1,0 +1,11 @@
+[Unit]
+Description=EasyTier Service
+After=network.target syslog.target
+Wants=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/easytier-core -c /usr/local/etc/easytier.config.toml
+
+[Install]
+WantedBy=multi-user.target
