@@ -1,5 +1,5 @@
 {
-  "log": { "loglevel": "none", "error": "none", "access": "none" }, //  "debug" | "info" | "warning" | "error" | "none"
+  //"log": { "loglevel": "none", "error": "none", "access": "none" }, //  "debug" | "info" | "warning" | "error" | "none"
   "log": { "loglevel": "error", "access": "/var/log/xray/access.log", "error": "/var/log/xray/error.log", "dnslog": true }, //遮掩IP地址 "maskAddress": "half", 
 
   "stats": {},
@@ -32,9 +32,7 @@
         "decryption": "none"
       },
       "streamSettings": {
-        "network": "tcp",
-        "security": "reality",
-        "sockopt": {"tcpFastOpen": 32768},
+        "network": "tcp", "sockopt": {"tcpFastOpen": 32768}, "security": "reality",
         "realitySettings": {
             "dest": ${fallback_port_http}, // 必填，格式同 VLESS fallbacks 的 dest
             "xver": 1, // 选填，格式同 VLESS fallbacks 的 xver
