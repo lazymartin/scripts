@@ -13,11 +13,11 @@ update_geofiles(){
   # download geoip.dat
   wget -q --show-progress -O /usr/local/share/xray/geoip.dat "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/download/${LATEST_VERSION}/geoip.dat"
   if [[ ! -s /usr/local/share/xray/geoip.dat ]]; then
-    logger "Failed to update \"geoip.dat\", using the original file."
+    logger -t month "Failed to update \"geoip.dat\", using the original file."
     cp -p /usr/local/share/xray/geoip.dat.bak /usr/local/share/xray/geoip.dat
     count=$((${count} + 1))
   else
-    logger "The file \"geoip.dat\" was successfully updated!";
+    logger -t month "The file \"geoip.dat\" was successfully updated!";
   fi
 
   # download geosite.dat
@@ -52,7 +52,42 @@ update_geofiles(){
 }
 
 update_crt(){
+  local crt_file="/etc/ssl/web.crt"
+  local key_file="/etc/ssl/web.key"
+  local notify_email="${email}" # 请在此处配置接收通知的邮箱
 
+  # 1. 备份原证书
+  cp -f "$crt_file" "${crt_file}.bak"
+  cp -f "$key_file" "${key_file}.bak"
+
+  # 2. 下载新证书
+  # 添加了 -f 参数：如果遇到 HTTP 错误（如 404），curl 也会返回失败状态码
+  curl -4Rsf -o "$crt_file" -u ${webdav_username}:${webdav_password} ${webdav_link}/documents/ssl/${domain}.crt
+  local crt_status=$?
+
+  curl -4Rsf -o "$key_file" -u ${webdav_username}:${webdav_password} ${webdav_link}/documents/ssl/${domain}.key
+  local key_status=$?
+
+  # 3. 判断下载是否成功
+  if [ $crt_status -ne 0 ] || [ $key_status -ne 0 ]; then
+    # 如果任一文件下载失败，恢复原文件
+    mv -f "${crt_file}.bak" "$crt_file"
+    mv -f "${key_file}.bak" "$key_file"
+    
+    # 使用 msmtp 发送失败通知
+    echo -e "Subject: 证书更新失败\n\n域名 ${domain} 的证书下载失败，已回滚为原证书，未重启服务。" | msmtp "$notify_email"
+    return 1
+  else
+    # 下载成功，清理备份文件（可选，也可以保留以防万一）
+    rm -f "${crt_file}.bak" "${key_file}.bak"
+    logger -t month "域名证书更新成功"
+    # 可选：发送成功通知
+    # echo -e "Subject: 证书更新成功\n\n域名 ${domain} 的证书已成功更新并部署。" | msmtp "$notify_email"
+  fi
+
+  # 4. 重启服务
+  systemctl restart nginx
+  systemctl restart xray
 }
 
 update_geofiles
