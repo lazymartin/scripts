@@ -23,11 +23,11 @@ update_geofiles(){
   # download geosite.dat
   wget -q --show-progress -O /usr/local/share/xray/geosite.dat "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/download/${LATEST_VERSION}/geosite.dat"
   if [[ ! -s /usr/local/share/xray/geosite.dat ]]; then
-    logger "Failed to update \"geosite.dat\", using the original file."
+    logger -t month "Failed to update \"geosite.dat\", using the original file."
     cp -p /usr/local/share/xray/geosite.dat.bak /usr/local/share/xray/geosite.dat
     count=$((${count} + 1))
   else
-    logger "The file \"geosite.dat\" was successfully updated!"
+    logger -t month "The file \"geosite.dat\" was successfully updated!"
   fi
 
   # update srs file
@@ -81,6 +81,7 @@ update_crt(){
     # 下载成功，清理备份文件（可选，也可以保留以防万一）
     rm -f "${crt_file}.bak" "${key_file}.bak"
     logger -t month "域名证书更新成功"
+    
     # 可选：发送成功通知
     # echo -e "Subject: 证书更新成功\n\n域名 ${domain} 的证书已成功更新并部署。" | msmtp "$notify_email"
   fi
