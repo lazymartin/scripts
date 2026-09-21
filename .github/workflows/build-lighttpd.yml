@@ -49,12 +49,12 @@ jobs:
       - name: Cross-Compile ARM64
         run: |
           ./autogen.sh
-          export PKG_CONFIG_LIBDIR=/usr/lib/aarch64-linux-gnu/pkgconfig:/usr/share/pkgconfig
-          export PKG_CONFIG=aarch64-linux-gnu-pkg-config
           
-          # 手动提取 ARM64 的 libxml2 路径变量，强制覆盖 configure 的检索逻辑
-          export XML_CFLAGS=$($PKG_CONFIG --cflags libxml-2.0)
-          export XML_LIBS=$($PKG_CONFIG --libs libxml-2.0)
+          # 【最终修复方案】: 配置标准的跨平台 pkg-config 环境变量
+          export PKG_CONFIG=pkg-config
+          export PKG_CONFIG_DIR=""
+          export PKG_CONFIG_LIBDIR=/usr/lib/aarch64-linux-gnu/pkgconfig:/usr/share/pkgconfig
+          export PKG_CONFIG_SYSROOT_DIR=/
           
           ./configure -C --host=aarch64-linux-gnu --enable-static --disable-shared --with-openssl --with-webdav-props --with-webdav-locks --with-pcre2
           make LIGHTTPD_STATIC=yes -j $(nproc)
