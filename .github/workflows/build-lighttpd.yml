@@ -38,7 +38,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          repository: lighttpd/lighttpd
+          repository: lighttpd/lighttpd1.4
 
       - name: Install Cross-Compile Dependencies
         run: |
