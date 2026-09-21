@@ -44,15 +44,18 @@ jobs:
         run: |
           dpkg --add-architecture arm64
           apt update
-          # 【修改点 1】: 使用 Debian 官方的 crossbuild-essential-arm64 替代基础的 gcc 编译器
           apt install -y autoconf automake libtool crossbuild-essential-arm64 pkg-config libssl-dev:arm64 libxml2-dev:arm64 libsqlite3-dev:arm64 uuid-dev:arm64 libpcre2-dev:arm64 zlib1g-dev:arm64
 
       - name: Cross-Compile ARM64
         run: |
           ./autogen.sh
-          # 【修改点 2】: 强制 pkg-config 检索 aarch64 的库路径
           export PKG_CONFIG_LIBDIR=/usr/lib/aarch64-linux-gnu/pkgconfig:/usr/share/pkgconfig
           export PKG_CONFIG=aarch64-linux-gnu-pkg-config
+          
+          # 手动提取 ARM64 的 libxml2 路径变量，强制覆盖 configure 的检索逻辑
+          export XML_CFLAGS=$($PKG_CONFIG --cflags libxml-2.0)
+          export XML_LIBS=$($PKG_CONFIG --libs libxml-2.0)
+          
           ./configure -C --host=aarch64-linux-gnu --enable-static --disable-shared --with-openssl --with-webdav-props --with-webdav-locks --with-pcre2
           make LIGHTTPD_STATIC=yes -j $(nproc)
 
