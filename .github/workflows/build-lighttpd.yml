@@ -1,7 +1,7 @@
 name: Build and Release Lighttpd Single-File
 
 on:
-  workflow_dispatch: # 取消了输入参数，直接点击运行即可
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -18,7 +18,8 @@ jobs:
       - name: Install Dependencies
         run: |
           apt update
-          apt install -y autoconf automake libtool build-essential pkg-config libssl-dev libxml2-dev libsqlite3-dev uuid-dev libpcre2-dev
+          # 新增了 zlib1g-dev
+          apt install -y autoconf automake libtool build-essential pkg-config libssl-dev libxml2-dev libsqlite3-dev uuid-dev libpcre2-dev zlib1g-dev
 
       - name: Compile x86_64
         run: |
@@ -44,7 +45,8 @@ jobs:
         run: |
           dpkg --add-architecture arm64
           apt update
-          apt install -y autoconf automake libtool build-essential pkg-config gcc-aarch64-linux-gnu libssl-dev:arm64 libxml2-dev:arm64 libsqlite3-dev:arm64 uuid-dev:arm64 libpcre2-dev:arm64
+          # 新增了 zlib1g-dev:arm64
+          apt install -y autoconf automake libtool build-essential pkg-config gcc-aarch64-linux-gnu libssl-dev:arm64 libxml2-dev:arm64 libsqlite3-dev:arm64 uuid-dev:arm64 libpcre2-dev:arm64 zlib1g-dev:arm64
 
       - name: Cross-Compile ARM64
         run: |
@@ -82,4 +84,3 @@ jobs:
           files: |
             lighttpd-x86_64
             lighttpd-arm64
-
