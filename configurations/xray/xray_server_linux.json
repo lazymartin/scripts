@@ -29,7 +29,7 @@
               "flow": "xtls-rprx-vision" // 选填，若有，客户端必须启用 XTLS
           }
         ],
-        "decryption": "none"
+        "decryption": "${decryption_code}"
       },
       "streamSettings": {
         "network": "tcp", "sockopt": {"tcpFastOpen": 32768}, "security": "reality",
@@ -37,6 +37,7 @@
             "dest": ${fallback_port_http}, // 必填，格式同 VLESS fallbacks 的 dest
             "xver": 1, // 选填，格式同 VLESS fallbacks 的 xver
             "serverNames": ["${x_domain}"], // 与 Nginx 配置中的 server_name 一致
+            "mldsa65Seed": "${mldsa65_seed}",
             "privateKey": "${xray_privateKey}", // 必填，执行 ./xray x25519 生成
             "shortIds": ["${xray_shortIds}"] // 0 到 f，长度为 2 的倍数，长度上限为 16，可留空(客户端 shortId 可为空)，或执行 openssl rand -hex 8 生成
         }
