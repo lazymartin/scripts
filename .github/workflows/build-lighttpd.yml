@@ -9,7 +9,7 @@ permissions:
 jobs:
   build-x86_64:
     runs-on: ubuntu-latest
-    container: debian:13
+    container: debian:trixie
     steps:
       - uses: actions/checkout@v4
         with:
@@ -24,7 +24,10 @@ jobs:
         run: |
           ./autogen.sh
 
-          # 写入需要静态内建的模块列表（包含系统默认加载的核心模块与你配置的模块）
+          # 修复静态编译时 test_mod.c 缺少 plugin 类型声明的源码 Bug
+          sed -i '/#ifdef LIGHTTPD_STATIC/i #include "plugin.h"' src/t/test_mod.c
+
+          # 写入需要静态内建的模块列表
           cat << 'EOF' > src/plugin-static.h
           PLUGIN_INIT(mod_rewrite)
           PLUGIN_INIT(mod_redirect)
@@ -60,7 +63,7 @@ jobs:
 
   build-arm64:
     runs-on: ubuntu-latest
-    container: debian:13
+    container: debian:trixie
     steps:
       - uses: actions/checkout@v4
         with:
@@ -75,6 +78,9 @@ jobs:
       - name: Cross-Compile ARM64
         run: |
           ./autogen.sh
+
+          # 修复静态编译时 test_mod.c 缺少 plugin 类型声明的源码 Bug
+          sed -i '/#ifdef LIGHTTPD_STATIC/i #include "plugin.h"' src/t/test_mod.c
 
           # 写入需要静态内建的模块列表
           cat << 'EOF' > src/plugin-static.h
