@@ -24,6 +24,7 @@ jobs:
         run: |
           ./autogen.sh
 
+          # 写入需要静态内建的模块列表
           cat << 'EOF' > src/plugin-static.h
           PLUGIN_INIT(mod_rewrite)
           PLUGIN_INIT(mod_redirect)
@@ -50,8 +51,9 @@ jobs:
             --with-webdav-locks \
             --with-pcre2
 
-          # 先生成必要的版本头文件，再仅编译 lighttpd 主程序（跳过测试目标）
-          make -C src versionstamp
+          # 1. 优先串行生成语法解析器头文件，避免并行编译竞态
+          make -C src configparser.h
+          # 2. 仅构建主程序，彻底跳过单元测试目标
           make -C src lighttpd LIGHTTPD_STATIC=yes -j $(nproc)
 
       - name: Upload Artifact
@@ -72,12 +74,14 @@ jobs:
         run: |
           dpkg --add-architecture arm64
           apt update
-          apt install -y autoconf automake libtool crossbuild-essential-arm64 pkg-config libssl-dev:arm64 libxml2-dev:arm64 libsqlite3-dev:arm64 uuid-dev:arm64 libpcre2-dev:arm64 zlib1g-dev:arm64
+          # 补回 build-essential，提供本地 make 与主机 gcc 编译器环境
+          apt install -y autoconf automake libtool build-essential crossbuild-essential-arm64 pkg-config libssl-dev:arm64 libxml2-dev:arm64 libsqlite3-dev:arm64 uuid-dev:arm64 libpcre2-dev:arm64 zlib1g-dev:arm64
 
       - name: Cross-Compile ARM64
         run: |
           ./autogen.sh
 
+          # 写入需要静态内建的模块列表
           cat << 'EOF' > src/plugin-static.h
           PLUGIN_INIT(mod_rewrite)
           PLUGIN_INIT(mod_redirect)
@@ -110,8 +114,9 @@ jobs:
             --with-webdav-locks \
             --with-pcre2
 
-          # 先生成必要的版本头文件，再仅编译 lighttpd 主程序（跳过测试目标）
-          make -C src versionstamp
+          # 1. 优先串行生成语法解析器头文件
+          make -C src configparser.h
+          # 2. 仅构建主程序，彻底跳过单元测试目标
           make -C src lighttpd LIGHTTPD_STATIC=yes -j $(nproc)
 
       - name: Upload Artifact
