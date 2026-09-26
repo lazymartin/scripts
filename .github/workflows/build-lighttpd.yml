@@ -24,10 +24,6 @@ jobs:
         run: |
           ./autogen.sh
 
-          # 修复静态编译时 test_mod.c 缺少 plugin 类型声明的源码 Bug
-          sed -i '/#ifdef LIGHTTPD_STATIC/i #include "plugin.h"' src/t/test_mod.c
-
-          # 写入需要静态内建的模块列表
           cat << 'EOF' > src/plugin-static.h
           PLUGIN_INIT(mod_rewrite)
           PLUGIN_INIT(mod_redirect)
@@ -46,6 +42,7 @@ jobs:
           EOF
 
           LIGHTTPD_STATIC=yes CPPFLAGS="-DLIGHTTPD_STATIC" ./configure -C \
+            --disable-dependency-tracking \
             --enable-static \
             --disable-shared \
             --with-openssl \
@@ -53,7 +50,9 @@ jobs:
             --with-webdav-locks \
             --with-pcre2
 
-          make LIGHTTPD_STATIC=yes -j $(nproc)
+          # 先生成必要的版本头文件，再仅编译 lighttpd 主程序（跳过测试目标）
+          make -C src versionstamp
+          make -C src lighttpd LIGHTTPD_STATIC=yes -j $(nproc)
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
@@ -79,10 +78,6 @@ jobs:
         run: |
           ./autogen.sh
 
-          # 修复静态编译时 test_mod.c 缺少 plugin 类型声明的源码 Bug
-          sed -i '/#ifdef LIGHTTPD_STATIC/i #include "plugin.h"' src/t/test_mod.c
-
-          # 写入需要静态内建的模块列表
           cat << 'EOF' > src/plugin-static.h
           PLUGIN_INIT(mod_rewrite)
           PLUGIN_INIT(mod_redirect)
@@ -107,6 +102,7 @@ jobs:
 
           LIGHTTPD_STATIC=yes CPPFLAGS="-DLIGHTTPD_STATIC" ./configure -C \
             --host=aarch64-linux-gnu \
+            --disable-dependency-tracking \
             --enable-static \
             --disable-shared \
             --with-openssl \
@@ -114,7 +110,9 @@ jobs:
             --with-webdav-locks \
             --with-pcre2
 
-          make LIGHTTPD_STATIC=yes -j $(nproc)
+          # 先生成必要的版本头文件，再仅编译 lighttpd 主程序（跳过测试目标）
+          make -C src versionstamp
+          make -C src lighttpd LIGHTTPD_STATIC=yes -j $(nproc)
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
