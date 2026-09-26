@@ -51,9 +51,9 @@ jobs:
             --with-webdav-locks \
             --with-pcre2
 
-          # 1. 优先串行生成语法解析器头文件，避免并行编译竞态
-          make -C src configparser.h
-          # 2. 仅构建主程序，彻底跳过单元测试目标
+          # 1. 优先串行生成版本头文件与语法解析器头文件
+          make -C src versionstamp configparser.h
+          # 2. 仅构建主程序，跳过单元测试目标
           make -C src lighttpd LIGHTTPD_STATIC=yes -j $(nproc)
 
       - name: Upload Artifact
@@ -74,7 +74,6 @@ jobs:
         run: |
           dpkg --add-architecture arm64
           apt update
-          # 补回 build-essential，提供本地 make 与主机 gcc 编译器环境
           apt install -y autoconf automake libtool build-essential crossbuild-essential-arm64 pkg-config libssl-dev:arm64 libxml2-dev:arm64 libsqlite3-dev:arm64 uuid-dev:arm64 libpcre2-dev:arm64 zlib1g-dev:arm64
 
       - name: Cross-Compile ARM64
@@ -114,9 +113,9 @@ jobs:
             --with-webdav-locks \
             --with-pcre2
 
-          # 1. 优先串行生成语法解析器头文件
-          make -C src configparser.h
-          # 2. 仅构建主程序，彻底跳过单元测试目标
+          # 1. 优先串行生成版本头文件与语法解析器头文件
+          make -C src versionstamp configparser.h
+          # 2. 仅构建主程序，跳过单元测试目标
           make -C src lighttpd LIGHTTPD_STATIC=yes -j $(nproc)
 
       - name: Upload Artifact
