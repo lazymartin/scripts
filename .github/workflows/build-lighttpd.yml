@@ -9,7 +9,7 @@ permissions:
 jobs:
   build-x86_64:
     runs-on: ubuntu-latest
-    container: debian:12
+    container: debian:13
     steps:
       - uses: actions/checkout@v4
         with:
@@ -23,7 +23,33 @@ jobs:
       - name: Compile x86_64
         run: |
           ./autogen.sh
-          ./configure -C --enable-static --disable-shared --with-openssl --with-webdav-props --with-webdav-locks --with-pcre2
+
+          # 写入需要静态内建的模块列表（包含系统默认加载的核心模块与你配置的模块）
+          cat << 'EOF' > src/plugin-static.h
+          PLUGIN_INIT(mod_rewrite)
+          PLUGIN_INIT(mod_redirect)
+          PLUGIN_INIT(mod_access)
+          PLUGIN_INIT(mod_alias)
+          PLUGIN_INIT(mod_indexfile)
+          PLUGIN_INIT(mod_dirlisting)
+          PLUGIN_INIT(mod_staticfile)
+          PLUGIN_INIT(mod_deflate)
+          PLUGIN_INIT(mod_setenv)
+          PLUGIN_INIT(mod_openssl)
+          PLUGIN_INIT(mod_extforward)
+          PLUGIN_INIT(mod_auth)
+          PLUGIN_INIT(mod_authn_file)
+          PLUGIN_INIT(mod_webdav)
+          EOF
+
+          LIGHTTPD_STATIC=yes CPPFLAGS="-DLIGHTTPD_STATIC" ./configure -C \
+            --enable-static \
+            --disable-shared \
+            --with-openssl \
+            --with-webdav-props \
+            --with-webdav-locks \
+            --with-pcre2
+
           make LIGHTTPD_STATIC=yes -j $(nproc)
 
       - name: Upload Artifact
@@ -34,7 +60,7 @@ jobs:
 
   build-arm64:
     runs-on: ubuntu-latest
-    container: debian:12
+    container: debian:13
     steps:
       - uses: actions/checkout@v4
         with:
@@ -49,14 +75,39 @@ jobs:
       - name: Cross-Compile ARM64
         run: |
           ./autogen.sh
-          
-          # 【最终修复方案】: 配置标准的跨平台 pkg-config 环境变量
+
+          # 写入需要静态内建的模块列表
+          cat << 'EOF' > src/plugin-static.h
+          PLUGIN_INIT(mod_rewrite)
+          PLUGIN_INIT(mod_redirect)
+          PLUGIN_INIT(mod_access)
+          PLUGIN_INIT(mod_alias)
+          PLUGIN_INIT(mod_indexfile)
+          PLUGIN_INIT(mod_dirlisting)
+          PLUGIN_INIT(mod_staticfile)
+          PLUGIN_INIT(mod_deflate)
+          PLUGIN_INIT(mod_setenv)
+          PLUGIN_INIT(mod_openssl)
+          PLUGIN_INIT(mod_extforward)
+          PLUGIN_INIT(mod_auth)
+          PLUGIN_INIT(mod_authn_file)
+          PLUGIN_INIT(mod_webdav)
+          EOF
+
           export PKG_CONFIG=pkg-config
           export PKG_CONFIG_DIR=""
           export PKG_CONFIG_LIBDIR=/usr/lib/aarch64-linux-gnu/pkgconfig:/usr/share/pkgconfig
           export PKG_CONFIG_SYSROOT_DIR=/
-          
-          ./configure -C --host=aarch64-linux-gnu --enable-static --disable-shared --with-openssl --with-webdav-props --with-webdav-locks --with-pcre2
+
+          LIGHTTPD_STATIC=yes CPPFLAGS="-DLIGHTTPD_STATIC" ./configure -C \
+            --host=aarch64-linux-gnu \
+            --enable-static \
+            --disable-shared \
+            --with-openssl \
+            --with-webdav-props \
+            --with-webdav-locks \
+            --with-pcre2
+
           make LIGHTTPD_STATIC=yes -j $(nproc)
 
       - name: Upload Artifact
