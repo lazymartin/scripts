@@ -18,13 +18,19 @@ jobs:
       - name: Install Dependencies
         run: |
           apt update
-          apt install -y wget ca-certificates autoconf automake libtool build-essential pkg-config libxml2-dev libsqlite3-dev uuid-dev libpcre2-dev zlib1g-dev
+          # 增加了 curl 和 jq，用于动态获取最新版本号
+          apt install -y wget curl jq ca-certificates autoconf automake libtool build-essential pkg-config libxml2-dev libsqlite3-dev uuid-dev libpcre2-dev zlib1g-dev
 
-      - name: Build OpenSSL 3.5 from source (x86_64)
+      - name: Build Latest OpenSSL from source (x86_64)
         run: |
-          wget https://github.com/openssl/openssl/releases/download/openssl-3.5.0/openssl-3.5.0.tar.gz
-          tar -zxf openssl-3.5.0.tar.gz
-          cd openssl-3.5.0
+          # 自动请求 GitHub API 获取最新版的 tag (格式通常为 openssl-x.x.x)
+          LATEST_TAG=$(curl -s https://api.github.com/repos/openssl/openssl/releases/latest | jq -r .tag_name)
+          echo "Auto-detected latest OpenSSL version: $LATEST_TAG"
+          
+          wget https://github.com/openssl/openssl/releases/download/${LATEST_TAG}/${LATEST_TAG}.tar.gz
+          tar -zxf ${LATEST_TAG}.tar.gz
+          cd ${LATEST_TAG}
+          
           ./config no-shared --prefix=/opt/openssl
           make -j$(nproc)
           make install_sw
@@ -85,13 +91,18 @@ jobs:
         run: |
           dpkg --add-architecture arm64
           apt update
-          apt install -y wget ca-certificates autoconf automake libtool build-essential crossbuild-essential-arm64 pkg-config libxml2-dev:arm64 libsqlite3-dev:arm64 uuid-dev:arm64 libpcre2-dev:arm64 zlib1g-dev:arm64
+          # 同样增加了 curl 和 jq
+          apt install -y wget curl jq ca-certificates autoconf automake libtool build-essential crossbuild-essential-arm64 pkg-config libxml2-dev:arm64 libsqlite3-dev:arm64 uuid-dev:arm64 libpcre2-dev:arm64 zlib1g-dev:arm64
 
-      - name: Build OpenSSL 3.5 from source (ARM64 Cross-Compile)
+      - name: Build Latest OpenSSL from source (ARM64 Cross-Compile)
         run: |
-          wget https://github.com/openssl/openssl/releases/download/openssl-3.5.0/openssl-3.5.0.tar.gz
-          tar -zxf openssl-3.5.0.tar.gz
-          cd openssl-3.5.0
+          LATEST_TAG=$(curl -s https://api.github.com/repos/openssl/openssl/releases/latest | jq -r .tag_name)
+          echo "Auto-detected latest OpenSSL version: $LATEST_TAG"
+          
+          wget https://github.com/openssl/openssl/releases/download/${LATEST_TAG}/${LATEST_TAG}.tar.gz
+          tar -zxf ${LATEST_TAG}.tar.gz
+          cd ${LATEST_TAG}
+          
           export CROSS_COMPILE=aarch64-linux-gnu-
           ./Configure linux-aarch64 no-shared --prefix=/opt/openssl-arm64
           make -j$(nproc)
