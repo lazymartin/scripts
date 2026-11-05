@@ -18,9 +18,18 @@ jobs:
       - name: Install Dependencies
         run: |
           apt update
-          apt install -y autoconf automake libtool build-essential pkg-config libssl-dev libxml2-dev libsqlite3-dev uuid-dev libpcre2-dev zlib1g-dev
+          apt install -y wget ca-certificates autoconf automake libtool build-essential pkg-config libxml2-dev libsqlite3-dev uuid-dev libpcre2-dev zlib1g-dev
 
-      - name: Compile x86_64
+      - name: Build OpenSSL 3.5 from source (x86_64)
+        run: |
+          wget https://github.com/openssl/openssl/releases/download/openssl-3.5.0/openssl-3.5.0.tar.gz
+          tar -zxf openssl-3.5.0.tar.gz
+          cd openssl-3.5.0
+          ./config no-shared --prefix=/opt/openssl
+          make -j$(nproc)
+          make install_sw # 仅安装软件和库，跳过文档以节省时间
+
+      - name: Compile Lighttpd x86_64
         run: |
           ./autogen.sh
 
@@ -41,6 +50,9 @@ jobs:
           PLUGIN_INIT(mod_authn_file)
           PLUGIN_INIT(mod_webdav)
           EOF
+
+          # 引导 pkg-config 优先寻找我们自己编译的 OpenSSL
+          export PKG_CONFIG_PATH="/opt/openssl/lib64/pkgconfig:/opt/openssl/lib/pkgconfig:$PKG_CONFIG_PATH"
 
           LIGHTTPD_STATIC=yes CPPFLAGS="-DLIGHTTPD_STATIC" ./configure -C \
             --disable-dependency-tracking \
@@ -74,9 +86,19 @@ jobs:
         run: |
           dpkg --add-architecture arm64
           apt update
-          apt install -y autoconf automake libtool build-essential crossbuild-essential-arm64 pkg-config libssl-dev:arm64 libxml2-dev:arm64 libsqlite3-dev:arm64 uuid-dev:arm64 libpcre2-dev:arm64 zlib1g-dev:arm64
+          apt install -y wget ca-certificates autoconf automake libtool build-essential crossbuild-essential-arm64 pkg-config libxml2-dev:arm64 libsqlite3-dev:arm64 uuid-dev:arm64 libpcre2-dev:arm64 zlib1g-dev:arm64
 
-      - name: Cross-Compile ARM64
+      - name: Build OpenSSL 3.5 from source (ARM64 Cross-Compile)
+        run: |
+          wget https://github.com/openssl/openssl/releases/download/openssl-3.5.0/openssl-3.5.0.tar.gz
+          tar -zxf openssl-3.5.0.tar.gz
+          cd openssl-3.5.0
+          export CROSS_COMPILE=aarch64-linux-gnu-
+          ./Configure linux-aarch64 no-shared --prefix=/opt/openssl-arm64
+          make -j$(nproc)
+          make install_sw
+
+      - name: Cross-Compile Lighttpd ARM64
         run: |
           ./autogen.sh
 
@@ -100,7 +122,8 @@ jobs:
 
           export PKG_CONFIG=pkg-config
           export PKG_CONFIG_DIR=""
-          export PKG_CONFIG_LIBDIR=/usr/lib/aarch64-linux-gnu/pkgconfig:/usr/share/pkgconfig
+          # 在 ARM64 的 pkg-config 寻找路径中加入刚刚编译的 OpenSSL 路径
+          export PKG_CONFIG_LIBDIR="/opt/openssl-arm64/lib64/pkgconfig:/opt/openssl-arm64/lib/pkgconfig:/usr/lib/aarch64-linux-gnu/pkgconfig:/usr/share/pkgconfig"
           export PKG_CONFIG_SYSROOT_DIR=/
 
           LIGHTTPD_STATIC=yes CPPFLAGS="-DLIGHTTPD_STATIC" ./configure -C \
@@ -147,3 +170,4 @@ jobs:
           files: |
             lighttpd-x86_64
             lighttpd-arm64
+            
