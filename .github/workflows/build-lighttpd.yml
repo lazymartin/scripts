@@ -27,13 +27,12 @@ jobs:
           cd openssl-3.5.0
           ./config no-shared --prefix=/opt/openssl
           make -j$(nproc)
-          make install_sw # 仅安装软件和库，跳过文档以节省时间
+          make install_sw
 
       - name: Compile Lighttpd x86_64
         run: |
           ./autogen.sh
 
-          # 写入需要静态内建的模块列表
           cat << 'EOF' > src/plugin-static.h
           PLUGIN_INIT(mod_rewrite)
           PLUGIN_INIT(mod_redirect)
@@ -51,10 +50,12 @@ jobs:
           PLUGIN_INIT(mod_webdav)
           EOF
 
-          # 引导 pkg-config 优先寻找我们自己编译的 OpenSSL
           export PKG_CONFIG_PATH="/opt/openssl/lib64/pkgconfig:/opt/openssl/lib/pkgconfig:$PKG_CONFIG_PATH"
 
-          LIGHTTPD_STATIC=yes CPPFLAGS="-DLIGHTTPD_STATIC" ./configure -C \
+          LIGHTTPD_STATIC=yes \
+          CPPFLAGS="-DLIGHTTPD_STATIC -I/opt/openssl/include" \
+          LDFLAGS="-L/opt/openssl/lib64 -L/opt/openssl/lib" \
+          ./configure -C \
             --disable-dependency-tracking \
             --enable-static \
             --disable-shared \
@@ -63,9 +64,7 @@ jobs:
             --with-webdav-locks \
             --with-pcre2
 
-          # 1. 优先串行生成版本头文件与语法解析器头文件
           make -C src versionstamp configparser.h
-          # 2. 仅构建主程序，跳过单元测试目标
           make -C src lighttpd LIGHTTPD_STATIC=yes -j $(nproc)
 
       - name: Upload Artifact
@@ -102,7 +101,6 @@ jobs:
         run: |
           ./autogen.sh
 
-          # 写入需要静态内建的模块列表
           cat << 'EOF' > src/plugin-static.h
           PLUGIN_INIT(mod_rewrite)
           PLUGIN_INIT(mod_redirect)
@@ -122,11 +120,13 @@ jobs:
 
           export PKG_CONFIG=pkg-config
           export PKG_CONFIG_DIR=""
-          # 在 ARM64 的 pkg-config 寻找路径中加入刚刚编译的 OpenSSL 路径
           export PKG_CONFIG_LIBDIR="/opt/openssl-arm64/lib64/pkgconfig:/opt/openssl-arm64/lib/pkgconfig:/usr/lib/aarch64-linux-gnu/pkgconfig:/usr/share/pkgconfig"
           export PKG_CONFIG_SYSROOT_DIR=/
 
-          LIGHTTPD_STATIC=yes CPPFLAGS="-DLIGHTTPD_STATIC" ./configure -C \
+          LIGHTTPD_STATIC=yes \
+          CPPFLAGS="-DLIGHTTPD_STATIC -I/opt/openssl-arm64/include" \
+          LDFLAGS="-L/opt/openssl-arm64/lib64 -L/opt/openssl-arm64/lib" \
+          ./configure -C \
             --host=aarch64-linux-gnu \
             --disable-dependency-tracking \
             --enable-static \
@@ -136,9 +136,7 @@ jobs:
             --with-webdav-locks \
             --with-pcre2
 
-          # 1. 优先串行生成版本头文件与语法解析器头文件
           make -C src versionstamp configparser.h
-          # 2. 仅构建主程序，跳过单元测试目标
           make -C src lighttpd LIGHTTPD_STATIC=yes -j $(nproc)
 
       - name: Upload Artifact
@@ -170,4 +168,3 @@ jobs:
           files: |
             lighttpd-x86_64
             lighttpd-arm64
-            
