@@ -15,7 +15,7 @@
     { "tag": "dns-in-v6", "listen": "::1", "port": 53, "protocol": "dokodemo-door", "settings": { "address": "::1", "port": 53, "network": "tcp,udp" } },
     {
       "tag": "proxy", "port": 443, "protocol": "vless",
-      "sniffing": { "enabled": true, "destOverride": ["http","tls","quic"] },
+      "sniffing": { "enabled": true, "destOverride": ["http","tls","quic"], "routeOnly": true  },
       "settings": {
         "clients": [
           {
@@ -47,7 +47,19 @@
 
   "outbounds": [
     { "tag": "direct", "protocol": "freedom" },
-    { "tag": "dns-out", "protocol": "dns" },
+    { "tag": "dns-out", "protocol": "dns", 
+      "streamSettings": { "sockopt": { "tcpFastOpen": 32768 } },
+      "settings": { 
+        "rewriteAddress": "1.1.1.1",
+        "rewritePort": 53,
+        "rules": [
+            { "action": "hijack", "qType": "1,28" },
+            { "action": "return", "rCode": 0, "qType": "64,65", "domain": ["geosite:geolocation-!cn"] },
+            { "action": "direct", "qType": "16,15,33,2,5,6,12,13,43,64,65,257" },
+            { "action": "return", "rCode": 5 }
+        ]
+      }
+    },
     { "tag": "block", "protocol": "blackhole" }
   ],
 
